@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Gotchi.Core.Models;
+using Gotchi.Persons.Models;
 
-namespace Gotchi.Models;
+namespace Gotchi.Portfolios.Models;
 
 public class Portfolio : ModelBase
 {
     public Person AccountHolder;
     public float Balance { get; set; }
+    public DateTime BalanceLastUpdated { get; set; }
     public IList<Asset> Assets;
 
     public Portfolio(string id, Person accountHolder)

@@ -2,7 +2,7 @@
 using MongoDB.Driver;
 
 
-namespace Gotchi.Repository;
+namespace Gotchi.Core.Repository;
 public abstract class RepositoryBase
 {
     protected string _connectionString;
@@ -37,12 +37,12 @@ public abstract class RepositoryBase
 
     protected bool Delete<T>()
     {
-        var filter = Builders<T>.Filter.Where( _ => true);
+        var filter = Builders<T>.Filter.Where(_ => true);
         ConnectToMongo<T>().DeleteMany(filter);
         return true;
     }
 
-    protected T Get<T>(string id) 
+    protected T Get<T>(string id)
     {
         return ConnectToMongo<T>().Find(FilterId<T>(id)).FirstOrDefault();
     }
@@ -52,12 +52,12 @@ public abstract class RepositoryBase
         return ConnectToMongo<T>().Find(FilterId<T>(id)).Any();
     }
 
-    protected ICollection<T> Get<T>()
+    protected ICollection<T> GetAll<T>()
     {
         return ConnectToMongo<T>().Find(_ => true).ToList();
     }
 
-    private FilterDefinition<T> FilterId<T>(string id) 
+    protected FilterDefinition<T> FilterId<T>(string id)
     {
         return Builders<T>.Filter.Eq("Id", id);
     }

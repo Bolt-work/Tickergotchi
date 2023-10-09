@@ -1,6 +1,6 @@
-﻿using Gotchi.Models;
+﻿using Gotchi.Persons.Models;
 
-namespace Gotchi.Repository;
+namespace Gotchi.Persons.Repository;
 
 public interface IPersonRepository
 {
@@ -8,7 +8,7 @@ public interface IPersonRepository
     bool Delete(Person id);
     bool DeleteAll();
     bool Exists(string id);
-    ICollection<Person> Get();
-    Person Get(string channelId);
+    ICollection<Person> GetAll();
+    Person Get(string personId);
     bool Upsert(Person model);
 }

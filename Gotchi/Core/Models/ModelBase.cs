@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Gotchi.Models
+namespace Gotchi.Core.Models
 {
     public abstract class ModelBase
     {

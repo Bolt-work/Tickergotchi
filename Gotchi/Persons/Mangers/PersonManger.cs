@@ -1,12 +1,7 @@
-﻿using Gotchi.Models;
-using Gotchi.Repository;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Gotchi.Persons.Models;
+using Gotchi.Persons.Repository;
 
-namespace Gotchi.Mangers
+namespace Gotchi.Persons.Mangers
 {
     public class PersonManger : IPersonManger
     {

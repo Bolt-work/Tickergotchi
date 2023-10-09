@@ -1,5 +1,6 @@
-﻿using Gotchi.Models;
-using Gotchi.Repository;
+﻿
+using Gotchi.Persons.Models;
+using Gotchi.Persons.Repository;
 
 namespace Gotchi
 {

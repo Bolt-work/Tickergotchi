@@ -1,6 +1,6 @@
-﻿using Gotchi.Models;
+﻿using Gotchi.Persons.Models;
 
-namespace Gotchi.Mangers
+namespace Gotchi.Persons.Mangers
 {
     public interface IPersonManger
     {

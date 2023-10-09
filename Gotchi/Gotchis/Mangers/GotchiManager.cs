@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Gotchi.Mangers
+namespace Gotchi.Gotchis.Mangers
 {
-    public class PortfolioManger
+    public class GotchiManager
     {
     }
 }
