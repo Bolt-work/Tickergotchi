@@ -1,0 +1,7 @@
+{
+  "StartingMaxHunger": 100,
+  "HungerAmountPerHour": 1,
+  "FoodHungerValue": 1,
+  "FoodBaseCost": 100,
+  "FoodAddedCost": 1
+}

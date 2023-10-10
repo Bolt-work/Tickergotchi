@@ -12,7 +12,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="CryptoCoins\Mangers\" />
+    <ProjectReference Include="..\CoinMarketCap\CoinMarketCap.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="GameSettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

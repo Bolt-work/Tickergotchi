@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Gotchi.Core.Repository;
 
 namespace Gotchi.Core.Models
 {
@@ -14,6 +15,8 @@ namespace Gotchi.Core.Models
         [BsonRepresentation(BsonType.ObjectId)]
         [BsonIgnoreIfDefault]
         public string? KeyId { get; set; }
+
+        [CoreId]
         public string? Id { get; set; }
     }
 }

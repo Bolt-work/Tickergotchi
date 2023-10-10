@@ -4,8 +4,8 @@ namespace Gotchi.CryptoCoins.Repository;
 
 public class CryptoCoinRepositorySettings : RepositorySettings
 {
-public CryptoCoinRepositorySettings()
-{
-    CollectionName = "CryptoCoins";
-}
+    public CryptoCoinRepositorySettings()
+    {
+        CollectionName = "CryptoCoins";
+    }
 }

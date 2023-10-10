@@ -24,15 +24,15 @@ public class GotchiRepository : RepositoryBase
             return true;
     }
 
-    public bool Delete(string id) => Delete<Portfolio>(id);
-    public bool Delete(Portfolio portfolio) => Delete(portfolio.Id);
+    public bool Delete(string id) => base.DeleteEntry<Portfolio>(id);
+    public bool Delete(Portfolio portfolio) => base.DeleteEntry<Portfolio>(portfolio.Id);
 
-    public bool DeleteAll() => Delete<Portfolio>();
+    public bool DeleteAll() => base.DeleteAllEntries<Portfolio>();
 
-    public Portfolio Get(string id) => Get<Portfolio>(id);
+    public Portfolio Get(string id) => base.GetEntry<Portfolio>(id);
 
-    public ICollection<Portfolio> GetAll() => GetAll<Portfolio>();
+    public ICollection<Portfolio> GetAll() => base.GetAllEntries<Portfolio>();
 
-    public bool Exists(string id) => Exists<Portfolio>(id);
+    public bool Exists(string id) => base.Exists<Portfolio>(id);
 
 }

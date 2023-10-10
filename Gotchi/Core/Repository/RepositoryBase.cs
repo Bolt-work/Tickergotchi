@@ -1,5 +1,7 @@
-﻿using MongoDB.Bson;
+﻿using Gotchi.Portfolios.Models;
+using MongoDB.Bson;
 using MongoDB.Driver;
+using System.Xml.Linq;
 
 
 namespace Gotchi.Core.Repository;
@@ -23,26 +25,47 @@ public abstract class RepositoryBase
         return db.GetCollection<T>(_collectionName);
     }
 
-    protected bool Upsert<T>(T model, string id)
+    protected string GetCoreId<T>(T model)
     {
+        if (model is null)
+            throw new ArgumentNullException("Mandatory parameter", nameof(model));
+        
+        foreach (var property in model.GetType().GetProperties())
+        {
+            foreach (var attribute in property.GetCustomAttributes(true))
+            {
+                if (attribute.GetType() == typeof(CoreId))
+                {
+                    var value = property.GetValue(model);
+                    return Convert.ToString(value) ?? throw new NullReferenceException();
+                }
+            }
+        }
+
+        throw new CoreIdAttributeNotFoundException(model);
+    }
+
+    protected bool Upsert<T>(T model)
+    {
+        var id = GetCoreId<T>(model);
         ConnectToMongo<T>().ReplaceOne(FilterId<T>(id), model, new ReplaceOptions { IsUpsert = true });
         return true;
     }
 
-    protected bool Delete<T>(string id)
+    protected bool DeleteEntry<T>(string id)
     {
         ConnectToMongo<T>().DeleteOne(FilterId<T>(id));
         return true;
     }
 
-    protected bool Delete<T>()
+    protected bool DeleteAllEntries<T>()
     {
         var filter = Builders<T>.Filter.Where(_ => true);
         ConnectToMongo<T>().DeleteMany(filter);
         return true;
     }
 
-    protected T Get<T>(string id)
+    protected T GetEntry<T>(string id)
     {
         return ConnectToMongo<T>().Find(FilterId<T>(id)).FirstOrDefault();
     }
@@ -52,13 +75,24 @@ public abstract class RepositoryBase
         return ConnectToMongo<T>().Find(FilterId<T>(id)).Any();
     }
 
-    protected ICollection<T> GetAll<T>()
+    protected ICollection<T> GetAllEntries<T>()
     {
         return ConnectToMongo<T>().Find(_ => true).ToList();
     }
 
-    protected FilterDefinition<T> FilterId<T>(string id)
+    protected T GetByKeyStr<T>(string key, string value)
     {
-        return Builders<T>.Filter.Eq("Id", id);
+        return ConnectToMongo<T>().Find<T>(Filter<T>(key, value)).SingleOrDefault();
+    }
+
+    protected ICollection<T> GetManyByKeyStr<T>(string key, string value)
+    {
+        return ConnectToMongo<T>().Find(Filter<T>(key, value)).ToList();
+    }
+
+    protected FilterDefinition<T> FilterId<T>(string id) => Filter<T>("Id", id);
+    protected FilterDefinition<T> Filter<T>(string key, string id)
+    {
+        return Builders<T>.Filter.Eq(key, id);
     }
 }
