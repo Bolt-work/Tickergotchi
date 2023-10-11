@@ -52,8 +52,9 @@ public abstract class RepositoryBase
         return true;
     }
 
-    protected bool DeleteEntry<T>(string id)
+    protected bool DeleteEntry<T>(string? id)
     {
+        id = id ?? throw new ArgumentNullException(id);
         ConnectToMongo<T>().DeleteOne(FilterId<T>(id));
         return true;
     }

@@ -5,7 +5,7 @@ using Gotchi.Portfolios.Repository;
 
 namespace Gotchi.Portfolios.Mangers
 {
-    public class PortfolioManger
+    public class PortfolioManger : IPortfolioManger
     {
         private IPortfolioRepository _portfolioRepository;
 
@@ -15,7 +15,7 @@ namespace Gotchi.Portfolios.Mangers
         }
 
         public Portfolio CreatePortfolio(Person person) => CreatePortfolio(CoreHelper.NewId(), person);
-        public Portfolio CreatePortfolio(string id, Person person) 
+        public Portfolio CreatePortfolio(string id, Person person)
         {
             var portfolio = new Portfolio(id, person);
             portfolio.BalanceLastUpdated = DateTime.Now;
@@ -23,17 +23,17 @@ namespace Gotchi.Portfolios.Mangers
             return portfolio;
         }
 
-        public bool Store(Portfolio portfolio) 
+        public bool Store(Portfolio portfolio)
         {
             return _portfolioRepository.Upsert(portfolio);
         }
 
-        public Portfolio Get(string id) 
+        public Portfolio Get(string id)
         {
             return _portfolioRepository.Get(id);
         }
 
-        public bool Delete(Portfolio portfolio) 
+        public bool Delete(Portfolio portfolio)
         {
             return _portfolioRepository.Delete(portfolio);
         }
@@ -43,7 +43,7 @@ namespace Gotchi.Portfolios.Mangers
             return _portfolioRepository.Delete(id);
         }
 
-        public void Update(Portfolio portfolio) 
+        public void Update(Portfolio portfolio)
         {
             var hours = CoreHelper.NumberOfHoursPassed(portfolio.BalanceLastUpdated);
         }

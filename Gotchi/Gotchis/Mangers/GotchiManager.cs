@@ -1,12 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+using Gotchi.Gotchis.Models;
+using Gotchi.Gotchis.Repository;
+using Gotchi.Persons.Models;
 
-namespace Gotchi.Gotchis.Mangers
+namespace Gotchi.Gotchis.Mangers;
+
+public class GotchiManager : IGotchiManager
 {
-    public class GotchiManager
+    private IGotchiRepository _gotchiRepository;
+    public GotchiManager(IGotchiRepository gotchiRepository)
     {
+        _gotchiRepository = gotchiRepository;
+    }
+
+    public CryptoGotchi CreateCryptoGotchi(string id, Person owner)
+    {
+        return new CryptoGotchi(id, owner);
     }
 }
