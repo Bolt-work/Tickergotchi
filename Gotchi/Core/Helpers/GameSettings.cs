@@ -28,6 +28,9 @@ public static class GameSettings
 
     public class Settings 
     {
+        public int DeductionBaseAmount { get; set; }
+        public int DeductionPercentage { get; set; }
+        public int StartingBalance { get; set; }
         public int StartingMaxHunger { get; set; }
         public int HungerAmountPerHour { get; set; }
         public int FoodHungerValue { get; set; }

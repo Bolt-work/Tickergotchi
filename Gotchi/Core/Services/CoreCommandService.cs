@@ -13,26 +13,29 @@ using System.Windows.Input;
 
 namespace Gotchi.Core.Services;
 
-public class CommandService
+public class CoreCommandService : ICoreCommandService
 {
     private const string _commandHandlerSuffix = "Handler";
     private const string _commandHandlerMethodName = "Handle";
+    private IServiceProvider _serviceProvider;
 
-    public void Start(string[] args, ICoreCommand command) 
+
+    public CoreCommandService(IServiceProvider serviceProvider)
     {
-        using IHost host = CreateHostBuilder(args).Build();
-        using var scope = host.Services.CreateScope();
-        var services = scope.ServiceProvider;
+        _serviceProvider = serviceProvider;
+    }
 
+    public void Process(ICoreCommand command)
+    {
         try
         {
             var commandName = command.GetType().FullName;
             var commandHandlerType = Type.GetType(commandName + _commandHandlerSuffix);
             commandHandlerType = commandHandlerType ?? throw new CommandHandlerNotFoundException(commandName);
 
-            var commandHandler = services.GetRequiredService(commandHandlerType);
+            var commandHandler = _serviceProvider.GetRequiredService(commandHandlerType);
             var commandHandlerMethod = commandHandlerType.GetMethod(_commandHandlerMethodName);
-            commandHandlerMethod = commandHandlerMethod ?? throw new MethodNotFoundOnCommandHandlerException(commandName);
+            commandHandlerMethod = commandHandlerMethod ?? throw new MethodNotFoundOnCommandHandlerException(command.ToString());
 
             commandHandlerMethod.Invoke(commandHandler, new object[] { command });
         }
@@ -40,17 +43,5 @@ public class CommandService
         {
             ExceptionDispatchInfo.Capture(ex).Throw();
         }
-    }
-
-    static IHostBuilder CreateHostBuilder(string[] args) 
-    {
-        return Host.CreateDefaultBuilder(args)
-            .ConfigureServices((_, services) => 
-            {
-                CryptoCoinServiceConfig.Register(services);
-                PersonServiceConfig.Register(services);
-                PortfolioServiceConfig.Register(services);
-                GotchiServiceConfig.Register(services);
-            });
     }
 }

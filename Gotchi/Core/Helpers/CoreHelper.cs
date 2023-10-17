@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Gotchi.Portfolios.DTOs;
+using Gotchi.Portfolios.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,4 +17,5 @@ public static class CoreHelper
     {
         return until.Subtract(since).Hours;
     }
+
 }

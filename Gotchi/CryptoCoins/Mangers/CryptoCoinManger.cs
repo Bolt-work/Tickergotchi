@@ -1,17 +1,10 @@
 ﻿using CoinMarketCap;
-using CoinMarketCap.DataModels;
-using Gotchi.Core.Helpers;
+using Gotchi.Core.Mangers;
 using Gotchi.CryptoCoins.Repository;
 using Gotchi.Portfolios.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace Gotchi.CryptoCoins.Mangers;
 
-public class CryptoCoinManger : ICryptoCoinManger
+public class CryptoCoinManger : CoreMangerBase, ICryptoCoinManger
 {
     private ICryptoCoinRepository _cryptoCoinRepository;
     private ICoinMarketApi _coinMarketApi;
@@ -20,11 +13,6 @@ public class CryptoCoinManger : ICryptoCoinManger
         _cryptoCoinRepository = cryptoCoinRepository;
         _coinMarketApi = coinMarketApi;
     }
-
-    //public ICollection<CryptoCoin> GetByName(string name) 
-    //{
-        
-    //}
 
     public bool UpdateCoinValues()
     {
@@ -54,5 +42,14 @@ public class CryptoCoinManger : ICryptoCoinManger
 
         return true;
     }
+
+    public CryptoCoin CryptoCoinByCoinMarketId(string coinMarketId) 
+    {
+        var cryptoCoin = _cryptoCoinRepository.GetByCoinMarketId(coinMarketId);
+        return ThrowIfModelNull(cryptoCoin, coinMarketId);
+    } 
+    public CryptoCoin CryptoCoinByName(string name) => _cryptoCoinRepository.GetByName(name);
+    public ICollection<CryptoCoin> CryptoCoinBySlug(string slug) => _cryptoCoinRepository.GetBySlug(slug);
+    public ICollection<CryptoCoin> CryptoCoinBySymbol(string symbol) => _cryptoCoinRepository.GetBySymbol(symbol);
 
 }

@@ -5,11 +5,10 @@ namespace Gotchi.CryptoCoins.Repository
     public interface ICryptoCoinRepository
     {
         bool DeleteAll();
-        bool Exists(string id);
+        bool Exists(string coinMarketId);
         ICollection<CryptoCoin> GetAll();
         CryptoCoin GetByCoinMarketId(string coinMarketId);
-        CryptoCoin GetById(string id);
-        ICollection<CryptoCoin> GetByName(string name);
+        CryptoCoin GetByName(string name);
         ICollection<CryptoCoin> GetBySlug(string slug);
         ICollection<CryptoCoin> GetBySymbol(string symbol);
         void Insert(IList<CryptoCoin> models);

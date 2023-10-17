@@ -5,11 +5,11 @@ namespace Gotchi.Portfolios.Mangers
 {
     public interface IPortfolioManger
     {
-        Portfolio CreatePortfolio(Person person);
-        Portfolio CreatePortfolio(string id, Person person);
+        void BuyAsset(Portfolio portfolio, CryptoCoin coin, float amount);
+        Portfolio CreatePortfolio(Person accountHolder, string? portfolioId = null);
         bool Delete(Portfolio portfolio);
         bool Delete(string id);
-        Portfolio Get(string id);
+        Portfolio GetByPortfolioId(string id);
         bool Store(Portfolio portfolio);
         void Update(Portfolio portfolio);
     }

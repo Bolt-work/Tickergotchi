@@ -3,12 +3,11 @@ using CoinMarketCap;
 using Gotchi.Core.Helpers;
 using Gotchi.Core.Repository;
 using Gotchi.Core.Services;
+using Gotchi.CryptoCoins.CommandServices;
 using Gotchi.CryptoCoins.Mangers;
 using Gotchi.CryptoCoins.Repository;
 using Gotchi.Persons.CommandServices;
-using Gotchi.Persons.Models;
-using Gotchi.Persons.Repository;
-using Gotchi.Portfolios.Models;
+using Gotchi.Portfolios.CommandService;
 
 namespace Gotchi
 {
@@ -16,33 +15,27 @@ namespace Gotchi
     {
         static void Main(string[] args)
         {
-            //var person = new Person(Guid.NewGuid().ToString());
+            var gotchiService = new GotchiHostService(args);
+            var gotchiDataAccessService = gotchiService.DataAccess();
+            var commandService = gotchiService.CommandService();
 
-            //var personSettings = new PersonRepositorySettings();
-            //var personDb = new PersonRepository(personSettings);
-            //personDb.Upsert(person);
+            //var personId = CoreHelper.NewId();
+            var personId = "7294a4b7-362f-42d0-8780-5532bfba9001";
+            var portfolioId = "7ae53002-0af1-470f-81b3-29e53d1896e5";
+            //ICoreCommand c = new CreatePersonCommand(personId, "Doom", "Bolt");
+            
+            //ICoreCommand c = new CreatePortfolioCommand(personId, portfolioId);
 
-            var a = GameSettings.Values();
-            //var repo = new CryptoCoinRepository(new CryptoCoinRepositorySettings());
-            //var coinManger = new CryptoCoinManger(repo, new CoinMarketApi());
-            //coinManger.UpdateCoinValues();
+            //ICoreCommand c = new UpdateCryptoCoinRepositoryCommand();
 
-            var coin = new CryptoCoin() 
-            {
-                Id = "Test"
-            };
+            ICoreCommand c = new BuyAssetsCommand(portfolioId, "1", 100);
+            commandService.Process(c);
 
-            //PersonRepositorySettings repoSettings = new();
-            //PersonRepository personRepository = new(repoSettings);
+            //var portfolios = gotchiDataAccessService.PortfoliosByPersonId(personId);
+            var portfolio = gotchiDataAccessService.PortfolioById(portfolioId);
+            var t = 0;
 
-            //Person person = new(CoreHelper.NewId());
-
-            //personRepository.Upsert(person);
-
-            ICoreCommand c = new CreatePersonCommand(CoreHelper.NewId());
-            CommandService commandService = new CommandService();
-            commandService.Start(args, c);
-
+            //"9f93b577-27ea-4d72-93c2-c99975b48217"
             //ICoreCommand h = new CreatePersonCommand(CoreHelper.NewId());
             //var n = h.GetType();
 

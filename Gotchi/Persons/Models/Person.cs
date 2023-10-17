@@ -9,7 +9,8 @@ namespace Gotchi.Persons.Models;
 
 public class Person : ModelBase
 {
-    public string? Name { get; set; }
+    public string? FirstName { get; set; }
+    public string? LastName { get; set; }
 
     public Person(string id)
     {

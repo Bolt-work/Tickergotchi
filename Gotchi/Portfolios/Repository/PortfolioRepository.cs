@@ -4,7 +4,7 @@ using Gotchi.Portfolios.Models;
 namespace Gotchi.Portfolios.Repository;
 public class PortfolioRepository : RepositoryBase, IPortfolioRepository
 {
-    public PortfolioRepository(RepositorySettings repositorySettings)
+    public PortfolioRepository(PortfolioRepositorySettings repositorySettings)
         : base(repositorySettings)
     {
     }
@@ -16,7 +16,9 @@ public class PortfolioRepository : RepositoryBase, IPortfolioRepository
 
     public bool DeleteAll() => base.DeleteAllEntries<Portfolio>();
 
-    public Portfolio Get(string id) => base.GetEntry<Portfolio>(id);
+    public Portfolio GetByPortfolioId(string portfolioId) => base.GetEntry<Portfolio>(portfolioId);
+    
+    public ICollection<Portfolio> GetByPersonId(string personId) => base.GetManyByKeyStr<Portfolio>("AccountHolder.Id", personId);
 
     public ICollection<Portfolio> GetAll() => base.GetAllEntries<Portfolio>();
 

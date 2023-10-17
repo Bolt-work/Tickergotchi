@@ -1,4 +1,5 @@
 ﻿using Gotchi.Persons.CommandServices;
+using Gotchi.Persons.DataAccess;
 using Gotchi.Persons.Mangers;
 using Gotchi.Persons.Repository;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,12 +10,15 @@ public class PersonServiceConfig
 {
     public static void Register(IServiceCollection services)
     {
-        services.AddSingleton<PersonRepositorySettings>();
-        services.AddSingleton<IPersonRepository, PersonRepository>();
-        services.AddSingleton<IPersonManger, PersonManger>();
-
         // Command Handlers
         services.AddSingleton<CreatePersonCommandHandler>();
 
+        // Data Access
+        services.AddSingleton<IPersonDataAccess, PersonDataAccess>();
+
+        // Repository
+        services.AddSingleton<PersonRepositorySettings>();
+        services.AddSingleton<IPersonRepository, PersonRepository>();
+        services.AddSingleton<IPersonManger, PersonManger>();
     }
 }

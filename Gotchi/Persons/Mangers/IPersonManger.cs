@@ -4,9 +4,9 @@ namespace Gotchi.Persons.Mangers
 {
     public interface IPersonManger
     {
-        Person Create(string id);
+        Person Create(string id, string? firstName = null, string? lastName = null);
         bool Delete(Person person);
-        Person Get(string id);
+        Person GetById(string id);
         bool Store(Person person);
     }
 }

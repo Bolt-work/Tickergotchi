@@ -22,3 +22,9 @@ public class MethodNotFoundOnCommandHandlerException : ServiceExceptionBase
     private const string _message = "Method not found on commandHandler :: ";
     public MethodNotFoundOnCommandHandlerException(string? handlerName) : base(_message + handlerName) { }
 }
+
+public class NoDependencyInjectionRegisteredException : ServiceExceptionBase
+{
+    private const string _message = "No dependency injection  has been registered";
+    public NoDependencyInjectionRegisteredException() : base(_message) { }
+}

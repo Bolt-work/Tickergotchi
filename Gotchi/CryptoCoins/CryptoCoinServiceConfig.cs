@@ -1,4 +1,7 @@
-﻿using Gotchi.CryptoCoins.Mangers;
+﻿using CoinMarketCap;
+using Gotchi.CryptoCoins.CommandServices;
+using Gotchi.CryptoCoins.DataAccess;
+using Gotchi.CryptoCoins.Mangers;
 using Gotchi.CryptoCoins.Repository;
 using Gotchi.Persons.CommandServices;
 using Gotchi.Persons.Mangers;
@@ -16,12 +19,18 @@ public class CryptoCoinServiceConfig
 {
     public static void Register(IServiceCollection services)
     {
+        // Command Handlers
+        services.AddSingleton<UpdateCryptoCoinRepositoryCommandHandler>();
+
+        // DataAccess
+        services.AddSingleton<ICryptoCoinsDataAccess, CryptoCoinsDataAccess>();
+
+        // Coin market Api
+        services.AddSingleton<ICoinMarketApi, CoinMarketApi>();
+
+        // Repository
         services.AddSingleton<CryptoCoinRepositorySettings>();
         services.AddSingleton<ICryptoCoinRepository, CryptoCoinRepository>();
         services.AddSingleton<ICryptoCoinManger, CryptoCoinManger>();
-
-        // Command Handlers
-        //services.AddSingleton<CreatePersonCommandHandler>();
-
     }
 }

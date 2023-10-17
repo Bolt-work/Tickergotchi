@@ -8,7 +8,8 @@ public interface IPortfolioRepository
     bool Delete(string id);
     bool DeleteAll();
     bool Exists(string id);
-    Portfolio Get(string id);
+    Portfolio GetByPortfolioId(string portfolioId);
     ICollection<Portfolio> GetAll();
     bool Upsert(Portfolio model);
+    ICollection<Portfolio> GetByPersonId(string personId);
 }

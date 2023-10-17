@@ -1,9 +1,10 @@
-﻿using Gotchi.Persons.Models;
+﻿using Gotchi.Core.Mangers;
+using Gotchi.Persons.Models;
 using Gotchi.Persons.Repository;
 
 namespace Gotchi.Persons.Mangers
 {
-    public class PersonManger : IPersonManger
+    public class PersonManger : CoreMangerBase, IPersonManger
     {
         private IPersonRepository _personRepository;
 
@@ -12,14 +13,19 @@ namespace Gotchi.Persons.Mangers
             _personRepository = personRepository;
         }
 
-        public Person Create(string id)
+        public Person Create(string id, string? firstName = null, string? lastName = null)
         {
-            return new Person(id);
+            return new Person(id) 
+            {
+                FirstName = firstName,
+                LastName = lastName
+            };
         }
 
-        public Person Get(string id)
+        public Person GetById(string id)
         {
-            return _personRepository.Get(id);
+            var person = _personRepository.GetById(id);
+            return ThrowIfModelNull(person, id);
         }
 
         public bool Delete(Person person)

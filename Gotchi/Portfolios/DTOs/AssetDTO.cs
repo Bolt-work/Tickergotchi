@@ -1,13 +1,16 @@
-﻿namespace Gotchi.Portfolios.Models;
+﻿using Gotchi.Core.Models;
 
-public class Asset
+namespace Gotchi.Portfolios.DTOs;
+public class AssetDTO : ModelBase
 {
-    public string? Id { get; set; }
-    public string? CoinMarketId { get; set; }
+    public int CoinMarketId { get; set; }
     public string? Name { get; set; }
     public string? Slug { get; set; }
     public string? Symbol { get; set; }
+
     public float PriceWhenLastBought { get; set; }
+    public float CurrentPrice { get; set; }
     public float MoneyInvested { get; set; }
     public float Units { get; set; }
 }
+

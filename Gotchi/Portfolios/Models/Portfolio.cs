@@ -6,7 +6,16 @@ namespace Gotchi.Portfolios.Models;
 public class Portfolio : ModelBase
 {
     public Person AccountHolder;
-    public float Balance { get; set; }
+
+    private float _balance;
+    public float Balance
+    {
+        get {
+            BalanceLastUpdated = DateTime.Now;
+            return Utilities.CalculatePortfolioBalance(_balance, BalanceLastUpdated); 
+        }
+        set { _balance = value; }
+    }
     public DateTime BalanceLastUpdated { get; set; }
     public IList<Asset> Assets;
 
@@ -16,4 +25,5 @@ public class Portfolio : ModelBase
         AccountHolder = accountHolder;
         Assets = new List<Asset>();
     }
+
 }
