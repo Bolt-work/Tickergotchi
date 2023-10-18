@@ -11,7 +11,7 @@ using System.Xml.Linq;
 
 namespace Gotchi.CryptoCoins.Repository;
 
-public class CryptoCoinRepository : RepositoryBase, ICryptoCoinRepository
+public class CryptoCoinRepository : RepositoryBase<CryptoCoin>, ICryptoCoinRepository
 {
     public CryptoCoinRepository(CryptoCoinRepositorySettings repositorySettings)
         : base(repositorySettings)
@@ -20,19 +20,16 @@ public class CryptoCoinRepository : RepositoryBase, ICryptoCoinRepository
 
     public void Insert(IList<CryptoCoin> models)
     {
-        ConnectToMongo<CryptoCoin>().InsertMany(models);
+        ConnectToMongo().InsertMany(models);
     }
-    //public bool Upsert(CryptoCoin model) => Upsert(model, model.Id);
 
-    public bool DeleteAll() => DeleteAllEntries<CryptoCoin>();
+    public bool DeleteAll() => DeleteAllEntries();
+    public CryptoCoin GetByCoinMarketId(string coinMarketId) => base.GetByKeyStr("Id", coinMarketId);
+    public CryptoCoin GetByName(string name) => base.GetByKeyStr("Name", name);
+    public ICollection<CryptoCoin> GetBySlug(string slug) => base.GetManyByKeyStr("Slug", slug);
+    public ICollection<CryptoCoin> GetBySymbol(string symbol) => base.GetManyByKeyStr("Symbol", symbol);
+    public ICollection<CryptoCoin> GetAll() => base.GetAllEntries();
 
-    public CryptoCoin GetByCoinMarketId(string coinMarketId) => base.GetByKeyStr<CryptoCoin>("Id", coinMarketId);
-
-    public CryptoCoin GetByName(string name) => base.GetByKeyStr<CryptoCoin>("Name", name);
-    public ICollection<CryptoCoin> GetBySlug(string slug) => base.GetManyByKeyStr<CryptoCoin>("Slug", slug);
-    public ICollection<CryptoCoin> GetBySymbol(string symbol) => base.GetManyByKeyStr<CryptoCoin>("Symbol", symbol);
-    public ICollection<CryptoCoin> GetAll() => base.GetAllEntries<CryptoCoin>();
-
-    public bool Exists(string coinMarketId) => base.Exists<CryptoCoin>(coinMarketId);
+    public bool Exists(string coinMarketId) => base.EntryExists(coinMarketId);
 
 }

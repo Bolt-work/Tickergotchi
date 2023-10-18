@@ -1,15 +1,10 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
+﻿using Gotchi.Core.Repository;
 using MongoDB.Bson;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Gotchi.Core.Repository;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace Gotchi.Core.Models
 {
-    public abstract class ModelBase
+    public abstract class CoreModelBase
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]

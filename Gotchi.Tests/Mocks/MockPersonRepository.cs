@@ -17,11 +17,11 @@ public class MockPersonRepository : MockRepositoryBase<Person>,  IPersonReposito
 
         _db.Add(TestPerson);
     }
-    public bool Delete(Person person) => base.Delete(person);
-    public new bool Delete(string? id) => base.Delete(id);
-    public new bool DeleteAll() => base.DeleteAll();
-    public new bool Exists(string id) => base.Exists(id);
-    public new ICollection<Person> GetAll() => base.GetAll();
-    public new Person GetById(string personId) => base.GetById(personId);
-    public new bool Upsert(Person model) => base.Upsert(model);
+    public bool Delete(Person person) => base.DeleteEntry(person);
+    public bool Delete(string? id) => base.DeleteEntry(id);
+    public bool DeleteAll() => base.DeleteAllEntries();
+    public bool Exists(string id) => base.EntryExists(id);
+    public ICollection<Person> GetAll() => base.GetAllEntries();
+    public Person GetById(string personId) => base.GetEntryById(personId);
+    public bool Upsert(Person model) => base.UpsertEntry(model);
 }

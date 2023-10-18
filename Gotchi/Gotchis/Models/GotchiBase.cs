@@ -8,7 +8,7 @@ using Gotchi.Persons.Models;
 
 namespace Gotchi.Gotchis.Models;
 
-public abstract class GotchiBase : ModelBase
+public abstract class GotchiBase : CoreModelBase
 {
     public Person Owner;
     public string? Name { get; set; }

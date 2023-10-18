@@ -1,11 +1,12 @@
-﻿using Gotchi.Portfolios.Models;
+﻿using Gotchi.Core.Models;
+using Gotchi.Portfolios.Models;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using System.Xml.Linq;
 
 
 namespace Gotchi.Core.Repository;
-public abstract class RepositoryBase
+public abstract class RepositoryBase<T> where T : CoreModelBase
 {
     protected string _connectionString;
     protected string _databaseName;
@@ -18,14 +19,14 @@ public abstract class RepositoryBase
         _collectionName = repositorySettings.CollectionName;
     }
 
-    protected IMongoCollection<T> ConnectToMongo<T>()
+    protected IMongoCollection<T> ConnectToMongo()
     {
         var client = new MongoClient(_connectionString);
         var db = client.GetDatabase(_databaseName);
         return db.GetCollection<T>(_collectionName);
     }
 
-    protected string GetCoreId<T>(T model)
+    protected string GetCoreId(T model)
     {
         if (model is null)
             throw new ArgumentNullException("Mandatory parameter", nameof(model));
@@ -45,54 +46,54 @@ public abstract class RepositoryBase
         throw new CoreIdAttributeNotFoundException(model);
     }
 
-    protected bool Upsert<T>(T model)
+    protected bool UpsertEntry(T model)
     {
-        var id = GetCoreId<T>(model);
-        ConnectToMongo<T>().ReplaceOne(FilterId<T>(id), model, new ReplaceOptions { IsUpsert = true });
-        return true;
+        var id = GetCoreId(model);
+        var result = ConnectToMongo().ReplaceOne(FilterId(id), model, new ReplaceOptions { IsUpsert = true });
+        return result.IsAcknowledged;
     }
 
-    protected bool DeleteEntry<T>(string? id)
+    protected bool DeleteEntry(string? id)
     {
         id = id ?? throw new ArgumentNullException(id);
-        ConnectToMongo<T>().DeleteOne(FilterId<T>(id));
-        return true;
+        var result = ConnectToMongo().DeleteOne(FilterId(id));
+        return result.IsAcknowledged;
     }
 
-    protected bool DeleteAllEntries<T>()
+    protected bool DeleteAllEntries()
     {
         var filter = Builders<T>.Filter.Where(_ => true);
-        ConnectToMongo<T>().DeleteMany(filter);
-        return true;
+        var result = ConnectToMongo().DeleteMany(filter);
+        return result.IsAcknowledged;
     }
 
-    protected T GetEntry<T>(string id)
+    protected T GetEntryById(string id)
     {
-        return ConnectToMongo<T>().Find(FilterId<T>(id)).FirstOrDefault();
+        return ConnectToMongo().Find(x => x.Id == id).FirstOrDefault();
     }
 
-    protected bool Exists<T>(string id)
+    protected bool EntryExists(string id)
     {
-        return ConnectToMongo<T>().Find(FilterId<T>(id)).Any();
+        return ConnectToMongo().Find(x => x.Id == id).Any();
     }
 
-    protected ICollection<T> GetAllEntries<T>()
+    protected ICollection<T> GetAllEntries()
     {
-        return ConnectToMongo<T>().Find(_ => true).ToList();
+        return ConnectToMongo().Find(_ => true).ToList();
     }
 
-    protected T GetByKeyStr<T>(string key, string value)
+    protected T GetByKeyStr(string key, string value)
     {
-        return ConnectToMongo<T>().Find<T>(Filter<T>(key, value)).SingleOrDefault();
+        return ConnectToMongo().Find(Filter(key, value)).SingleOrDefault();
     }
 
-    protected ICollection<T> GetManyByKeyStr<T>(string key, string value)
+    protected ICollection<T> GetManyByKeyStr(string key, string value)
     {
-        return ConnectToMongo<T>().Find(Filter<T>(key, value)).ToList();
+        return ConnectToMongo().Find(Filter(key, value)).ToList();
     }
 
-    protected FilterDefinition<T> FilterId<T>(string id) => Filter<T>("Id", id);
-    protected FilterDefinition<T> Filter<T>(string key, string id)
+    protected FilterDefinition<T> FilterId(string id) => Filter("Id", id);
+    protected FilterDefinition<T> Filter(string key, string id)
     {
         return Builders<T>.Filter.Eq(key, id);
     }

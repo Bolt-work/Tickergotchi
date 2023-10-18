@@ -2,7 +2,7 @@
 
 namespace Gotchi.Portfolios.Models;
 
-public class CryptoCoin :ModelBase
+public class CryptoCoin :CoreModelBase
 {
     // Id is coin market Id
     public string? Name { get; set; }

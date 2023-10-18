@@ -7,7 +7,7 @@ using Gotchi.Core.Models;
 
 namespace Gotchi.Persons.Models;
 
-public class Person : ModelBase
+public class Person : CoreModelBase
 {
     public string? FirstName { get; set; }
     public string? LastName { get; set; }

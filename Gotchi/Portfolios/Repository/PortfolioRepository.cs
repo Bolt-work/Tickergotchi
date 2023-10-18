@@ -2,26 +2,20 @@
 using Gotchi.Portfolios.Models;
 
 namespace Gotchi.Portfolios.Repository;
-public class PortfolioRepository : RepositoryBase, IPortfolioRepository
+public class PortfolioRepository : RepositoryBase<Portfolio>, IPortfolioRepository
 {
     public PortfolioRepository(PortfolioRepositorySettings repositorySettings)
         : base(repositorySettings)
     {
     }
 
-    public bool Upsert(Portfolio model) => base.Upsert(model);
-
-    public bool Delete(Portfolio portfolio) => base.DeleteEntry<Portfolio>(portfolio.Id);
-    public bool Delete(string id) => base.DeleteEntry<Portfolio>(id);
-
-    public bool DeleteAll() => base.DeleteAllEntries<Portfolio>();
-
-    public Portfolio GetByPortfolioId(string portfolioId) => base.GetEntry<Portfolio>(portfolioId);
-    
-    public ICollection<Portfolio> GetByPersonId(string personId) => base.GetManyByKeyStr<Portfolio>("AccountHolder.Id", personId);
-
-    public ICollection<Portfolio> GetAll() => base.GetAllEntries<Portfolio>();
-
-    public bool Exists(string id) => base.Exists<Portfolio>(id);
+    public bool Upsert(Portfolio model) => base.UpsertEntry(model);
+    public bool Delete(Portfolio portfolio) => base.DeleteEntry(portfolio.Id);
+    public bool Delete(string id) => base.DeleteEntry(id);
+    public bool DeleteAll() => base.DeleteAllEntries();
+    public Portfolio GetByPortfolioId(string portfolioId) => base.GetEntryById(portfolioId);
+    public ICollection<Portfolio> GetByPersonId(string personId) => base.GetManyByKeyStr("AccountHolder.Id", personId);
+    public ICollection<Portfolio> GetAll() => base.GetAllEntries();
+    public bool Exists(string id) => base.EntryExists(id);
 
 }

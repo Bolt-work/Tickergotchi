@@ -3,7 +3,7 @@ using Gotchi.Persons.Models;
 
 namespace Gotchi.Portfolios.Models;
 
-public class Portfolio : ModelBase
+public class Portfolio : CoreModelBase
 {
     public Person AccountHolder;
 

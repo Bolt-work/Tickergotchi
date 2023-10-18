@@ -25,11 +25,11 @@ public class MockCryptoCoinRepository : MockRepositoryBase<CryptoCoin>, ICryptoC
         _db.Add(TestCoin);
     }
 
-    public new bool DeleteAll() => base.DeleteAll();
-    public new bool Exists(string coinMarketId) => base.Exists(coinMarketId);
-    public new ICollection<CryptoCoin> GetAll() => base.GetAll();
+    public bool DeleteAll() => base.DeleteAllEntries();
+    public bool Exists(string coinMarketId) => base.EntryExists(coinMarketId);
+    public ICollection<CryptoCoin> GetAll() => base.GetAllEntries();
 
-    public CryptoCoin GetByCoinMarketId(string coinMarketId) => base.GetById(coinMarketId);
+    public CryptoCoin GetByCoinMarketId(string coinMarketId) => base.GetEntryById(coinMarketId);
 
     public CryptoCoin GetByName(string name)
     {
@@ -46,5 +46,5 @@ public class MockCryptoCoinRepository : MockRepositoryBase<CryptoCoin>, ICryptoC
         return _db.Where(x => x.Symbol == symbol).ToList();
     }
 
-    public new void Insert(IList<CryptoCoin> models) => base.Insert(models);
+    public void Insert(IList<CryptoCoin> models) => base.InsertEntries(models);
 }

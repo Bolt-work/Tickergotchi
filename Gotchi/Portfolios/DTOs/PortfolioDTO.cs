@@ -2,7 +2,7 @@
 using Gotchi.Persons.DTOs;
 
 namespace Gotchi.Portfolios.DTOs;
-public class PortfolioDTO : ModelBase
+public class PortfolioDTO : CoreModelBase
 {
     public PersonDTO AccountHolder;
     private float _balance;

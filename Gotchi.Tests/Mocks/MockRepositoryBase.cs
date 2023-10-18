@@ -3,7 +3,7 @@ using MongoDB.Driver;
 
 namespace Gotchi.Tests.Mocks;
 
-public abstract class MockRepositoryBase<T> where T : ModelBase
+public abstract class MockRepositoryBase<T> where T : CoreModelBase
 {
     public List<T> _db;
 
@@ -12,50 +12,50 @@ public abstract class MockRepositoryBase<T> where T : ModelBase
         _db = new List<T>();
     }
 
-    protected bool Delete(ModelBase person) => Delete(person.Id);
+    protected bool DeleteEntry(CoreModelBase person) => DeleteEntry(person.Id);
 
-    protected bool Delete(string? id)
+    protected bool DeleteEntry(string? id)
     {
         _db.RemoveAll(x => x.Id == id);
         return true;
     }
 
-    protected bool DeleteAll()
+    protected bool DeleteAllEntries()
     {
         _db = new List<T>();
         return true;
     }
 
-    protected bool Exists(string id)
+    protected bool EntryExists(string id)
     {
         return _db.Any(x => x.Id == id);
     }
 
-    protected ICollection<T> GetAll()
+    protected ICollection<T> GetAllEntries()
     {
         return _db;
     }
 
-    protected T GetById(string personId)
+    protected T GetEntryById(string personId)
     {
         return  _db.Single(x => x.Id == personId);
     }
 
-    protected bool Insert(T model)
+    protected bool InsertEntry(T model)
     {
         _db.Add(model);
         return true;
     }
 
-    public void Insert(IList<T> models) 
+    public void InsertEntries(IList<T> models) 
     {
         _db.AddRange(models);
     }
 
-    protected bool Upsert(T model)
+    protected bool UpsertEntry(T model)
     {
-        Delete(model);
-        Insert(model);
+        DeleteEntry(model);
+        InsertEntry(model);
         return true;
     }
 

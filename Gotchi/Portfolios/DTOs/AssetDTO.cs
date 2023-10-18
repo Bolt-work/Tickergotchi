@@ -1,7 +1,7 @@
 ﻿using Gotchi.Core.Models;
 
 namespace Gotchi.Portfolios.DTOs;
-public class AssetDTO : ModelBase
+public class AssetDTO : CoreModelBase
 {
     public int CoinMarketId { get; set; }
     public string? Name { get; set; }
