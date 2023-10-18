@@ -13,9 +13,18 @@ public class CannotAffordPurchaseOfAssetException : CoreMangerException
 
 public class AssetNotFoundException : CoreMangerException
 {
-    public AssetNotFoundException(Portfolio portfolio, CryptoCoin coin)
+    public AssetNotFoundException(Portfolio portfolio, string coinMarketId)
         : base(
-            $"Asset with CoinMarketId : {coin.Id} not found in portfolio with id : {coin.Id}"
+            $"Asset with CoinMarketId : {coinMarketId} not found in portfolio with id : {coinMarketId}"
+            )
+    { }
+}
+
+public class AssetDoesHaveEnoughUnitsToSell : CoreMangerException
+{
+    public AssetDoesHaveEnoughUnitsToSell(Asset asset, int units)
+        : base(
+            $"Asset with CoinMarketId : {asset.CoinMarketId} only has {asset.Units} units. Can not sell {units} units"
             )
     { }
 }

@@ -8,4 +8,5 @@ public class CoreMangerBase
         var checkObject = model ?? throw new ModelIsNullException<T>(identifier);
         return (T) checkObject;
     }
+
 }

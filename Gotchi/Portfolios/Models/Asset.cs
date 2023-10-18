@@ -8,6 +8,6 @@ public class Asset
     public string? Slug { get; set; }
     public string? Symbol { get; set; }
     public float PriceWhenLastBought { get; set; }
-    public float MoneyInvested { get; set; }
+    public float Profit { get; set; }
     public float Units { get; set; }
 }

@@ -15,6 +15,9 @@ namespace Gotchi.Persons.Mangers
 
         public Person Create(string id, string? firstName = null, string? lastName = null)
         {
+            if(_personRepository.Exists(id))
+                throw new ModelWithIdAlreadyExistsException<Person>(id);
+
             return new Person(id) 
             {
                 FirstName = firstName,

@@ -14,6 +14,7 @@ namespace Gotchi.Portfolios.Mangers
         {
             _portfolioRepository = portfolioRepository;
         }
+
         public Portfolio CreatePortfolio(Person accountHolder, string? portfolioId = null)
         {
             var id = portfolioId ?? CoreHelper.NewId();
@@ -45,10 +46,10 @@ namespace Gotchi.Portfolios.Mangers
             if (amountInValue > balance)
                 throw new CannotAffordPurchaseOfAssetException(portfolio, coin, amountInValue);
 
-            if (AssetAlreadyOwned(portfolio, coin))
+            if (AssetOwned(portfolio, coin))
             {
                 var asset = RetrieveAsset(portfolio, coin);
-                asset.MoneyInvested += amountInValue;
+                asset.Profit -= amountInValue;
                 asset.PriceWhenLastBought = coin.Price;
             }
             else 
@@ -61,16 +62,37 @@ namespace Gotchi.Portfolios.Mangers
             portfolio.BalanceLastUpdated = DateTime.Now;
         }
 
-        private bool AssetAlreadyOwned(Portfolio portfolio, CryptoCoin coin) 
+        public void SellAsset(Portfolio portfolio, CryptoCoin coin, int units) 
+        {
+            var asset = RetrieveAsset(portfolio, coin);
+
+            if (asset.Units < units)
+                throw new AssetDoesHaveEnoughUnitsToSell(asset, units);
+
+            var value = units * coin.Price;
+            asset.Units -= units;
+            asset.Profit += value;
+
+            portfolio.Balance += value;
+            portfolio.BalanceLastUpdated = DateTime.Now;
+        }
+
+        private bool AssetOwned(Portfolio portfolio, CryptoCoin coin) 
         {
             return portfolio.Assets.Any(x => x.CoinMarketId == coin.Id);
         }
 
-        private Asset RetrieveAsset(Portfolio portfolio, CryptoCoin coin)
+        private Asset RetrieveAsset(Portfolio portfolio, CryptoCoin coin) 
         {
-            var asset = portfolio.Assets.Single(x => x.CoinMarketId == coin.Id);
+            var coinId = coin.Id ?? throw new ArgumentNullException(nameof(coin));
+            return RetrieveAsset(portfolio, coinId);
+        }
+
+        private Asset RetrieveAsset(Portfolio portfolio, string coinMarketId)
+        {
+            var asset = portfolio.Assets.Single(x => x.CoinMarketId == coinMarketId);
             if(asset is null)
-                throw new AssetNotFoundException(portfolio, coin);
+                throw new AssetNotFoundException(portfolio, coinMarketId);
 
             return asset;
         }
@@ -86,18 +108,19 @@ namespace Gotchi.Portfolios.Mangers
                 Symbol = coin.Symbol,
                 PriceWhenLastBought = coin.Price,
                 Units = amountInValue,
-                MoneyInvested = amountInValue,
+                Profit = 0 - amountInValue,
             };
         }
 
-        public bool Delete(Portfolio portfolio)
+        public void RemovePortfolioAsset(Portfolio portfolio, string coinMarketId)
         {
-            return _portfolioRepository.Delete(portfolio);
+            var asset = RetrieveAsset(portfolio, coinMarketId);
+            portfolio.Assets.Remove(asset);
         }
 
-        public bool Delete(string id)
+        public bool DeletePortfolio(Portfolio portfolio)
         {
-            return _portfolioRepository.Delete(id);
+            return _portfolioRepository.Delete(portfolio);
         }
 
         public void Update(Portfolio portfolio)

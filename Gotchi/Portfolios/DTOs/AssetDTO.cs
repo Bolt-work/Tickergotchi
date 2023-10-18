@@ -10,7 +10,7 @@ public class AssetDTO : ModelBase
 
     public float PriceWhenLastBought { get; set; }
     public float CurrentPrice { get; set; }
-    public float MoneyInvested { get; set; }
+    public float Profit { get; set; }
     public float Units { get; set; }
 }
 

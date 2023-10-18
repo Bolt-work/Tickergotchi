@@ -1,9 +1,7 @@
-﻿using Amazon.Runtime.Internal.Util;
-using Gotchi.Core.Services;
+﻿using Gotchi.Core.Services;
 using Gotchi.CryptoCoins.Mangers;
 using Gotchi.Portfolios.Mangers;
 using Microsoft.Extensions.Logging;
-using System.Reflection.Metadata;
 
 namespace Gotchi.Portfolios.CommandService;
 

@@ -14,11 +14,13 @@ public class PortfolioServiceConfig
     {
         // CommandHandler
         services.AddSingleton<CreatePortfolioCommandHandler>();
+        services.AddSingleton<DeletePortfolioCommandHandler>();
+        services.AddSingleton<RemoveAssetCommandHandler>();
         services.AddSingleton<BuyAssetsCommandHandler>();
+        services.AddSingleton<SellAssetsCommandHandler>();
 
         // DataAccess
         services.AddSingleton<IPortfolioDataAccess, PortfolioDataAccess>();
-
 
         // Repository
         services.AddSingleton<PortfolioRepositorySettings>();
