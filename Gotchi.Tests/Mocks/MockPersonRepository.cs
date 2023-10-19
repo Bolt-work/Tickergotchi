@@ -7,16 +7,20 @@ public class MockPersonRepository : MockRepositoryBase<Person>,  IPersonReposito
 {
     public Person TestPerson;
 
-    public MockPersonRepository()
+    public MockPersonRepository(bool addTestData = false)
     {
-        TestPerson = new Person("testId")
+        TestPerson = new Person("testPersonId")
         {
             FirstName = "testFirst",
             LastName = "testLast"
         };
 
-        _db.Add(TestPerson);
+        if(addTestData)
+            _db.Add(TestPerson);
     }
+
+    public void AddTestPerson() => _db.Add(TestPerson);
+
     public bool Delete(Person person) => base.DeleteEntry(person);
     public bool Delete(string? id) => base.DeleteEntry(id);
     public bool DeleteAll() => base.DeleteAllEntries();

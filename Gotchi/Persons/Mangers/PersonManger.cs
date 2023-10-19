@@ -20,8 +20,8 @@ namespace Gotchi.Persons.Mangers
 
             return new Person(id) 
             {
-                FirstName = firstName,
-                LastName = lastName
+                FirstName = firstName ?? string.Empty,
+                LastName = lastName ?? string.Empty,
             };
         }
 

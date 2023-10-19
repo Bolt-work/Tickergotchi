@@ -13,7 +13,7 @@ public class UpdateCryptoCoinRepositoryCommand : ICoreCommand
 public class UpdateCryptoCoinRepositoryCommandHandler : CoreCommandHandlerBase
 {
     private ICryptoCoinManger _cryptoCoinManger;
-    public UpdateCryptoCoinRepositoryCommandHandler(ICryptoCoinManger cryptoCoinManger, ILogger<CreatePersonCommandHandler> logger)
+    public UpdateCryptoCoinRepositoryCommandHandler(ICryptoCoinManger cryptoCoinManger, ILogger<UpdateCryptoCoinRepositoryCommandHandler> logger)
         : base(logger)
     {
         _cryptoCoinManger = cryptoCoinManger;

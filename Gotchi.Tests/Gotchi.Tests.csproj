@@ -25,11 +25,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CoinMarketCap\CoinMarketCap.csproj" />
     <ProjectReference Include="..\Gotchi\Gotchi.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="CryptoCoins\" />
   </ItemGroup>
 
 </Project>

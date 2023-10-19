@@ -19,6 +19,9 @@ namespace Gotchi.Portfolios.Mangers
         {
             var id = portfolioId ?? CoreHelper.NewId();
 
+            if (_portfolioRepository.Exists(id))
+                throw new ModelWithIdAlreadyExistsException<Portfolio>(id);
+
             return new Portfolio(id, accountHolder) 
             {
                 BalanceLastUpdated = DateTime.Now,

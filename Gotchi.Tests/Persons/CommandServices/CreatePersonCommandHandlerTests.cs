@@ -6,7 +6,6 @@ using Gotchi.Persons.Mangers;
 using Gotchi.Persons.Models;
 using Gotchi.Tests.Mocks;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Gotchi.Tests.Persons.CommandServices;
 
@@ -20,9 +19,9 @@ public class CreatePersonCommandHandlerTests
     public CreatePersonCommandHandlerTests()
     {
         //Dependencies
-        _personRepo = new MockPersonRepository();
-        _personManger = new PersonManger(_personRepo);
-        _logger = new NullLogger<CreatePersonCommandHandler>();
+        _personRepo = CommandHandlerHelper.MockPersonRepository();
+        _personManger = CommandHandlerHelper.PersonManger(_personRepo);
+        _logger = CommandHandlerHelper.Logger<CreatePersonCommandHandler>();
         _commandHandler = new CreatePersonCommandHandler(_personManger, _logger);
     }
 
@@ -47,11 +46,12 @@ public class CreatePersonCommandHandlerTests
     public void Handle_InvalidCreatePersonCommand_AlreadyExistsError()
     {
         // Arrange
+        _personRepo.AddTestPerson();
         var personId = _personRepo.TestPerson.Id;
-        var command = new CreatePersonCommand(personId, "First", "Last");
+        var command = new CreatePersonCommand(personId!, "First", "Last");
 
         //Act
-        Action act = () => _commandHandler.Handle(command);;
+        Action act = () => _commandHandler.Handle(command);
 
         // Assert
         act.Should().Throw<ModelWithIdAlreadyExistsException<Person>>();

@@ -1,7 +1,11 @@
 ﻿using CoinMarketCap;
 using Gotchi.Core.Mangers;
+using Gotchi.Core.Repository;
 using Gotchi.CryptoCoins.Repository;
 using Gotchi.Portfolios.Models;
+using System.Diagnostics;
+using System.Xml.Linq;
+
 namespace Gotchi.CryptoCoins.Mangers;
 
 public class CryptoCoinManger : CoreMangerBase, ICryptoCoinManger
@@ -21,18 +25,22 @@ public class CryptoCoinManger : CoreMangerBase, ICryptoCoinManger
         var coins = new List<CryptoCoin>();
         DateTime now = DateTime.Now;
 
-        foreach (var datum in jsonModel.data)
+        var data = jsonModel.data ?? throw new CoinMarketApiModelPropertyIsNullExceptions(jsonModel, "data");
+
+        foreach (var datum in data)
         {
-            CryptoCoin coin = new()
-            {
-                Id = datum.id.ToString(),
-                Name = datum.name,
-                Slug = datum.slug,
-                Symbol = datum.symbol,
-                CoinMarketLastUpdated = datum.last_updated,
-                LastUpdated = now,
-                Price = datum.quote.USD.price
-            };
+            CryptoCoin coin = new();
+
+            coin.Id = datum.id.ToString();
+            coin.Name = datum.name;
+            coin.Slug = datum.slug;
+            coin.Symbol = datum.symbol;
+            coin.CoinMarketLastUpdated = datum.last_updated;
+            coin.LastUpdated = now;
+
+            var quote = datum.quote ?? throw new CoinMarketApiModelPropertyIsNullExceptions(datum, "quote");
+            var usd = quote.USD ?? throw new CoinMarketApiModelPropertyIsNullExceptions(quote, "USD");
+            coin.Price = usd.price;
 
             coins.Add(coin);
         }
@@ -42,6 +50,7 @@ public class CryptoCoinManger : CoreMangerBase, ICryptoCoinManger
 
         return true;
     }
+
 
     public CryptoCoin CryptoCoinByCoinMarketId(string coinMarketId) 
     {

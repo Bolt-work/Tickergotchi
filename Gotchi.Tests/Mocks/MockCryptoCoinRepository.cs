@@ -1,15 +1,12 @@
 ﻿using Gotchi.CryptoCoins.Repository;
 using Gotchi.Portfolios.Models;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Xml.Linq;
 
 namespace Gotchi.Tests.Mocks;
 
 public class MockCryptoCoinRepository : MockRepositoryBase<CryptoCoin>, ICryptoCoinRepository
 {
     CryptoCoin TestCoin;
-    public MockCryptoCoinRepository()
+    public MockCryptoCoinRepository(bool addTestData = false)
     {
         TestCoin = new CryptoCoin
         {
@@ -22,8 +19,12 @@ public class MockCryptoCoinRepository : MockRepositoryBase<CryptoCoin>, ICryptoC
             LastUpdated = DateTime.Now,
         };
 
-        _db.Add(TestCoin);
+        if (addTestData)
+            AddTestCoin();
     }
+
+    public void AddTestCoin() => _db.Add(TestCoin);
+
 
     public bool DeleteAll() => base.DeleteAllEntries();
     public bool Exists(string coinMarketId) => base.EntryExists(coinMarketId);
