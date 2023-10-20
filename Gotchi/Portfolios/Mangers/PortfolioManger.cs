@@ -46,12 +46,16 @@ namespace Gotchi.Portfolios.Mangers
         {
             // Encase it updates
             var balance = portfolio.Balance;
+            if(amountInValue <= 0)
+                throw new ArgumentOutOfRangeException(nameof(amountInValue));
+
             if (amountInValue > balance)
                 throw new CannotAffordPurchaseOfAssetException(portfolio, coin, amountInValue);
 
             if (AssetOwned(portfolio, coin))
             {
                 var asset = RetrieveAsset(portfolio, coin);
+                asset.Units += amountInValue;
                 asset.Profit -= amountInValue;
                 asset.PriceWhenLastBought = coin.Price;
             }
@@ -68,6 +72,8 @@ namespace Gotchi.Portfolios.Mangers
         public void SellAsset(Portfolio portfolio, CryptoCoin coin, int units) 
         {
             var asset = RetrieveAsset(portfolio, coin);
+            if (units <= 0)
+                throw new ArgumentOutOfRangeException(nameof(units));
 
             if (asset.Units < units)
                 throw new AssetDoesHaveEnoughUnitsToSell(asset, units);
@@ -75,6 +81,7 @@ namespace Gotchi.Portfolios.Mangers
             var value = units * coin.Price;
             asset.Units -= units;
             asset.Profit += value;
+            asset.PriceWhenLastBought = coin.Price;
 
             portfolio.Balance += value;
             portfolio.BalanceLastUpdated = DateTime.Now;
@@ -93,7 +100,7 @@ namespace Gotchi.Portfolios.Mangers
 
         private Asset RetrieveAsset(Portfolio portfolio, string coinMarketId)
         {
-            var asset = portfolio.Assets.Single(x => x.CoinMarketId == coinMarketId);
+            var asset = portfolio.Assets.SingleOrDefault(x => x.CoinMarketId == coinMarketId);
             if(asset is null)
                 throw new AssetNotFoundException(portfolio, coinMarketId);
 

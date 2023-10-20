@@ -10,9 +10,11 @@ public class Portfolio : CoreModelBase
     private float _balance;
     public float Balance
     {
-        get {
+        get 
+        {
+            _balance = PortfolioUtilities.CalculatePortfolioBalance(_balance, BalanceLastUpdated);
             BalanceLastUpdated = DateTime.Now;
-            return Utilities.CalculatePortfolioBalance(_balance, BalanceLastUpdated); 
+            return _balance;
         }
         set { _balance = value; }
     }

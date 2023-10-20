@@ -11,8 +11,9 @@ public class PortfolioDTO : CoreModelBase
     {
         get
         {
+            _balance = PortfolioUtilities.CalculatePortfolioBalance(_balance, BalanceLastUpdated);
             BalanceLastUpdated = DateTime.Now;
-            return Utilities.CalculatePortfolioBalance(_balance, BalanceLastUpdated);
+            return _balance;
         }
         set { _balance = value; }
     }

@@ -12,7 +12,7 @@ public abstract class MockRepositoryBase<T> where T : CoreModelBase
         _db = new List<T>();
     }
 
-    protected bool DeleteEntry(CoreModelBase person) => DeleteEntry(person.Id);
+    protected bool DeleteEntry(CoreModelBase model) => DeleteEntry(model.Id);
 
     protected bool DeleteEntry(string? id)
     {
@@ -36,9 +36,9 @@ public abstract class MockRepositoryBase<T> where T : CoreModelBase
         return _db;
     }
 
-    protected T GetEntryById(string personId)
+    protected T GetEntryById(string id)
     {
-        return  _db.Single(x => x.Id == personId);
+        return  _db.Single(x => x.Id == id);
     }
 
     protected bool InsertEntry(T model)

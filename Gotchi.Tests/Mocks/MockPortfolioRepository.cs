@@ -28,14 +28,18 @@ public class MockPortfolioRepository : MockRepositoryBase<Portfolio> , IPortfoli
             Profit = 0 - 2000F,
         };
 
-        TestPortfolio.Assets.Add(TestAsset);
-
         if (withTestData)
-            AddTestPortfolio();
+            AddTestPortfolioAndAsset();
     }
 
     public void AddTestPortfolio() 
     {
+        _db.Add(TestPortfolio);
+    }
+
+    public void AddTestPortfolioAndAsset()
+    {
+        TestPortfolio.Assets.Add(TestAsset);
         _db.Add(TestPortfolio);
     }
 

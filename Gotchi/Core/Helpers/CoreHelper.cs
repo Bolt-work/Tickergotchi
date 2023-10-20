@@ -1,12 +1,4 @@
-﻿using Gotchi.Portfolios.DTOs;
-using Gotchi.Portfolios.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Gotchi.Core.Helpers;
+﻿namespace Gotchi.Core.Helpers;
 
 public static class CoreHelper
 {
@@ -15,7 +7,8 @@ public static class CoreHelper
     public static int NumberOfHoursPassed(DateTime since) => NumberOfHoursPassed(since, DateTime.Now);
     public static int NumberOfHoursPassed(DateTime since, DateTime until) 
     {
-        return until.Subtract(since).Hours;
+        var hours = until.Subtract(since).Hours;
+        return (hours <= 0) ? 0 : hours;
     }
 
 }

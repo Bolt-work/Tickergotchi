@@ -11,7 +11,6 @@ namespace Gotchi.Tests.Portfolios.CommandServices;
 
 public class CreatePortfolioCommandHandlerTests
 {
-
     private MockPortfolioRepository _portfolioRepo;
     private PortfolioManger _portfolioManger;
 
@@ -38,6 +37,7 @@ public class CreatePortfolioCommandHandlerTests
     public void Handle_ValidCreatePortfolioCommand_CreatesPortfolio()
     {
         // Arrange
+        _portfolioRepo.DeleteAll();
         var personId = _personRepository.TestPerson.Id;
         var portfolioId = "portfolioUnitTestId";
         var command = new CreatePortfolioCommand(personId!, portfolioId);
@@ -55,6 +55,7 @@ public class CreatePortfolioCommandHandlerTests
     public void Handle_InvalidCreatePortfolioCommand_AlreadyExistsError()
     {
         // Arrange
+        _portfolioRepo.DeleteAll();
         _portfolioRepo.AddTestPortfolio();
         var personId = _personRepository.TestPerson.Id;
         var portfolioId = _portfolioRepo.TestPortfolio.Id;

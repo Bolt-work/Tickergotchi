@@ -31,7 +31,7 @@ public class SellAssetsCommandHandler : CoreCommandHandlerBase
         _cryptoCoinManger = cryptoCoinManger;  
     }
 
-    public void Handel(SellAssetsCommand command) 
+    public void Handle(SellAssetsCommand command) 
     {
         base.Handle(command);
         var portfolio = _portfolioManger.GetByPortfolioId(command.PortfolioId);

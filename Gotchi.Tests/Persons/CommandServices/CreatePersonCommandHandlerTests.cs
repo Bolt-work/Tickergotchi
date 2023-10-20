@@ -29,6 +29,7 @@ public class CreatePersonCommandHandlerTests
     public void Handle_ValidCreatePersonCommand_PersonIsCreated() 
     {
         // Arrange
+        _personRepo.DeleteAll();
         var personId = CoreHelper.NewId();
         var command = new CreatePersonCommand(personId, "First", "Last");
 
@@ -46,6 +47,7 @@ public class CreatePersonCommandHandlerTests
     public void Handle_InvalidCreatePersonCommand_AlreadyExistsError()
     {
         // Arrange
+        _personRepo.DeleteAll();
         _personRepo.AddTestPerson();
         var personId = _personRepo.TestPerson.Id;
         var command = new CreatePersonCommand(personId!, "First", "Last");
@@ -56,16 +58,4 @@ public class CreatePersonCommandHandlerTests
         // Assert
         act.Should().Throw<ModelWithIdAlreadyExistsException<Person>>();
     }
-
-    //[Fact]
-    //public void Handle_InvalidCreatePersonCommand_ValidationErrors()
-    //{
-
-    //}
-
-    //[Fact]
-    //public void Handle_CreatePersonCommand_DataStoreInteraction() 
-    //{
-
-    //}
 }

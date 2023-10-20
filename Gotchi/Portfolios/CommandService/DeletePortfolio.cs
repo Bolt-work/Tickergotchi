@@ -1,5 +1,4 @@
 ﻿using Gotchi.Core.Services;
-using Gotchi.CryptoCoins.Mangers;
 using Gotchi.Portfolios.Mangers;
 using Microsoft.Extensions.Logging;
 
@@ -24,7 +23,7 @@ public class DeletePortfolioCommandHandler : CoreCommandHandlerBase
         _portfolioManger = portfolioManger;
     }
 
-    public void Handle(BuyAssetsCommand command)
+    public void Handle(DeletePortfolioCommand command)
     {
         base.Handle(command);
         var portfolio = _portfolioManger.GetByPortfolioId(command.PortfolioId);
