@@ -5,6 +5,6 @@ namespace Gotchi.Gotchis.Mangers
 {
     public interface IGotchiManager
     {
-        CryptoGotchi CreateCryptoGotchi(string id, Person owner);
+        CryptoGotchi CreateCryptoGotchi(Person owner, string? gotchiId = null);
     }
 }

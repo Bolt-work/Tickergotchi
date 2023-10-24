@@ -72,6 +72,7 @@ namespace Gotchi.Portfolios.Mangers
         public void SellAsset(Portfolio portfolio, CryptoCoin coin, int units) 
         {
             var asset = RetrieveAsset(portfolio, coin);
+
             if (units <= 0)
                 throw new ArgumentOutOfRangeException(nameof(units));
 
