@@ -1,5 +1,5 @@
 ﻿using Gotchi.Core.Services;
-using Gotchi.Portfolios.Mangers;
+using Gotchi.Portfolios.Managers;
 using Microsoft.Extensions.Logging;
 
 namespace Gotchi.Portfolios.CommandService;
@@ -15,18 +15,18 @@ public class DeletePortfolioCommand : ICoreCommand
 
 public class DeletePortfolioCommandHandler : CoreCommandHandlerBase
 {
-    private IPortfolioManger _portfolioManger;
+    private IPortfolioManager _portfolioManager;
 
-    public DeletePortfolioCommandHandler(IPortfolioManger portfolioManger, ILogger<DeletePortfolioCommandHandler> logger)
+    public DeletePortfolioCommandHandler(IPortfolioManager portfolioManager, ILogger<DeletePortfolioCommandHandler> logger)
         : base(logger)
     {
-        _portfolioManger = portfolioManger;
+        _portfolioManager = portfolioManager;
     }
 
     public void Handle(DeletePortfolioCommand command)
     {
         base.Handle(command);
-        var portfolio = _portfolioManger.GetByPortfolioId(command.PortfolioId);
-        _portfolioManger.DeletePortfolio(portfolio);
+        var portfolio = _portfolioManager.GetByPortfolioId(command.PortfolioId);
+        _portfolioManager.DeletePortfolio(portfolio);
     }
 }

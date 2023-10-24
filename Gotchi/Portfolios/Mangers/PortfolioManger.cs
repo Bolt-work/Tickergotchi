@@ -1,16 +1,16 @@
 ﻿using Gotchi.Core.Helpers;
-using Gotchi.Core.Mangers;
+using Gotchi.Core.Managers;
 using Gotchi.Persons.Models;
 using Gotchi.Portfolios.Models;
 using Gotchi.Portfolios.Repository;
 
-namespace Gotchi.Portfolios.Mangers
+namespace Gotchi.Portfolios.Managers
 {
-    public class PortfolioManger : CoreMangerBase, IPortfolioManger
+    public class PortfolioManager : CoreManagerBase, IPortfolioManager
     {
         private IPortfolioRepository _portfolioRepository;
 
-        public PortfolioManger(IPortfolioRepository portfolioRepository)
+        public PortfolioManager(IPortfolioRepository portfolioRepository)
         {
             _portfolioRepository = portfolioRepository;
         }

@@ -1,8 +1,8 @@
 ﻿using FluentAssertions;
 using Gotchi.Core.Helpers;
-using Gotchi.Core.Mangers;
+using Gotchi.Core.Managers;
 using Gotchi.Persons.CommandServices;
-using Gotchi.Persons.Mangers;
+using Gotchi.Persons.Managers;
 using Gotchi.Persons.Models;
 using Gotchi.Tests.Mocks;
 using Microsoft.Extensions.Logging;
@@ -12,7 +12,7 @@ namespace Gotchi.Tests.Persons.CommandServices;
 public class CreatePersonCommandHandlerTests
 {
     private MockPersonRepository _personRepo;
-    private PersonManger _personManger;
+    private PersonManager _personManager;
     private ILogger<CreatePersonCommandHandler> _logger;
     private CreatePersonCommandHandler _commandHandler;
 
@@ -20,9 +20,9 @@ public class CreatePersonCommandHandlerTests
     {
         //Dependencies
         _personRepo = CommandHandlerHelper.MockPersonRepository();
-        _personManger = CommandHandlerHelper.PersonManger(_personRepo);
+        _personManager = CommandHandlerHelper.PersonManager(_personRepo);
         _logger = CommandHandlerHelper.Logger<CreatePersonCommandHandler>();
-        _commandHandler = new CreatePersonCommandHandler(_personManger, _logger);
+        _commandHandler = new CreatePersonCommandHandler(_personManager, _logger);
     }
 
     [Fact]

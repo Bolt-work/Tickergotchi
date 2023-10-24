@@ -1,14 +1,14 @@
-﻿using Gotchi.Core.Mangers;
+﻿using Gotchi.Core.Managers;
 using Gotchi.Persons.Models;
 using Gotchi.Persons.Repository;
 
-namespace Gotchi.Persons.Mangers
+namespace Gotchi.Persons.Managers
 {
-    public class PersonManger : CoreMangerBase, IPersonManger
+    public class PersonManager : CoreManagerBase, IPersonManager
     {
         private IPersonRepository _personRepository;
 
-        public PersonManger(IPersonRepository personRepository)
+        public PersonManager(IPersonRepository personRepository)
         {
             _personRepository = personRepository;
         }

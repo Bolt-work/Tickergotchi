@@ -1,7 +1,7 @@
 ﻿using Gotchi.Gotchis.Models;
 using Gotchi.Persons.Models;
 
-namespace Gotchi.Gotchis.Mangers
+namespace Gotchi.Gotchis.Managers
 {
     public interface IGotchiManager
     {

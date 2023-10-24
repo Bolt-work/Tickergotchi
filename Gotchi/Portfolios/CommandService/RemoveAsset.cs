@@ -1,5 +1,5 @@
 ﻿using Gotchi.Core.Services;
-using Gotchi.Portfolios.Mangers;
+using Gotchi.Portfolios.Managers;
 using Microsoft.Extensions.Logging;
 
 namespace Gotchi.Portfolios.CommandService;
@@ -18,19 +18,19 @@ public class RemoveAssetCommand : ICoreCommand
 
 public class RemoveAssetCommandHandler : CoreCommandHandlerBase
 {
-    private IPortfolioManger _portfolioManger;
+    private IPortfolioManager _portfolioManager;
 
-    public RemoveAssetCommandHandler(IPortfolioManger portfolioManger, ILogger<RemoveAssetCommandHandler> logger)
+    public RemoveAssetCommandHandler(IPortfolioManager portfolioManager, ILogger<RemoveAssetCommandHandler> logger)
         : base(logger)
     {
-        _portfolioManger = portfolioManger;
+        _portfolioManager = portfolioManager;
     }
 
     public void Handle(RemoveAssetCommand command)
     {
         base.Handle(command);
-        var portfolio = _portfolioManger.GetByPortfolioId(command.PortfolioId);
-        _portfolioManger.RemovePortfolioAsset(portfolio, command.AssetCoinMarketId);
-        _portfolioManger.Store(portfolio);
+        var portfolio = _portfolioManager.GetByPortfolioId(command.PortfolioId);
+        _portfolioManager.RemovePortfolioAsset(portfolio, command.AssetCoinMarketId);
+        _portfolioManager.Store(portfolio);
     }
 }

@@ -1,8 +1,8 @@
 ﻿using Gotchi.Portfolios.Models;
 
-namespace Gotchi.CryptoCoins.Mangers
+namespace Gotchi.CryptoCoins.Managers
 {
-    public interface ICryptoCoinManger
+    public interface ICryptoCoinManager
     {
         bool UpdateCoinValues();
 

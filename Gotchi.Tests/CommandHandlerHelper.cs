@@ -1,10 +1,10 @@
 ﻿using CoinMarketCap;
 using Gotchi.CryptoCoins.CommandServices;
-using Gotchi.CryptoCoins.Mangers;
+using Gotchi.CryptoCoins.Managers;
 using Gotchi.CryptoCoins.Repository;
-using Gotchi.Persons.Mangers;
+using Gotchi.Persons.Managers;
 using Gotchi.Persons.Repository;
-using Gotchi.Portfolios.Mangers;
+using Gotchi.Portfolios.Managers;
 using Gotchi.Portfolios.Repository;
 using Gotchi.Tests.Mocks;
 using Microsoft.Extensions.Logging;
@@ -21,23 +21,23 @@ public static class CommandHandlerHelper
 
     public static MockPersonRepository MockPersonRepository() => new MockPersonRepository();
     public static MockPersonRepository MockPersonRepositoryWithData() => new MockPersonRepository(true);
-    public static PersonManger PersonManger(IPersonRepository personRepository) => new PersonManger(personRepository);
-    public static PersonManger PersonManger() => new PersonManger(MockPersonRepository());
-    public static PersonManger PersonMangerWithData() => new PersonManger(MockPersonRepositoryWithData());
+    public static PersonManager PersonManager(IPersonRepository personRepository) => new PersonManager(personRepository);
+    public static PersonManager PersonManager() => new PersonManager(MockPersonRepository());
+    public static PersonManager PersonManagerWithData() => new PersonManager(MockPersonRepositoryWithData());
 
 
     public static MockCoinMarketApi CoinMarketApi() => new MockCoinMarketApi();
     public static MockCryptoCoinRepository MockCryptoCoinRepository() => new MockCryptoCoinRepository();
     public static MockCryptoCoinRepository MockCryptoCoinRepositoryWithData() => new MockCryptoCoinRepository(true);
-    public static CryptoCoinManger CryptoCoinManger(ICryptoCoinRepository cryptoCoinRepository, ICoinMarketApi coinMarketApi) => new CryptoCoinManger(cryptoCoinRepository, coinMarketApi);
-    public static CryptoCoinManger CryptoCoinManger(ICryptoCoinRepository cryptoCoinRepository) => new CryptoCoinManger(cryptoCoinRepository, CoinMarketApi());
-    public static CryptoCoinManger CryptoCoinManger() => new CryptoCoinManger(MockCryptoCoinRepository(), CoinMarketApi());
-    public static CryptoCoinManger CryptoCoinMangerWithData() => new CryptoCoinManger(MockCryptoCoinRepositoryWithData(), CoinMarketApi());
+    public static CryptoCoinManager CryptoCoinManager(ICryptoCoinRepository cryptoCoinRepository, ICoinMarketApi coinMarketApi) => new CryptoCoinManager(cryptoCoinRepository, coinMarketApi);
+    public static CryptoCoinManager CryptoCoinManager(ICryptoCoinRepository cryptoCoinRepository) => new CryptoCoinManager(cryptoCoinRepository, CoinMarketApi());
+    public static CryptoCoinManager CryptoCoinManager() => new CryptoCoinManager(MockCryptoCoinRepository(), CoinMarketApi());
+    public static CryptoCoinManager CryptoCoinManagerWithData() => new CryptoCoinManager(MockCryptoCoinRepositoryWithData(), CoinMarketApi());
 
 
     public static MockPortfolioRepository MockPortfolioRepository() => new MockPortfolioRepository();
     public static MockPortfolioRepository MockPortfolioRepositoryWithData() => new MockPortfolioRepository(true);
-    public static PortfolioManger PortfolioManger(IPortfolioRepository portfolioRepository) => new PortfolioManger(portfolioRepository);
-    public static PortfolioManger PortfolioManger() => new PortfolioManger(MockPortfolioRepository());
-    public static PortfolioManger PortfolioMangerWithData() => new PortfolioManger(MockPortfolioRepositoryWithData());
+    public static PortfolioManager PortfolioManager(IPortfolioRepository portfolioRepository) => new PortfolioManager(portfolioRepository);
+    public static PortfolioManager PortfolioManager() => new PortfolioManager(MockPortfolioRepository());
+    public static PortfolioManager PortfolioManagerWithData() => new PortfolioManager(MockPortfolioRepositoryWithData());
 }

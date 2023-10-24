@@ -1,10 +1,10 @@
 ﻿using CoinMarketCap;
 using Gotchi.CryptoCoins.CommandServices;
 using Gotchi.CryptoCoins.DataAccess;
-using Gotchi.CryptoCoins.Mangers;
+using Gotchi.CryptoCoins.Managers;
 using Gotchi.CryptoCoins.Repository;
 using Gotchi.Persons.CommandServices;
-using Gotchi.Persons.Mangers;
+using Gotchi.Persons.Managers;
 using Gotchi.Persons.Repository;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -31,6 +31,6 @@ public class CryptoCoinServiceConfig
         // Repository
         services.AddSingleton<CryptoCoinRepositorySettings>();
         services.AddSingleton<ICryptoCoinRepository, CryptoCoinRepository>();
-        services.AddSingleton<ICryptoCoinManger, CryptoCoinManger>();
+        services.AddSingleton<ICryptoCoinManager, CryptoCoinManager>();
     }
 }

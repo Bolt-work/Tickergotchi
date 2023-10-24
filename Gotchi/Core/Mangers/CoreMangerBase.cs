@@ -1,6 +1,6 @@
-﻿namespace Gotchi.Core.Mangers;
+﻿namespace Gotchi.Core.Managers;
 
-public class CoreMangerBase
+public class CoreManagerBase
 {
 
     public T ThrowIfModelNull<T>(T model, string identifier) 

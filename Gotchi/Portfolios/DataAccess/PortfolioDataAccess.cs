@@ -1,28 +1,28 @@
 ﻿using AutoMapper;
 using Gotchi.Portfolios.DTOs;
-using Gotchi.Portfolios.Mangers;
+using Gotchi.Portfolios.Managers;
 
 namespace Gotchi.Portfolios.DataAccess;
 
 internal class PortfolioDataAccess : IPortfolioDataAccess
 {
-    IPortfolioManger _portfolioManger;
+    IPortfolioManager _portfolioManager;
     IMapper _mapper;
-    public PortfolioDataAccess(IPortfolioManger portfolioManger, IMapper mapper)
+    public PortfolioDataAccess(IPortfolioManager portfolioManager, IMapper mapper)
     {
-        _portfolioManger = portfolioManger;
+        _portfolioManager = portfolioManager;
         _mapper = mapper;
     }
 
     public PortfolioDTO PortfolioById(string portfolioId)
     {
-        var portfolioModel = _portfolioManger.GetByPortfolioId(portfolioId);
+        var portfolioModel = _portfolioManager.GetByPortfolioId(portfolioId);
         return _mapper.Map<PortfolioDTO>(portfolioModel);
     }
 
     public ICollection<PortfolioDTO> PortfoliosByPersonId(string personId)
     {
-        var portfolioModels = _portfolioManger.GetByPersonId(personId);
+        var portfolioModels = _portfolioManager.GetByPersonId(personId);
         return _mapper.Map<ICollection<PortfolioDTO>>(portfolioModels);
     }
 }

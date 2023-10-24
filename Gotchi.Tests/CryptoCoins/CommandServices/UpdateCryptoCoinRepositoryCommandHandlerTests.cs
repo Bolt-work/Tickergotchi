@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using Gotchi.CryptoCoins.CommandServices;
-using Gotchi.CryptoCoins.Mangers;
+using Gotchi.CryptoCoins.Managers;
 using Gotchi.Tests.Mocks;
 using Microsoft.Extensions.Logging;
 
@@ -9,7 +9,7 @@ namespace Gotchi.Tests.CryptoCoins.CommandServices;
 public class UpdateCryptoCoinRepositoryCommandHandlerTests
 {
     private MockCryptoCoinRepository _coinRepo;
-    private CryptoCoinManger _cryptoCoinManger;
+    private CryptoCoinManager _cryptoCoinManager;
     private ILogger<UpdateCryptoCoinRepositoryCommandHandler> _logger;
     private UpdateCryptoCoinRepositoryCommandHandler _commandHandler;
 
@@ -17,10 +17,10 @@ public class UpdateCryptoCoinRepositoryCommandHandlerTests
     {
         //Dependencies
         _coinRepo = CommandHandlerHelper.MockCryptoCoinRepository();
-        _cryptoCoinManger = CommandHandlerHelper.CryptoCoinManger(_coinRepo);
+        _cryptoCoinManager = CommandHandlerHelper.CryptoCoinManager(_coinRepo);
         _logger = CommandHandlerHelper.Logger<UpdateCryptoCoinRepositoryCommandHandler>();
 
-        _commandHandler = new UpdateCryptoCoinRepositoryCommandHandler(_cryptoCoinManger, _logger);
+        _commandHandler = new UpdateCryptoCoinRepositoryCommandHandler(_cryptoCoinManager, _logger);
     }
 
     [Fact]

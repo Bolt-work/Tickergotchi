@@ -1,15 +1,15 @@
 ﻿using CoinMarketCap;
-using Gotchi.Core.Mangers;
+using Gotchi.Core.Managers;
 using Gotchi.CryptoCoins.Repository;
 using Gotchi.Portfolios.Models;
 
-namespace Gotchi.CryptoCoins.Mangers;
+namespace Gotchi.CryptoCoins.Managers;
 
-public class CryptoCoinManger : CoreMangerBase, ICryptoCoinManger
+public class CryptoCoinManager : CoreManagerBase, ICryptoCoinManager
 {
     private ICryptoCoinRepository _cryptoCoinRepository;
     private ICoinMarketApi _coinMarketApi;
-    public CryptoCoinManger(ICryptoCoinRepository cryptoCoinRepository, ICoinMarketApi coinMarketApi)
+    public CryptoCoinManager(ICryptoCoinRepository cryptoCoinRepository, ICoinMarketApi coinMarketApi)
     {
         _cryptoCoinRepository = cryptoCoinRepository;
         _coinMarketApi = coinMarketApi;

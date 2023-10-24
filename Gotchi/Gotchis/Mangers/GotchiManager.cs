@@ -1,6 +1,6 @@
 ﻿
 using Gotchi.Core.Helpers;
-using Gotchi.Core.Mangers;
+using Gotchi.Core.Managers;
 using Gotchi.Gotchis.Models;
 using Gotchi.Gotchis.Repository;
 using Gotchi.Persons.Models;
@@ -9,7 +9,7 @@ using System.Globalization;
 using System.Reflection.Emit;
 using System.Xml.Linq;
 
-namespace Gotchi.Gotchis.Mangers;
+namespace Gotchi.Gotchis.Managers;
 
 public class GotchiManager : IGotchiManager
 {
@@ -26,10 +26,7 @@ public class GotchiManager : IGotchiManager
         if (_gotchiRepository.Exists(id))
             throw new ModelWithIdAlreadyExistsException<Portfolio>(id);
 
-        return new CryptoGotchi(id, owner, name) 
-        {
-
-        };
+        return BuildGotchi(owner, gotchiId, name);
     }
 
     private CryptoGotchi BuildGotchi(Person owner, string? gotchiId, string? name) 

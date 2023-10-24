@@ -1,9 +1,9 @@
-﻿using Gotchi.Core.Mangers;
+﻿using Gotchi.Core.Managers;
 using Gotchi.Portfolios.Models;
 
-namespace Gotchi.Portfolios.Mangers;
+namespace Gotchi.Portfolios.Managers;
 
-public class CannotAffordPurchaseOfAssetException : CoreMangerException
+public class CannotAffordPurchaseOfAssetException : CoreManagerException
 {
     public CannotAffordPurchaseOfAssetException(Portfolio portfolio, CryptoCoin coin, float amountInValue) 
         : base(
@@ -11,7 +11,7 @@ public class CannotAffordPurchaseOfAssetException : CoreMangerException
             ){}
 }
 
-public class AssetNotFoundException : CoreMangerException
+public class AssetNotFoundException : CoreManagerException
 {
     public AssetNotFoundException(Portfolio portfolio, string coinMarketId)
         : base(
@@ -20,7 +20,7 @@ public class AssetNotFoundException : CoreMangerException
     { }
 }
 
-public class AssetDoesHaveEnoughUnitsToSell : CoreMangerException
+public class AssetDoesHaveEnoughUnitsToSell : CoreManagerException
 {
     public AssetDoesHaveEnoughUnitsToSell(Asset asset, int units)
         : base(

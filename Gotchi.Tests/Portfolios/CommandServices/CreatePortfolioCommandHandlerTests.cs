@@ -1,8 +1,8 @@
 ﻿using FluentAssertions;
-using Gotchi.Core.Mangers;
-using Gotchi.Persons.Mangers;
+using Gotchi.Core.Managers;
+using Gotchi.Persons.Managers;
 using Gotchi.Portfolios.CommandService;
-using Gotchi.Portfolios.Mangers;
+using Gotchi.Portfolios.Managers;
 using Gotchi.Portfolios.Models;
 using Gotchi.Tests.Mocks;
 using Microsoft.Extensions.Logging;
@@ -12,10 +12,10 @@ namespace Gotchi.Tests.Portfolios.CommandServices;
 public class CreatePortfolioCommandHandlerTests
 {
     private MockPortfolioRepository _portfolioRepo;
-    private PortfolioManger _portfolioManger;
+    private PortfolioManager _portfolioManager;
 
     private MockPersonRepository _personRepository;
-    private PersonManger _personManger;
+    private PersonManager _personManager;
     private ILogger<CreatePortfolioCommandHandler> _logger;
     private CreatePortfolioCommandHandler _commandHandler;
 
@@ -23,14 +23,14 @@ public class CreatePortfolioCommandHandlerTests
     {
         //Dependencies
         _personRepository = CommandHandlerHelper.MockPersonRepositoryWithData();
-        _personManger = CommandHandlerHelper.PersonManger(_personRepository);
+        _personManager = CommandHandlerHelper.PersonManager(_personRepository);
 
         _logger = CommandHandlerHelper.Logger<CreatePortfolioCommandHandler>();
 
         _portfolioRepo = CommandHandlerHelper.MockPortfolioRepository();
-        _portfolioManger = CommandHandlerHelper.PortfolioManger(_portfolioRepo);
+        _portfolioManager = CommandHandlerHelper.PortfolioManager(_portfolioRepo);
 
-        _commandHandler = new CreatePortfolioCommandHandler(_portfolioManger, _personManger, _logger);
+        _commandHandler = new CreatePortfolioCommandHandler(_portfolioManager, _personManager, _logger);
     }
 
     [Fact]

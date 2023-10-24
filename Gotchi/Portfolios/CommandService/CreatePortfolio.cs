@@ -1,7 +1,7 @@
 ﻿
 using Gotchi.Core.Services;
-using Gotchi.Persons.Mangers;
-using Gotchi.Portfolios.Mangers;
+using Gotchi.Persons.Managers;
+using Gotchi.Portfolios.Managers;
 using Microsoft.Extensions.Logging;
 
 namespace Gotchi.Portfolios.CommandService;
@@ -20,20 +20,20 @@ public class CreatePortfolioCommand : ICoreCommand
 
 public class CreatePortfolioCommandHandler : CoreCommandHandlerBase
 {
-    private IPortfolioManger _portfolioManger;
-    private IPersonManger _personManger;
-    public CreatePortfolioCommandHandler(IPortfolioManger portfolioManger, IPersonManger personManger, ILogger<CreatePortfolioCommandHandler> logger)
+    private IPortfolioManager _portfolioManager;
+    private IPersonManager _personManager;
+    public CreatePortfolioCommandHandler(IPortfolioManager portfolioManager, IPersonManager personManager, ILogger<CreatePortfolioCommandHandler> logger)
         : base(logger)
     {
-        _portfolioManger = portfolioManger;
-        _personManger = personManger;
+        _portfolioManager = portfolioManager;
+        _personManager = personManager;
     }
 
     public void Handle(CreatePortfolioCommand command)
     {
         base.Handle(command);
-        var accountHolder = _personManger.GetPersonById(command.PersonsId);
-        var portfolio = _portfolioManger.CreatePortfolio(accountHolder, command.PortfolioId);
-        _portfolioManger.Store(portfolio);
+        var accountHolder = _personManager.GetPersonById(command.PersonsId);
+        var portfolio = _portfolioManager.CreatePortfolio(accountHolder, command.PortfolioId);
+        _portfolioManager.Store(portfolio);
     }
 }

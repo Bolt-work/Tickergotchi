@@ -1,9 +1,9 @@
 ﻿using Gotchi.Persons.Models;
 using Gotchi.Portfolios.Models;
 
-namespace Gotchi.Portfolios.Mangers
+namespace Gotchi.Portfolios.Managers
 {
-    public interface IPortfolioManger
+    public interface IPortfolioManager
     {
         void BuyAsset(Portfolio portfolio, CryptoCoin coin, float amount);
         Portfolio CreatePortfolio(Person accountHolder, string? portfolioId = null);

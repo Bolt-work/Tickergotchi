@@ -1,17 +1,17 @@
-﻿namespace Gotchi.Core.Mangers;
+﻿namespace Gotchi.Core.Managers;
 
-public abstract class CoreMangerException : Exception 
+public abstract class CoreManagerException : Exception 
 {
-    public CoreMangerException(string message) : base(message) { }
+    public CoreManagerException(string message) : base(message) { }
 }
 
-public class ModelIsNullException<T> : CoreMangerException
+public class ModelIsNullException<T> : CoreManagerException
 {
     public ModelIsNullException(string identifier) 
         : base($"Model is null, id : {identifier}, Type expected : {typeof(T).FullName}"){}
 }
 
-public class ModelWithIdAlreadyExistsException<T> : CoreMangerException
+public class ModelWithIdAlreadyExistsException<T> : CoreManagerException
 {
     public ModelWithIdAlreadyExistsException(string identifier)
         : base($"Model with id : {identifier}, Type {typeof(T).FullName}") { }

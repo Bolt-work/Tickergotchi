@@ -4,7 +4,7 @@ using Gotchi.Core.Helpers;
 using Gotchi.Core.Repository;
 using Gotchi.Core.Services;
 using Gotchi.CryptoCoins.CommandServices;
-using Gotchi.CryptoCoins.Mangers;
+using Gotchi.CryptoCoins.Managers;
 using Gotchi.CryptoCoins.Repository;
 using Gotchi.Persons.CommandServices;
 using Gotchi.Portfolios.CommandService;

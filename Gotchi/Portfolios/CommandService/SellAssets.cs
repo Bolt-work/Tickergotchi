@@ -1,6 +1,6 @@
 ﻿using Gotchi.Core.Services;
-using Gotchi.CryptoCoins.Mangers;
-using Gotchi.Portfolios.Mangers;
+using Gotchi.CryptoCoins.Managers;
+using Gotchi.Portfolios.Managers;
 using Microsoft.Extensions.Logging;
 
 namespace Gotchi.Portfolios.CommandService;
@@ -21,22 +21,22 @@ public class SellAssetsCommand : ICoreCommand
 
 public class SellAssetsCommandHandler : CoreCommandHandlerBase 
 {
-    private IPortfolioManger _portfolioManger;
-    private ICryptoCoinManger _cryptoCoinManger;
+    private IPortfolioManager _portfolioManager;
+    private ICryptoCoinManager _cryptoCoinManager;
 
-    public SellAssetsCommandHandler(IPortfolioManger portfolioManger, ICryptoCoinManger cryptoCoinManger, ILogger<SellAssetsCommandHandler> logger) 
+    public SellAssetsCommandHandler(IPortfolioManager portfolioManager, ICryptoCoinManager cryptoCoinManager, ILogger<SellAssetsCommandHandler> logger) 
         : base(logger)
     {
-        _portfolioManger = portfolioManger;
-        _cryptoCoinManger = cryptoCoinManger;  
+        _portfolioManager = portfolioManager;
+        _cryptoCoinManager = cryptoCoinManager;  
     }
 
     public void Handle(SellAssetsCommand command) 
     {
         base.Handle(command);
-        var portfolio = _portfolioManger.GetByPortfolioId(command.PortfolioId);
-        var coin = _cryptoCoinManger.CryptoCoinByCoinMarketId(command.CoinMarketId);
-        _portfolioManger.SellAsset(portfolio, coin, command.Units);
-        _portfolioManger.Store(portfolio);
+        var portfolio = _portfolioManager.GetByPortfolioId(command.PortfolioId);
+        var coin = _cryptoCoinManager.CryptoCoinByCoinMarketId(command.CoinMarketId);
+        _portfolioManager.SellAsset(portfolio, coin, command.Units);
+        _portfolioManager.Store(portfolio);
     }
 }

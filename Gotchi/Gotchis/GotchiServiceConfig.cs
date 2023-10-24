@@ -1,6 +1,6 @@
-﻿using Gotchi.CryptoCoins.Mangers;
+﻿using Gotchi.CryptoCoins.Managers;
 using Gotchi.CryptoCoins.Repository;
-using Gotchi.Gotchis.Mangers;
+using Gotchi.Gotchis.Managers;
 using Gotchi.Gotchis.Repository;
 using Microsoft.Extensions.DependencyInjection;
 using System;

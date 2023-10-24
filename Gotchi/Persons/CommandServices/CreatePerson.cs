@@ -1,5 +1,5 @@
 ﻿using Gotchi.Core.Services;
-using Gotchi.Persons.Mangers;
+using Gotchi.Persons.Managers;
 using Microsoft.Extensions.Logging;
 
 namespace Gotchi.Persons.CommandServices;
@@ -20,17 +20,17 @@ public class CreatePersonCommand : ICoreCommand
 
 public class CreatePersonCommandHandler : CoreCommandHandlerBase
 {
-    private IPersonManger _personManger;
-    public CreatePersonCommandHandler(IPersonManger personManger, ILogger<CreatePersonCommandHandler> logger)
+    private IPersonManager _personManager;
+    public CreatePersonCommandHandler(IPersonManager personManager, ILogger<CreatePersonCommandHandler> logger)
         :base(logger)
     {
-        _personManger = personManger;
+        _personManager = personManager;
     }
 
     public void Handle(CreatePersonCommand command) 
     {
         base.Handle(command);
-        var person = _personManger.Create(command.PersonsId, command.FirstName, command.LastName);
-        _personManger.Store(person);
+        var person = _personManager.Create(command.PersonsId, command.FirstName, command.LastName);
+        _personManager.Store(person);
     }
 }

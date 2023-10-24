@@ -3,7 +3,7 @@ using Gotchi.CryptoCoins;
 using Gotchi.Gotchis;
 using Gotchi.Persons;
 using Gotchi.Persons.CommandServices;
-using Gotchi.Persons.Mangers;
+using Gotchi.Persons.Managers;
 using Gotchi.Persons.Repository;
 using Gotchi.Portfolios;
 using Microsoft.Extensions.DependencyInjection;

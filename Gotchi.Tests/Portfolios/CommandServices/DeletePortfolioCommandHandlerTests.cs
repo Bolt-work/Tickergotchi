@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
-using Gotchi.Core.Mangers;
+using Gotchi.Core.Managers;
 using Gotchi.Portfolios.CommandService;
-using Gotchi.Portfolios.Mangers;
+using Gotchi.Portfolios.Managers;
 using Gotchi.Portfolios.Models;
 using Gotchi.Tests.Mocks;
 using Microsoft.Extensions.Logging;
@@ -11,7 +11,7 @@ namespace Gotchi.Tests.Portfolios.CommandServices;
 public class DeletePortfolioCommandHandlerTests
 {
     private MockPortfolioRepository _portfolioRepo;
-    private PortfolioManger _portfolioManger;
+    private PortfolioManager _portfolioManager;
 
     private ILogger<DeletePortfolioCommandHandler> _logger;
 
@@ -22,9 +22,9 @@ public class DeletePortfolioCommandHandlerTests
         _logger = CommandHandlerHelper.Logger<DeletePortfolioCommandHandler>();
 
         _portfolioRepo = CommandHandlerHelper.MockPortfolioRepository();
-        _portfolioManger = CommandHandlerHelper.PortfolioManger(_portfolioRepo);
+        _portfolioManager = CommandHandlerHelper.PortfolioManager(_portfolioRepo);
 
-        _commandHandler = new DeletePortfolioCommandHandler(_portfolioManger, _logger);
+        _commandHandler = new DeletePortfolioCommandHandler(_portfolioManager, _logger);
     }
 
     [Fact]

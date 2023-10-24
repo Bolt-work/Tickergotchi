@@ -1,8 +1,8 @@
 ﻿using Gotchi.Persons.Models;
 
-namespace Gotchi.Persons.Mangers
+namespace Gotchi.Persons.Managers
 {
-    public interface IPersonManger
+    public interface IPersonManager
     {
         Person Create(string id, string? firstName = null, string? lastName = null);
         bool Delete(Person person);
