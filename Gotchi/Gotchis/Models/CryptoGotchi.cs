@@ -1,16 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Gotchi.Core.Models;
 using Gotchi.Persons.Models;
 
 namespace Gotchi.Gotchis.Models;
 
-public class CryptoGotchi : GotchiBase
+public class CryptoGotchi : CoreModelBase
 {
-    public CryptoGotchi(string id, Person owner) : base(id, owner)
-    {
+    public Person Owner;
+    public string? Name { get; set; }
+    public int Level { get; set; }
+    public int Hunger { get; set; }
+    public int HungerMax { get; set; }
+    public int FoodUnitsConsumed { get; set; }
+    public DateTime LastUpdated { get; set; }
 
+    public CryptoGotchi(string id, Person owner)
+    {
+        Id = id;
+        Owner = owner;
     }
 }

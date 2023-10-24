@@ -28,7 +28,7 @@ public class MockCryptoCoinRepository : MockRepositoryBase<CryptoCoin>, ICryptoC
 
     public bool DeleteAll() => base.DeleteAllEntries();
     public bool Exists(string coinMarketId) => base.EntryExists(coinMarketId);
-    public ICollection<CryptoCoin> GetAll() => base.GetAllEntries();
+    public IEnumerable<CryptoCoin> GetAll() => base.GetAllEntries();
 
     public CryptoCoin GetByCoinMarketId(string coinMarketId) => base.GetEntryById(coinMarketId);
 
@@ -37,12 +37,12 @@ public class MockCryptoCoinRepository : MockRepositoryBase<CryptoCoin>, ICryptoC
         return _db.SingleOrDefault(x => x.Name == name)!;
     }
 
-    public ICollection<CryptoCoin> GetBySlug(string slug)
+    public IEnumerable<CryptoCoin> GetBySlug(string slug)
     {
         return _db.Where(x => x.Slug == slug).ToList();
     }
 
-    public ICollection<CryptoCoin> GetBySymbol(string symbol)
+    public IEnumerable<CryptoCoin> GetBySymbol(string symbol)
     {
         return _db.Where(x => x.Symbol == symbol).ToList();
     }

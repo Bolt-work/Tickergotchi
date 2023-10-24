@@ -25,7 +25,7 @@ namespace Gotchi.Persons.Mangers
             };
         }
 
-        public Person GetById(string id)
+        public Person GetPersonById(string id)
         {
             var person = _personRepository.GetById(id);
             return ThrowIfModelNull(person, id);

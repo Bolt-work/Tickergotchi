@@ -14,8 +14,8 @@ public class PortfolioRepository : RepositoryBase<Portfolio>, IPortfolioReposito
     public bool Delete(string id) => base.DeleteEntry(id);
     public bool DeleteAll() => base.DeleteAllEntries();
     public Portfolio GetByPortfolioId(string portfolioId) => base.GetEntryById(portfolioId);
-    public ICollection<Portfolio> GetByPersonId(string personId) => base.GetManyByKeyStr("AccountHolder.Id", personId);
-    public ICollection<Portfolio> GetAll() => base.GetAllEntries();
+    public IEnumerable<Portfolio> GetByPersonId(string personId) => base.GetManyByKeyStr("AccountHolder.Id", personId);
+    public IEnumerable<Portfolio> GetAll() => base.GetAllEntries();
     public bool Exists(string id) => base.EntryExists(id);
 
 }

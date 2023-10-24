@@ -1,23 +1,22 @@
 ﻿using AutoMapper;
 using Gotchi.Persons.DTOs;
-using Gotchi.Persons.Models;
-using Gotchi.Persons.Repository;
+using Gotchi.Persons.Mangers;
 
 namespace Gotchi.Persons.DataAccess;
 
 public class PersonDataAccess : IPersonDataAccess
 {
-    IPersonRepository _personRepository;
+    IPersonManger _personManger;
     IMapper _mapper;
-    public PersonDataAccess(IPersonRepository personRepository, IMapper mapper)
+    public PersonDataAccess(IPersonManger personManger, IMapper mapper)
     {
-        _personRepository = personRepository;
+        _personManger = personManger;
         _mapper = mapper;
     }
 
     public PersonDTO PersonById(string id)
     {
-        var personModel = _personRepository.GetById(id);
+        var personModel = _personManger.GetPersonById(id);
         return _mapper.Map<PersonDTO>(personModel);
     }
 }

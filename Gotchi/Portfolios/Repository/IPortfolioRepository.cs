@@ -9,7 +9,7 @@ public interface IPortfolioRepository
     bool DeleteAll();
     bool Exists(string id);
     Portfolio GetByPortfolioId(string portfolioId);
-    ICollection<Portfolio> GetAll();
+    IEnumerable<Portfolio> GetAll();
     bool Upsert(Portfolio model);
-    ICollection<Portfolio> GetByPersonId(string personId);
+    IEnumerable<Portfolio> GetByPersonId(string personId);
 }

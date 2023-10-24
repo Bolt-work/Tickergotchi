@@ -6,18 +6,7 @@ namespace Gotchi.Portfolios.Models;
 public class Portfolio : CoreModelBase
 {
     public Person AccountHolder;
-
-    private float _balance;
-    public float Balance
-    {
-        get 
-        {
-            _balance = PortfolioUtilities.CalculatePortfolioBalance(_balance, BalanceLastUpdated);
-            BalanceLastUpdated = DateTime.Now;
-            return _balance;
-        }
-        set { _balance = value; }
-    }
+    public float Balance { get; set; }
     public DateTime BalanceLastUpdated { get; set; }
     public IList<Asset> Assets;
 

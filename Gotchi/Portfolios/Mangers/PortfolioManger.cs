@@ -34,11 +34,21 @@ namespace Gotchi.Portfolios.Mangers
             return _portfolioRepository.Upsert(portfolio);
         }
 
-        public Portfolio GetByPortfolioId (string id)
+        public Portfolio GetByPortfolioId (string portfolioId)
         {
-            var portfolio = _portfolioRepository.GetByPortfolioId(id);
-            ThrowIfModelNull(portfolio, id);
+            var portfolio = _portfolioRepository.GetByPortfolioId(portfolioId);
+            ThrowIfModelNull(portfolio, portfolioId);
             Update(portfolio);
+            return portfolio;
+        }
+
+        public IEnumerable<Portfolio> GetByPersonId(string personId)
+        {
+            var portfolio = _portfolioRepository.GetByPersonId(personId);
+            foreach (var p in portfolio) 
+            { 
+                Update(p); 
+            }
             return portfolio;
         }
 
@@ -136,6 +146,8 @@ namespace Gotchi.Portfolios.Mangers
 
         public void Update(Portfolio portfolio)
         {
+            portfolio.Balance = PortfolioUtilities.CalculatePortfolioBalance(portfolio.Balance, portfolio.BalanceLastUpdated);
+            portfolio.BalanceLastUpdated = DateTime.Now;
         }
 
     }

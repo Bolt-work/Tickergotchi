@@ -47,9 +47,9 @@ public class MockPortfolioRepository : MockRepositoryBase<Portfolio> , IPortfoli
     public bool Delete(string id) => base.DeleteEntry(id);
     public bool DeleteAll() => base.DeleteAllEntries();
     public bool Exists(string id) => base.EntryExists(id);
-    public ICollection<Portfolio> GetAll() => base.GetAllEntries();
+    public IEnumerable<Portfolio> GetAll() => base.GetAllEntries();
 
-    public ICollection<Portfolio> GetByPersonId(string personId) 
+    public IEnumerable<Portfolio> GetByPersonId(string personId) 
     {
         return _db.Where(x => x.AccountHolder.Id == personId).ToList();
     }

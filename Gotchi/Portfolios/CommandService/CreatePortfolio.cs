@@ -32,7 +32,7 @@ public class CreatePortfolioCommandHandler : CoreCommandHandlerBase
     public void Handle(CreatePortfolioCommand command)
     {
         base.Handle(command);
-        var accountHolder = _personManger.GetById(command.PersonsId);
+        var accountHolder = _personManger.GetPersonById(command.PersonsId);
         var portfolio = _portfolioManger.CreatePortfolio(accountHolder, command.PortfolioId);
         _portfolioManger.Store(portfolio);
     }

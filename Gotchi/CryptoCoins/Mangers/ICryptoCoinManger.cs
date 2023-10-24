@@ -8,7 +8,7 @@ namespace Gotchi.CryptoCoins.Mangers
 
         CryptoCoin CryptoCoinByCoinMarketId(string coinMarketId);
         CryptoCoin CryptoCoinByName(string name);
-        ICollection<CryptoCoin> CryptoCoinBySlug(string slug);
-        ICollection<CryptoCoin> CryptoCoinBySymbol(string symbol);
+        IEnumerable<CryptoCoin> CryptoCoinBySlug(string slug);
+        IEnumerable<CryptoCoin> CryptoCoinBySymbol(string symbol);
     }
 }

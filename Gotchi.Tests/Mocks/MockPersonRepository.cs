@@ -25,7 +25,7 @@ public class MockPersonRepository : MockRepositoryBase<Person>,  IPersonReposito
     public bool Delete(string? id) => base.DeleteEntry(id);
     public bool DeleteAll() => base.DeleteAllEntries();
     public bool Exists(string id) => base.EntryExists(id);
-    public ICollection<Person> GetAll() => base.GetAllEntries();
+    public IEnumerable<Person> GetAll() => base.GetAllEntries();
     public Person GetById(string personId) => base.GetEntryById(personId);
     public bool Upsert(Person model) => base.UpsertEntry(model);
 }

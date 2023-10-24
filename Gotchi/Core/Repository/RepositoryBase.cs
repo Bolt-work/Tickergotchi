@@ -1,8 +1,5 @@
 ﻿using Gotchi.Core.Models;
-using Gotchi.Portfolios.Models;
-using MongoDB.Bson;
 using MongoDB.Driver;
-using System.Xml.Linq;
 
 
 namespace Gotchi.Core.Repository;

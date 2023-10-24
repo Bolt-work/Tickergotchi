@@ -8,7 +8,7 @@ public interface IPersonRepository
     bool Delete(Person person);
     bool DeleteAll();
     bool Exists(string id);
-    ICollection<Person> GetAll();
+    IEnumerable<Person> GetAll();
     Person GetById(string personId);
     bool Upsert(Person model);
 }
