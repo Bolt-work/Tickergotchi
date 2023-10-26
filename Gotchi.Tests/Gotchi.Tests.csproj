@@ -29,4 +29,8 @@
     <ProjectReference Include="..\Gotchi\Gotchi.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Gotchi\Mangers\" />
+  </ItemGroup>
+
 </Project>

@@ -25,7 +25,7 @@ public class GotchiManager : CoreManagerBase, IGotchiManager
             throw new ModelIsNullException<Person>();
 
         if (_gotchiRepository.Exists(id))
-            throw new ModelWithIdAlreadyExistsException<Portfolio>(id);
+            throw new ModelWithIdAlreadyExistsException<CryptoGotchi>(id);
 
         return BuildGotchi(owner, gotchiId, name);
     }
@@ -42,7 +42,8 @@ public class GotchiManager : CoreManagerBase, IGotchiManager
             HungerMax = GameSettings.Values().StartingMaxHunger,
             FoodUnitsConsumed = 0,
             LastUpdated = DateTime.Now,
-            State = GotchiState.Alive
+            State = GotchiState.Alive,
+            PriceForFood = GameSettings.Values().FoodBaseCost
         };
     }
 

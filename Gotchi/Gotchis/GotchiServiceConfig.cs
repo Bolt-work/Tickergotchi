@@ -14,6 +14,7 @@ public class GotchiServiceConfig
         services.AddSingleton<IGotchiManager, GotchiManager>();
 
         // Command Handlers
+        services.AddSingleton<FeedGotchiCommandHandler>();
         services.AddSingleton<CreateGotchiCommandHandler>();
 
     }

@@ -44,7 +44,7 @@ public class DeletePortfolioCommandHandlerTests
     }
 
     [Fact]
-    public void Handle_InValidDeletePortfolioCommand_ModelNullException()
+    public void Handle_InValidDeletePortfolioCommand_ModelNotFoundException()
     {
         // Arrange
         _portfolioRepo.DeleteAll();
@@ -55,6 +55,6 @@ public class DeletePortfolioCommandHandlerTests
         Action act = () => _commandHandler.Handle(command);
 
         // Assert
-        act.Should().Throw<ModelIsNullException<Portfolio>>();
+        act.Should().Throw<ModelNotFoundException<Portfolio>>();
     }
 }

@@ -31,7 +31,7 @@ public abstract class MockRepositoryBase<T> where T : CoreModelBase
         return _db.Any(x => x.Id == id);
     }
 
-    protected ICollection<T> GetAllEntries()
+    protected IEnumerable<T> GetAllEntries()
     {
         return _db;
     }

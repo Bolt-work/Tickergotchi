@@ -15,7 +15,7 @@ public class GotchiRepository : RepositoryBase<CryptoGotchi>, IGotchiRepository
     public bool Delete(CryptoGotchi gotchi) => base.DeleteEntry(gotchi.Id);
     public bool DeleteAll() => base.DeleteAllEntries();
     public CryptoGotchi Get(string id) => base.GetEntryById(id);
-    public ICollection<CryptoGotchi> GetAll() => base.GetAllEntries();
+    public IEnumerable<CryptoGotchi> GetAll() => base.GetAllEntries();
     public bool Exists(string id) => base.EntryExists(id);
 
 }

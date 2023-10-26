@@ -9,7 +9,7 @@ namespace Gotchi.Gotchis.Repository
         bool DeleteAll();
         bool Exists(string id);
         CryptoGotchi Get(string id);
-        ICollection<CryptoGotchi> GetAll();
+        IEnumerable<CryptoGotchi> GetAll();
         bool Upsert(CryptoGotchi gotchi);
     }
 }

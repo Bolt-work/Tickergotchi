@@ -3,13 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34009.444
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebFront", "WebFront\WebFront.csproj", "{F8BBFAB4-12D5-4CB5-9130-5833C1801885}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoinMarketCap", "CoinMarketCap\CoinMarketCap.csproj", "{9175798C-EC76-46F9-83A8-BFFB4721EFAB}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gotchi", "Gotchi\Gotchi.csproj", "{C5660161-C277-4DC3-B238-04CAF26B1214}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gotchi.Tests", "Gotchi.Tests\Gotchi.Tests.csproj", "{6F5374FA-B32C-44F2-9296-E717CED5D8FC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gotchi.Tests", "Gotchi.Tests\Gotchi.Tests.csproj", "{6F5374FA-B32C-44F2-9296-E717CED5D8FC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +15,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{F8BBFAB4-12D5-4CB5-9130-5833C1801885}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F8BBFAB4-12D5-4CB5-9130-5833C1801885}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F8BBFAB4-12D5-4CB5-9130-5833C1801885}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F8BBFAB4-12D5-4CB5-9130-5833C1801885}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9175798C-EC76-46F9-83A8-BFFB4721EFAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9175798C-EC76-46F9-83A8-BFFB4721EFAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9175798C-EC76-46F9-83A8-BFFB4721EFAB}.Release|Any CPU.ActiveCfg = Release|Any CPU

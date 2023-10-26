@@ -2,6 +2,8 @@
 using Gotchi.CryptoCoins.CommandServices;
 using Gotchi.CryptoCoins.Managers;
 using Gotchi.CryptoCoins.Repository;
+using Gotchi.Gotchis.Managers;
+using Gotchi.Gotchis.Repository;
 using Gotchi.Persons.Managers;
 using Gotchi.Persons.Repository;
 using Gotchi.Portfolios.Managers;
@@ -40,4 +42,10 @@ public static class CommandHandlerHelper
     public static PortfolioManager PortfolioManager(IPortfolioRepository portfolioRepository) => new PortfolioManager(portfolioRepository);
     public static PortfolioManager PortfolioManager() => new PortfolioManager(MockPortfolioRepository());
     public static PortfolioManager PortfolioManagerWithData() => new PortfolioManager(MockPortfolioRepositoryWithData());
+
+    public static MockGotchiRepository MockGotchiRepository() => new MockGotchiRepository();
+    public static MockGotchiRepository MockGotchiRepositoryWithData() => new MockGotchiRepository(true);
+    public static GotchiManager GotchiManager(IGotchiRepository portfolioRepository) => new GotchiManager(portfolioRepository);
+    public static GotchiManager GotchiManager() => new GotchiManager(MockGotchiRepository());
+    public static GotchiManager GotchiManagerWithData() => new GotchiManager(MockGotchiRepositoryWithData());
 }
