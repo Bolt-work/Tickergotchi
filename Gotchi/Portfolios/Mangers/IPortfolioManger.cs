@@ -8,11 +8,12 @@ namespace Gotchi.Portfolios.Managers
         void BuyAsset(Portfolio portfolio, CryptoCoin coin, float amount);
         Portfolio CreatePortfolio(Person accountHolder, string? portfolioId = null);
         bool DeletePortfolio(Portfolio portfolio);
-        Portfolio GetByPortfolioId(string id);
+        Portfolio GetByPortfolioId(string? portfolioId);
         IEnumerable<Portfolio> GetByPersonId(string personId);
         void RemovePortfolioAsset(Portfolio portfolio, string coinMarketId);
         void SellAsset(Portfolio portfolio, CryptoCoin coin, int units);
         bool Store(Portfolio portfolio);
         void Update(Portfolio portfolio);
+        float WithdrawFromAccount(Portfolio portfolio, float amount);
     }
 }

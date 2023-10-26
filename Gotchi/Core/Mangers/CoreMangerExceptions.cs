@@ -7,8 +7,14 @@ public abstract class CoreManagerException : Exception
 
 public class ModelIsNullException<T> : CoreManagerException
 {
-    public ModelIsNullException(string identifier) 
-        : base($"Model is null, id : {identifier}, Type expected : {typeof(T).FullName}"){}
+    public ModelIsNullException() 
+        : base($"Model is null, Type expected : {typeof(T).FullName}"){}
+}
+
+public class ModelNotFoundException<T> : CoreManagerException
+{
+    public ModelNotFoundException(string identifier)
+        : base($"Model not found, id : {identifier}, Type expected : {typeof(T).FullName}") { }
 }
 
 public class ModelWithIdAlreadyExistsException<T> : CoreManagerException

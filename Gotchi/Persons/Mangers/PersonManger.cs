@@ -25,10 +25,11 @@ namespace Gotchi.Persons.Managers
             };
         }
 
-        public Person GetPersonById(string id)
+        public Person GetPersonById(string? personId)
         {
+            var id = personId ?? throw new ArgumentNullException(nameof(personId)); 
             var person = _personRepository.GetById(id);
-            return ThrowIfModelNull(person, id);
+            return ThrowIfModelNotFound(person, id);
         }
 
         public bool Delete(Person person)

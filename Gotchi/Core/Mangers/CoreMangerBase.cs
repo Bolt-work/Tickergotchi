@@ -3,10 +3,10 @@
 public class CoreManagerBase
 {
 
-    public T ThrowIfModelNull<T>(T model, string identifier) 
+    public T ThrowIfModelNotFound<T>(T model, string identifier)
     {
-        var checkObject = model ?? throw new ModelIsNullException<T>(identifier);
-        return (T) checkObject;
+        var checkObject = model ?? throw new ModelNotFoundException<T>(identifier);
+        return (T)checkObject;
     }
 
 }

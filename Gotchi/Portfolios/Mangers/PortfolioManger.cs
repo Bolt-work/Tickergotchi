@@ -34,10 +34,13 @@ namespace Gotchi.Portfolios.Managers
             return _portfolioRepository.Upsert(portfolio);
         }
 
-        public Portfolio GetByPortfolioId (string portfolioId)
+        public Portfolio GetByPortfolioId (string? portfolioId)
         {
+            if(portfolioId is null)
+                throw new ArgumentNullException(nameof(portfolioId));
+
             var portfolio = _portfolioRepository.GetByPortfolioId(portfolioId);
-            ThrowIfModelNull(portfolio, portfolioId);
+            ThrowIfModelNotFound(portfolio, portfolioId);
             Update(portfolio);
             return portfolio;
         }
@@ -148,6 +151,17 @@ namespace Gotchi.Portfolios.Managers
         {
             portfolio.Balance = PortfolioUtilities.CalculatePortfolioBalance(portfolio.Balance, portfolio.BalanceLastUpdated);
             portfolio.BalanceLastUpdated = DateTime.Now;
+        }
+
+        public float WithdrawFromAccount(Portfolio portfolio, float amount) 
+        {
+            Update(portfolio);
+
+            if (portfolio.Balance < amount)
+                throw new NotEnoughFundsForWithdrawException(portfolio, amount);
+
+            portfolio.Balance -= amount;
+            return amount;
         }
 
     }

@@ -52,7 +52,7 @@ public class CryptoCoinManager : CoreManagerBase, ICryptoCoinManager
     public CryptoCoin CryptoCoinByCoinMarketId(string coinMarketId) 
     {
         var cryptoCoin = _cryptoCoinRepository.GetByCoinMarketId(coinMarketId);
-        return ThrowIfModelNull(cryptoCoin, coinMarketId);
+        return ThrowIfModelNotFound(cryptoCoin, coinMarketId);
     } 
     public CryptoCoin CryptoCoinByName(string name) => _cryptoCoinRepository.GetByName(name);
     public IEnumerable<CryptoCoin> CryptoCoinBySlug(string slug) => _cryptoCoinRepository.GetBySlug(slug);

@@ -6,7 +6,7 @@ namespace Gotchi.Persons.Managers
     {
         Person Create(string id, string? firstName = null, string? lastName = null);
         bool Delete(Person person);
-        Person GetPersonById(string id);
+        Person GetPersonById(string? id);
         bool Store(Person person);
     }
 }

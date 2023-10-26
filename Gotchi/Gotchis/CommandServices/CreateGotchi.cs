@@ -8,13 +8,13 @@ namespace Gotchi.Gotchis.CommandServices;
 
 public class CreateGotchiCommand : ICoreCommand
 {
-    public readonly string? PersonId;
+    public readonly string? OwnerId;
     public readonly string? Name;
     public readonly string? GotchiId;
 
-    public CreateGotchiCommand(string personId, string name, string? gotchiId = null)
+    public CreateGotchiCommand(string ownerId, string name, string? gotchiId = null)
     {
-        PersonId = personId;
+        OwnerId = ownerId;
         Name = name;
         GotchiId = gotchiId;
     }
@@ -31,11 +31,11 @@ public class CreateGotchiCommandHandler: CoreCommandHandlerBase
         _personManager = personManager;
     }
 
-    public void Handle(CreatePortfolioCommand command)
+    public void Handle(CreateGotchiCommand command)
     {
         base.Handle(command);
-        //var accountHolder = _personManager.GetPersonById(command.PersonsId);
-        //var portfolio = _portfolioManager.CreatePortfolio(accountHolder, command.PortfolioId);
-        //_portfolioManager.Store(portfolio);
+        var owner = _personManager.GetPersonById(command.OwnerId);
+        var gotchi = _gotchiManager.CreateCryptoGotchi(owner, command.Name, command.GotchiId);
+        _gotchiManager.Store(gotchi);
     }
 }

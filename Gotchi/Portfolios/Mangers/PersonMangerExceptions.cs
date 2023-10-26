@@ -11,6 +11,15 @@ public class CannotAffordPurchaseOfAssetException : CoreManagerException
             ){}
 }
 
+public class NotEnoughFundsForWithdrawException : CoreManagerException
+{
+    public NotEnoughFundsForWithdrawException(Portfolio portfolio, float amountToWithdraw)
+        : base(
+            $"Not enough funds for withdrawal, PortfolioId : {portfolio.Id}, Amount -{amountToWithdraw}"
+            )
+    { }
+}
+
 public class AssetNotFoundException : CoreManagerException
 {
     public AssetNotFoundException(Portfolio portfolio, string coinMarketId)
