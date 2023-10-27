@@ -55,6 +55,16 @@ namespace Gotchi.Portfolios.Managers
             return portfolio;
         }
 
+        public IEnumerable<Portfolio> PortfolioAll()
+        {
+            var portfolio = _portfolioRepository.GetAll();
+            foreach (var p in portfolio)
+            {
+                Update(p);
+            }
+            return portfolio;
+        }
+
         public void BuyAsset(Portfolio portfolio, CryptoCoin coin, float amountInValue) 
         {
             // Encase it updates

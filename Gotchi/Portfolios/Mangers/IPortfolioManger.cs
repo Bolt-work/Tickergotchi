@@ -15,5 +15,6 @@ namespace Gotchi.Portfolios.Managers
         bool Store(Portfolio portfolio);
         void Update(Portfolio portfolio);
         float WithdrawFromAccount(Portfolio portfolio, float amount);
+        IEnumerable<Portfolio> PortfolioAll();
     }
 }

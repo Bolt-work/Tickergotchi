@@ -25,4 +25,10 @@ internal class PortfolioDataAccess : IPortfolioDataAccess
         var portfolioModels = _portfolioManager.GetByPersonId(personId);
         return _mapper.Map<ICollection<PortfolioDTO>>(portfolioModels);
     }
+
+    public ICollection<PortfolioDTO> PortfoliosAll()
+    {
+        var portfolioModels = _portfolioManager.PortfolioAll();
+        return _mapper.Map<ICollection<PortfolioDTO>>(portfolioModels);
+    }
 }

@@ -35,6 +35,7 @@ public class GotchiServiceDataAccess: IPersonDataAccess,
 
     public PortfolioDTO PortfolioById(string portfolioId) => _portfolioDataAccess.PortfolioById(portfolioId);
     public ICollection<PortfolioDTO> PortfoliosByPersonId(string personId) => _portfolioDataAccess.PortfoliosByPersonId(personId);
+    public ICollection<PortfolioDTO> PortfoliosAll() => _portfolioDataAccess.PortfoliosAll();
 
     public CryptoCoinDTO CryptoCoinByCoinMarketId(string coinMarketId) => _cryptoCoinsDataAccess.CryptoCoinByCoinMarketId(coinMarketId);
     public CryptoCoinDTO CryptoCoinByName(string name) => _cryptoCoinsDataAccess.CryptoCoinByName(name);
@@ -43,4 +44,5 @@ public class GotchiServiceDataAccess: IPersonDataAccess,
 
     public GotchiDTO GotchiById(string gotchiId) => _gotchiDataAccess.GotchiById(gotchiId);
     public ICollection<GotchiDTO> GotchisByOwnerId(string ownerId) => _gotchiDataAccess.GotchisByOwnerId(ownerId);
+
 }

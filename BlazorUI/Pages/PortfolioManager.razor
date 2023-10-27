@@ -1,14 +1,72 @@
-﻿@page "/Portfolio"
+﻿@page "/PortfolioManager"
 
 @using BlazorUI.Models
 @using Gotchi
+@using Gotchi.Portfolios.CommandService;
+@using Gotchi.Portfolios.DTOs;
 
 @inject GotchiHostService _gotchiHostService
 
-<h3>PortFolioManager</h3>
+<h3>Portfolio Manager</h3>
 
 <h4>Create new portfolio</h4>
+<EditForm Model="@newPortfolio" OnValidSubmit="@CreateNewPortfolio">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <InputText id="personId" @bind-Value="newPortfolio.PersonId" />
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+</EditForm>
+
+<h4>Current People</h4>
+@if (portfolios is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Account Holder Id</th>
+                <th>Balance</th>
+                <th>Assets Count</th>
+                <th>BalanceLastUpdated</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var portfolio in portfolios)
+            {
+                <tr>
+                    <td>@portfolio.Id</td>
+                    <td>@portfolio.AccountHolder.Id</td>
+                    <td>@portfolio.Balance</td>
+                    <td>@portfolio.Assets.Count</td>
+                    <td>@portfolio.BalanceLastUpdated</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
 
 @code {
+    private ICollection<PortfolioDTO> portfolios;
+    private CreateNewPortfolioUiModel newPortfolio = new CreateNewPortfolioUiModel();
+
+    protected override async Task OnInitializedAsync()
+    {
+        portfolios = _gotchiHostService.DataAccess().PortfoliosAll();
+    }
+
+    private async Task CreateNewPortfolio()
+    {
+        var command = new CreatePortfolioCommand(newPortfolio.PersonId);
+        _gotchiHostService.CommandService().Process(command);
+
+        newPortfolio = new CreateNewPortfolioUiModel();
+        portfolios = _gotchiHostService.DataAccess().PortfoliosAll();
+    }
 
 }
