@@ -18,20 +18,19 @@ public class FeedGotchiCommand : ICoreCommand
     }
 }
 
-public class FeedGotchiCommandHandler : CoreCommandHandlerBase
+public class FeedGotchiCommandHandler : CoreCommandHandlerBase<FeedGotchiCommand>
 {
     private readonly IGotchiManager _gotchiManager;
     private readonly IPortfolioManager _portfolioManager;
-    public FeedGotchiCommandHandler(IGotchiManager gotchiManager, IPortfolioManager portfolioManager, ILogger<CreateGotchiCommandHandler> logger)
+    public FeedGotchiCommandHandler(IGotchiManager gotchiManager, IPortfolioManager portfolioManager, ILogger<FeedGotchiCommandHandler> logger)
         : base(logger)
     {
         _gotchiManager = gotchiManager;
         _portfolioManager = portfolioManager;
     }
 
-    public void Handle(FeedGotchiCommand command)
+    public override void Handle(FeedGotchiCommand command)
     {
-        base.Handle(command);
         var gotchi = _gotchiManager.GetGotchiById(command.GotchiId);
         var portfolio = _portfolioManager.GetByPortfolioId(command.PortfolioId);
 

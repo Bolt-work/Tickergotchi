@@ -19,7 +19,7 @@ public class BuyAssetsCommand : ICoreCommand
     }
 }
 
-public class BuyAssetsCommandHandler : CoreCommandHandlerBase
+public class BuyAssetsCommandHandler : CoreCommandHandlerBase<BuyAssetsCommand>
 {
     private IPortfolioManager _portfolioManager;
     private ICryptoCoinManager _cryptoCoinManager;
@@ -31,9 +31,8 @@ public class BuyAssetsCommandHandler : CoreCommandHandlerBase
         _cryptoCoinManager  = cryptoCoinManager;
     }
 
-    public void Handle(BuyAssetsCommand command) 
+    public override void Handle(BuyAssetsCommand command) 
     {
-        base.Handle(command);
         var cryptoCoin = _cryptoCoinManager.CryptoCoinByCoinMarketId(command.CoinMarketId);
         var portfolio = _portfolioManager.GetByPortfolioId(command.PortfolioId);
         _portfolioManager.BuyAsset(portfolio, cryptoCoin, command.AmountInValue);

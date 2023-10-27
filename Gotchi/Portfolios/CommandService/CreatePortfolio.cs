@@ -18,7 +18,7 @@ public class CreatePortfolioCommand : ICoreCommand
 }
 
 
-public class CreatePortfolioCommandHandler : CoreCommandHandlerBase
+public class CreatePortfolioCommandHandler : CoreCommandHandlerBase<CreatePortfolioCommand>
 {
     private IPortfolioManager _portfolioManager;
     private IPersonManager _personManager;
@@ -29,9 +29,8 @@ public class CreatePortfolioCommandHandler : CoreCommandHandlerBase
         _personManager = personManager;
     }
 
-    public void Handle(CreatePortfolioCommand command)
+    public override void Handle(CreatePortfolioCommand command)
     {
-        base.Handle(command);
         var accountHolder = _personManager.GetPersonById(command.PersonsId);
         var portfolio = _portfolioManager.CreatePortfolio(accountHolder, command.PortfolioId);
         _portfolioManager.Store(portfolio);

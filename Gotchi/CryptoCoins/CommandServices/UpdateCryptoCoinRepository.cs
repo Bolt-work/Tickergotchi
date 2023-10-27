@@ -10,7 +10,7 @@ public class UpdateCryptoCoinRepositoryCommand : ICoreCommand
 {
 }
 
-public class UpdateCryptoCoinRepositoryCommandHandler : CoreCommandHandlerBase
+public class UpdateCryptoCoinRepositoryCommandHandler : CoreCommandHandlerBase<UpdateCryptoCoinRepositoryCommand>
 {
     private ICryptoCoinManager _cryptoCoinManager;
     public UpdateCryptoCoinRepositoryCommandHandler(ICryptoCoinManager cryptoCoinManager, ILogger<UpdateCryptoCoinRepositoryCommandHandler> logger)
@@ -19,9 +19,8 @@ public class UpdateCryptoCoinRepositoryCommandHandler : CoreCommandHandlerBase
         _cryptoCoinManager = cryptoCoinManager;
     }
 
-    public void Handle(UpdateCryptoCoinRepositoryCommand command)
+    public override void Handle(UpdateCryptoCoinRepositoryCommand command)
     {
-        base.Handle(command);
         _cryptoCoinManager.UpdateCoinValues();
     }
 }

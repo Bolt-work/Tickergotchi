@@ -16,7 +16,7 @@ public class RemoveAssetCommand : ICoreCommand
     }
 }
 
-public class RemoveAssetCommandHandler : CoreCommandHandlerBase
+public class RemoveAssetCommandHandler : CoreCommandHandlerBase<RemoveAssetCommand>
 {
     private IPortfolioManager _portfolioManager;
 
@@ -26,9 +26,8 @@ public class RemoveAssetCommandHandler : CoreCommandHandlerBase
         _portfolioManager = portfolioManager;
     }
 
-    public void Handle(RemoveAssetCommand command)
+    public override void Handle(RemoveAssetCommand command)
     {
-        base.Handle(command);
         var portfolio = _portfolioManager.GetByPortfolioId(command.PortfolioId);
         _portfolioManager.RemovePortfolioAsset(portfolio, command.AssetCoinMarketId);
         _portfolioManager.Store(portfolio);

@@ -13,7 +13,7 @@ public class DeletePortfolioCommand : ICoreCommand
     }
 }
 
-public class DeletePortfolioCommandHandler : CoreCommandHandlerBase
+public class DeletePortfolioCommandHandler : CoreCommandHandlerBase<DeletePortfolioCommand>
 {
     private IPortfolioManager _portfolioManager;
 
@@ -23,9 +23,8 @@ public class DeletePortfolioCommandHandler : CoreCommandHandlerBase
         _portfolioManager = portfolioManager;
     }
 
-    public void Handle(DeletePortfolioCommand command)
+    public override void Handle(DeletePortfolioCommand command)
     {
-        base.Handle(command);
         var portfolio = _portfolioManager.GetByPortfolioId(command.PortfolioId);
         _portfolioManager.DeletePortfolio(portfolio);
     }

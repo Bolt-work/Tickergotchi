@@ -18,7 +18,7 @@ public class CreatePersonCommand : ICoreCommand
 }
 
 
-public class CreatePersonCommandHandler : CoreCommandHandlerBase
+public class CreatePersonCommandHandler : CoreCommandHandlerBase<CreatePersonCommand>
 {
     private IPersonManager _personManager;
     public CreatePersonCommandHandler(IPersonManager personManager, ILogger<CreatePersonCommandHandler> logger)
@@ -27,9 +27,8 @@ public class CreatePersonCommandHandler : CoreCommandHandlerBase
         _personManager = personManager;
     }
 
-    public void Handle(CreatePersonCommand command) 
+    public override void Handle(CreatePersonCommand command) 
     {
-        base.Handle(command);
         var person = _personManager.Create(command.PersonsId, command.FirstName, command.LastName);
         _personManager.Store(person);
     }

@@ -1,22 +1,31 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Gotchi.Core.Managers;
+using Microsoft.Extensions.Logging;
 
 namespace Gotchi.Core.Services;
 
-public abstract class CoreCommandHandlerBase
+public abstract class CoreCommandHandlerBase<T>
 {
-    ILogger<CoreCommandHandlerBase> _logger;
-    public CoreCommandHandlerBase(ILogger<CoreCommandHandlerBase> logger)
+    ILogger<CoreCommandHandlerBase<T>> _logger;
+    public CoreCommandHandlerBase(ILogger<CoreCommandHandlerBase<T>> logger)
     {
         _logger = logger;
     }
 
-    public void HandlerInvoke(ICoreCommand command) 
+    public void HandlerInvoke(T command) 
     {
-        _logger.LogInformation($"Processing command {command.GetType().FullName}");
+        try
+        {
+            if(command is null)
+                throw new ArgumentNullException(nameof(command));
+
+            _logger.LogInformation($"Processing command {command.GetType().FullName}");
+            Handle(command);
+        }
+        catch(CoreManagerException ex)
+        {
+            _logger.LogError(ex.ToString());
+        }
     }
 
-    protected void Handle(ICoreCommand command) 
-    {
-        _logger.LogInformation($"Processing command {command.GetType().FullName}");
-    }
+    public abstract void Handle(T command);
 }

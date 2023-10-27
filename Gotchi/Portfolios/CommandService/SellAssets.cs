@@ -19,7 +19,7 @@ public class SellAssetsCommand : ICoreCommand
     }
 }
 
-public class SellAssetsCommandHandler : CoreCommandHandlerBase 
+public class SellAssetsCommandHandler : CoreCommandHandlerBase<SellAssetsCommand> 
 {
     private IPortfolioManager _portfolioManager;
     private ICryptoCoinManager _cryptoCoinManager;
@@ -31,9 +31,8 @@ public class SellAssetsCommandHandler : CoreCommandHandlerBase
         _cryptoCoinManager = cryptoCoinManager;  
     }
 
-    public void Handle(SellAssetsCommand command) 
+    public override void Handle(SellAssetsCommand command) 
     {
-        base.Handle(command);
         var portfolio = _portfolioManager.GetByPortfolioId(command.PortfolioId);
         var coin = _cryptoCoinManager.CryptoCoinByCoinMarketId(command.CoinMarketId);
         _portfolioManager.SellAsset(portfolio, coin, command.Units);

@@ -20,7 +20,7 @@ public class CreateGotchiCommand : ICoreCommand
     }
 }
 
-public class CreateGotchiCommandHandler: CoreCommandHandlerBase
+public class CreateGotchiCommandHandler: CoreCommandHandlerBase<CreateGotchiCommand>
 {
     private readonly IGotchiManager _gotchiManager;
     private readonly IPersonManager _personManager;
@@ -31,9 +31,8 @@ public class CreateGotchiCommandHandler: CoreCommandHandlerBase
         _personManager = personManager;
     }
 
-    public void Handle(CreateGotchiCommand command)
+    public override void Handle(CreateGotchiCommand command)
     {
-        base.Handle(command);
         var owner = _personManager.GetPersonById(command.OwnerId);
         var gotchi = _gotchiManager.CreateCryptoGotchi(owner, command.Name, command.GotchiId);
         _gotchiManager.Store(gotchi);
