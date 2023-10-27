@@ -19,4 +19,10 @@ public class PersonDataAccess : IPersonDataAccess
         var personModel = _personManager.GetPersonById(id);
         return _mapper.Map<PersonDTO>(personModel);
     }
+
+    public ICollection<PersonDTO> PersonsAll()
+    {
+        var personModel = _personManager.GetAllPersons();
+        return _mapper.Map<ICollection<PersonDTO>>(personModel);
+    }
 }

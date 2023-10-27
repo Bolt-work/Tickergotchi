@@ -50,8 +50,8 @@ public class CreateGotchiCommandHandlerTest
 
         // Assert
         _gotchiRepo.GetAll().Should().NotBeEmpty();
-        _gotchiRepo.Get(gotchiId).Should().NotBeNull();
-        _gotchiRepo.Get(gotchiId).Name = testName;
+        _gotchiRepo.GotchiByGotchiId(gotchiId).Should().NotBeNull();
+        _gotchiRepo.GotchiByGotchiId(gotchiId).Name = testName;
     }
 
     [Fact]

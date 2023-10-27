@@ -47,15 +47,29 @@ public class GotchiManager : CoreManagerBase, IGotchiManager
         };
     }
 
-    public CryptoGotchi GetGotchiById(string? gotchiId) 
+    public CryptoGotchi GetGotchiById(string? gotchiId)
     {
-        if(gotchiId is null)
+        if (gotchiId is null)
             throw new ArgumentNullException(nameof(gotchiId));
 
-        var gotchi = _gotchiRepository.Get(gotchiId);
+        var gotchi = _gotchiRepository.GotchiByGotchiId(gotchiId);
         ThrowIfModelNotFound(gotchi, gotchiId);
         Update(gotchi);
         return gotchi;
+    }
+
+    public IEnumerable<CryptoGotchi> GetGotchisByOwnerId(string? ownerId)
+    {
+        if (ownerId is null)
+            throw new ArgumentNullException(nameof(ownerId));
+
+        var gotchis = _gotchiRepository.GotchisByOwnerId(ownerId);
+        foreach (var gotchi in gotchis) 
+        {
+            Update(gotchi);
+        }
+
+        return gotchis;
     }
 
     public bool Store(CryptoGotchi gotchi) 

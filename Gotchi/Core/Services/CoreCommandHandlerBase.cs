@@ -9,6 +9,12 @@ public abstract class CoreCommandHandlerBase
     {
         _logger = logger;
     }
+
+    public void HandlerInvoke(ICoreCommand command) 
+    {
+        _logger.LogInformation($"Processing command {command.GetType().FullName}");
+    }
+
     protected void Handle(ICoreCommand command) 
     {
         _logger.LogInformation($"Processing command {command.GetType().FullName}");

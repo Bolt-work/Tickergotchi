@@ -1,4 +1,5 @@
 ﻿
+using Gotchi.Core.Managers;
 using Gotchi.CryptoCoins;
 using Gotchi.Gotchis;
 using Gotchi.Persons;
@@ -8,6 +9,7 @@ using Gotchi.Persons.Repository;
 using Gotchi.Portfolios;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using System.Runtime.ExceptionServices;
 using System.Windows.Input;
 
@@ -16,9 +18,8 @@ namespace Gotchi.Core.Services;
 public class CoreCommandService : ICoreCommandService
 {
     private const string _commandHandlerSuffix = "Handler";
-    private const string _commandHandlerMethodName = "Handle";
+    private const string _commandHandlerMethodName = "HandlerInvoke";
     private IServiceProvider _serviceProvider;
-
 
     public CoreCommandService(IServiceProvider serviceProvider)
     {

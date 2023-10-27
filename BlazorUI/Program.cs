@@ -1,5 +1,6 @@
 using BlazorUI.Areas.Identity;
 using BlazorUI.Data;
+using Gotchi;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
@@ -26,6 +27,8 @@ namespace BlazorUI
             builder.Services.AddServerSideBlazor();
             builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
             builder.Services.AddSingleton<WeatherForecastService>();
+
+            builder.Services.AddSingleton(new GotchiHostService(new string[0]));
 
             var app = builder.Build();
 

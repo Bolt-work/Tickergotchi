@@ -35,7 +35,12 @@ public class MockGotchiRepository : MockRepositoryBase<CryptoGotchi>, IGotchiRep
     public bool DeleteAll() => base.DeleteAllEntries();
     public bool Exists(string id) => base.EntryExists(id);
 
-    public CryptoGotchi Get(string id) => base.GetEntryById(id);
+    public CryptoGotchi GotchiByGotchiId(string id) => base.GetEntryById(id);
     public IEnumerable<CryptoGotchi> GetAll() => base.GetAllEntries();
     public bool Upsert(CryptoGotchi gotchi) => base.UpsertEntry(gotchi);
+
+    public IEnumerable<CryptoGotchi> GotchisByOwnerId(string ownerId)
+    {
+        return _db.Where(x => x.Owner.Id == ownerId).ToList();
+}
 }

@@ -32,6 +32,11 @@ namespace Gotchi.Persons.Managers
             return ThrowIfModelNotFound(person, id);
         }
 
+        public IEnumerable<Person> GetAllPersons()
+        {
+            return _personRepository.GetAll();
+        }
+
         public bool Delete(Person person)
         {
             return _personRepository.Delete(person);

@@ -3,6 +3,8 @@ using Gotchi.Core.Services;
 using Gotchi.CryptoCoins;
 using Gotchi.CryptoCoins.DTOs;
 using Gotchi.Gotchis;
+using Gotchi.Gotchis.DTOs;
+using Gotchi.Gotchis.Models;
 using Gotchi.Persons;
 using Gotchi.Persons.DTOs;
 using Gotchi.Persons.Models;
@@ -33,9 +35,9 @@ public class GotchiHostService : CoreHostService
         return _commandService;
     }
 
-    public GotchiDataAccess DataAccess() 
+    public GotchiServiceDataAccess DataAccess() 
     {
-        return _serviceProvider.GetRequiredService<GotchiDataAccess>();
+        return _serviceProvider.GetRequiredService<GotchiServiceDataAccess>();
     }
 
     private IMapper BuildMapper() 
@@ -51,6 +53,9 @@ public class GotchiHostService : CoreHostService
             // Portfolio
             cfg.CreateMap<Portfolio, PortfolioDTO> ();
             cfg.CreateMap<Asset, AssetDTO>();
+
+            // Gotchi
+            cfg.CreateMap<CryptoGotchi, GotchiDTO>();
         });
         
         return config.CreateMapper();
@@ -60,7 +65,7 @@ public class GotchiHostService : CoreHostService
     {
         services.AddSingleton(BuildMapper());
 
-        services.AddSingleton<GotchiDataAccess>();
+        services.AddSingleton<GotchiServiceDataAccess>();
 
         CryptoCoinServiceConfig.Register(services);
         PersonServiceConfig.Register(services);
