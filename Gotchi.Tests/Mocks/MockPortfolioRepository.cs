@@ -12,7 +12,7 @@ public class MockPortfolioRepository : MockRepositoryBase<Portfolio> , IPortfoli
         var accountHolder = CommandHandlerHelper.MockPersonRepository().TestPerson;
         TestPortfolio = new Portfolio("testPortfolioId", accountHolder)
         {
-            BalanceLastUpdated = DateTime.Now,
+            BalanceLastUpdated = DateTime.UtcNow,
             Balance = 8_000F
         };
 

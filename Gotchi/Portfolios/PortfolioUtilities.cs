@@ -4,7 +4,7 @@ namespace Gotchi.Portfolios;
 
 public static class PortfolioUtilities
 {
-    public static float CalculatePortfolioBalance(float balance, DateTime balanceLastUpdated) => CalculatePortfolioBalance(balance, balanceLastUpdated, DateTime.Now);
+    public static float CalculatePortfolioBalance(float balance, DateTime balanceLastUpdated) => CalculatePortfolioBalance(balance, balanceLastUpdated, DateTime.UtcNow);
     public static float CalculatePortfolioBalance(float balance, DateTime balanceLastUpdated, DateTime currentDataTime)
     {
         if (balance < 1)

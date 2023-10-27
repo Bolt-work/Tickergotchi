@@ -20,7 +20,7 @@ public class CryptoCoinManager : CoreManagerBase, ICryptoCoinManager
         var jsonModel = _coinMarketApi.CallApi();
 
         var coins = new List<CryptoCoin>();
-        DateTime now = DateTime.Now;
+        DateTime now = DateTime.UtcNow;
 
         var data = jsonModel.data ?? throw new CoinMarketApiModelPropertyIsNullExceptions(jsonModel, "data");
 

@@ -16,7 +16,7 @@ public class MockGotchiRepository : MockRepositoryBase<CryptoGotchi>, IGotchiRep
             Hunger = GameSettings.Values().StartingMaxHunger,
             HungerMax = GameSettings.Values().StartingMaxHunger,
             FoodUnitsConsumed = 0,
-            LastUpdated = DateTime.Now,
+            LastUpdated = DateTime.UtcNow,
             State = GotchiState.Alive,
             PriceForFood = GameSettings.Values().FoodBaseCost
         };

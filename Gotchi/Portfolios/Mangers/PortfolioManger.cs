@@ -24,7 +24,7 @@ namespace Gotchi.Portfolios.Managers
 
             return new Portfolio(id, accountHolder) 
             {
-                BalanceLastUpdated = DateTime.Now,
+                BalanceLastUpdated = DateTime.UtcNow,
                 Balance = GameSettings.Values().StartingBalance
             };
         }
@@ -89,7 +89,7 @@ namespace Gotchi.Portfolios.Managers
             }
 
             portfolio.Balance = balance - amountInValue;
-            portfolio.BalanceLastUpdated = DateTime.Now;
+            portfolio.BalanceLastUpdated = DateTime.UtcNow;
         }
 
         public void SellAsset(Portfolio portfolio, CryptoCoin coin, int units) 
@@ -108,7 +108,7 @@ namespace Gotchi.Portfolios.Managers
             asset.PriceWhenLastBought = coin.Price;
 
             portfolio.Balance += value;
-            portfolio.BalanceLastUpdated = DateTime.Now;
+            portfolio.BalanceLastUpdated = DateTime.UtcNow;
         }
 
         private bool AssetOwned(Portfolio portfolio, CryptoCoin coin) 
@@ -160,7 +160,7 @@ namespace Gotchi.Portfolios.Managers
         public void Update(Portfolio portfolio)
         {
             portfolio.Balance = PortfolioUtilities.CalculatePortfolioBalance(portfolio.Balance, portfolio.BalanceLastUpdated);
-            portfolio.BalanceLastUpdated = DateTime.Now;
+            portfolio.BalanceLastUpdated = DateTime.UtcNow;
         }
 
         public float WithdrawFromAccount(Portfolio portfolio, float amount) 

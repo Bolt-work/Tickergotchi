@@ -17,7 +17,7 @@ public class MockCoinMarketApi : ICoinMarketApi
                     name = "Bitcoin",
                     symbol = "BTC",
                     slug = "bitcoin",
-                    last_updated = DateTime.Now,
+                    last_updated = DateTime.UtcNow,
 
                     quote = new Quote
                     {

@@ -41,7 +41,7 @@ public class GotchiManager : CoreManagerBase, IGotchiManager
             Hunger = GameSettings.Values().StartingMaxHunger,
             HungerMax = GameSettings.Values().StartingMaxHunger,
             FoodUnitsConsumed = 0,
-            LastUpdated = DateTime.Now,
+            LastUpdated = DateTime.UtcNow,
             State = GotchiState.Alive,
             PriceForFood = GameSettings.Values().FoodBaseCost
         };
@@ -80,7 +80,7 @@ public class GotchiManager : CoreManagerBase, IGotchiManager
     public void Update(CryptoGotchi gotchi) 
     {
         var hoursPassed = CoreHelper.NumberOfHoursPassed(gotchi.LastUpdated);
-        gotchi.LastUpdated = DateTime.Now;
+        gotchi.LastUpdated = DateTime.UtcNow;
         
         for (int i = 0; i < hoursPassed; i++) 
         {

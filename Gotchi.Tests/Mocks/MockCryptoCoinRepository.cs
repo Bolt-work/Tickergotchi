@@ -15,8 +15,8 @@ public class MockCryptoCoinRepository : MockRepositoryBase<CryptoCoin>, ICryptoC
             Symbol = "BTC",
             Slug = "bitcoin",
             Price = 27126.615234375F,
-            CoinMarketLastUpdated = DateTime.Now,
-            LastUpdated = DateTime.Now,
+            CoinMarketLastUpdated = DateTime.UtcNow,
+            LastUpdated = DateTime.UtcNow,
         };
 
         if (addTestData)

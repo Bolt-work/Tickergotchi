@@ -10,7 +10,7 @@ public class PortfolioUtilitiesTests
     public void CalculatePortfolioBalance_ValidTwoHoursPassed_CorrectBalance()
     {
         float balance = 10_000F;
-        DateTime now = DateTime.Now;
+        DateTime now = DateTime.UtcNow;
         DateTime lastUpdated = now.Subtract(new TimeSpan(2,0,0));
         DateTime current = now;
 
@@ -31,7 +31,7 @@ public class PortfolioUtilitiesTests
     public void CalculatePortfolioBalance_BalanceEmpty_ZeroBalance()
     {
         float balance = 0F;
-        DateTime now = DateTime.Now;
+        DateTime now = DateTime.UtcNow;
         DateTime lastUpdated = now.Subtract(new TimeSpan(2, 0, 0));
         DateTime current = now;
 
