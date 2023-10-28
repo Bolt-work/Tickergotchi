@@ -15,7 +15,8 @@ public static class PortfolioUtilities
         for (int i = hours; i > 0; i--)
         {
             newBalance = newBalance - GameSettings.Values().DeductionBaseAmount;
-            newBalance -= (float) newBalance * (GameSettings.Values().DeductionPercentage / 100);
+            float deductionPercentage = (float) GameSettings.Values().DeductionPercentage / 100;
+            newBalance -= (float) newBalance * deductionPercentage;
         }
 
         return (newBalance > 0) ? newBalance : 0;

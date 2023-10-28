@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gotchi", "Gotchi\Gotchi.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gotchi.Tests", "Gotchi.Tests\Gotchi.Tests.csproj", "{6F5374FA-B32C-44F2-9296-E717CED5D8FC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorUI", "BlazorUI\BlazorUI.csproj", "{D9140C17-0830-473E-BBEF-7EE44735C0FA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorUI", "BlazorUI\BlazorUI.csproj", "{D9140C17-0830-473E-BBEF-7EE44735C0FA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

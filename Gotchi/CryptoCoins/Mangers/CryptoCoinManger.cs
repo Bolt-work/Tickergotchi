@@ -57,5 +57,4 @@ public class CryptoCoinManager : CoreManagerBase, ICryptoCoinManager
     public CryptoCoin CryptoCoinByName(string name) => _cryptoCoinRepository.GetByName(name);
     public IEnumerable<CryptoCoin> CryptoCoinBySlug(string slug) => _cryptoCoinRepository.GetBySlug(slug);
     public IEnumerable<CryptoCoin> CryptoCoinBySymbol(string symbol) => _cryptoCoinRepository.GetBySymbol(symbol);
-
 }

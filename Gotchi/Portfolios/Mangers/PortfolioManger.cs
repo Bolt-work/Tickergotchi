@@ -1,5 +1,7 @@
 ﻿using Gotchi.Core.Helpers;
 using Gotchi.Core.Managers;
+using Gotchi.CryptoCoins.Managers;
+using Gotchi.CryptoCoins.Repository;
 using Gotchi.Persons.Models;
 using Gotchi.Portfolios.Models;
 using Gotchi.Portfolios.Repository;
@@ -9,10 +11,12 @@ namespace Gotchi.Portfolios.Managers
     public class PortfolioManager : CoreManagerBase, IPortfolioManager
     {
         private IPortfolioRepository _portfolioRepository;
+        private ICryptoCoinRepository _cryptoCoinRepository;
 
-        public PortfolioManager(IPortfolioRepository portfolioRepository)
+        public PortfolioManager(IPortfolioRepository portfolioRepository, ICryptoCoinRepository cryptoCoinRepository)
         {
             _portfolioRepository = portfolioRepository;
+            _cryptoCoinRepository = cryptoCoinRepository;
         }
 
         public Portfolio CreatePortfolio(Person accountHolder, string? portfolioId = null)
@@ -140,9 +144,13 @@ namespace Gotchi.Portfolios.Managers
                 Name = coin.Name,
                 Slug = coin.Slug,
                 Symbol = coin.Symbol,
-                PriceWhenLastBought = coin.Price,
                 Units = amountInValue,
                 Profit = 0 - amountInValue,
+
+                PriceWhenLastBought = coin.Price,
+                CoinMarketLastUpdated = coin.CoinMarketLastUpdated,
+                CoinLastUpdated = coin.LastUpdated,
+                IsValid = true
             };
         }
 
@@ -161,6 +169,29 @@ namespace Gotchi.Portfolios.Managers
         {
             portfolio.Balance = PortfolioUtilities.CalculatePortfolioBalance(portfolio.Balance, portfolio.BalanceLastUpdated);
             portfolio.BalanceLastUpdated = DateTime.UtcNow;
+            foreach (var asset in portfolio.Assets) 
+            {
+                Update(asset);
+            }
+        }
+
+        public void Update(Asset asset)
+        {
+            if(asset.CoinMarketId is null)
+                throw new ArgumentNullException(nameof(asset));
+
+            var coin = _cryptoCoinRepository.GetByCoinMarketId(asset.CoinMarketId);
+
+            if (coin is null)
+            {
+                asset.IsValid = false;
+            }
+            else 
+            {
+                asset.CurrentPrice = coin.Price;
+                asset.CoinMarketLastUpdated = coin.CoinMarketLastUpdated;
+                asset.CoinLastUpdated = coin.LastUpdated;
+            }
         }
 
         public float WithdrawFromAccount(Portfolio portfolio, float amount) 
