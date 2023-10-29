@@ -9,9 +9,9 @@ public class SellAssetsCommand : ICoreCommand
 {
     public readonly string PortfolioId;
     public readonly string CoinMarketId;
-    public readonly int Units;
+    public readonly float Units;
 
-    public SellAssetsCommand(string portfolioId, string coinMarketId, int units)
+    public SellAssetsCommand(string portfolioId, string coinMarketId, float units)
     {
         PortfolioId = portfolioId;
         CoinMarketId = coinMarketId;

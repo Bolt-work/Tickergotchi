@@ -31,7 +31,7 @@ public class AssetNotFoundException : CoreManagerException
 
 public class AssetDoesHaveEnoughUnitsToSell : CoreManagerException
 {
-    public AssetDoesHaveEnoughUnitsToSell(Asset asset, int units)
+    public AssetDoesHaveEnoughUnitsToSell(Asset asset, float units)
         : base(
             $"Asset with CoinMarketId : {asset.CoinMarketId} only has {asset.Units} units. Can not sell {units} units"
             )

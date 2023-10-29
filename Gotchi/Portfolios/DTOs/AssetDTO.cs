@@ -16,5 +16,15 @@ public class AssetDTO : CoreModelBase
     public DateTime CoinMarketLastUpdated { get; set; }
     public DateTime CoinLastUpdated { get; set; }
     public bool IsValid { get; set; }
+
+    public float NetChange() 
+    {
+        return (float) CurrentPrice - PriceWhenLastBought;
+    }
+
+    public float ProjectedProfit()
+    {
+        return (float) Units * CurrentPrice;
+    }
 }
 

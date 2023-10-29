@@ -35,6 +35,7 @@ else
                 <th>Balance</th>
                 <th>Assets Count</th>
                 <th>BalanceLastUpdated</th>
+                <th>Link</th>
             </tr>
         </thead>
         <tbody>
@@ -46,6 +47,9 @@ else
                     <td>@portfolio.Balance</td>
                     <td>@portfolio.Assets.Count</td>
                     <td>@portfolio.BalanceLastUpdated</td>
+                    <td>
+                        <button type="button" @onclick="() => ViewPortfolio(portfolio.Id)">Click</button>
+                    </td>
                 </tr>
             }
         </tbody>
@@ -63,13 +67,15 @@ else
 
     private async Task CreateNewPortfolio()
     {
-        // var command = new CreatePortfolioCommand(newPortfolio.PersonId);
-        // _gotchiHostService.CommandService().Process(command);
+        var command = new CreatePortfolioCommand(newPortfolio.PersonId);
+        _gotchiHostService.CommandService().Process(command);
 
-        // newPortfolio = new CreateNewPortfolioUiModel();
-        // portfolios = _gotchiHostService.DataAccess().PortfoliosAll();
+        newPortfolio = new CreateNewPortfolioUiModel();
+        portfolios = _gotchiHostService.DataAccess().PortfoliosAll();
+    }
 
-        var id = "0cd94651-7529-4d10-adda-58a95af54b0e";
+    private void ViewPortfolio(string id)
+    {
         navigationManager.NavigateTo($"/ViewPortfolio/{id}");
     }
 

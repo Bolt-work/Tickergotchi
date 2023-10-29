@@ -82,7 +82,7 @@ namespace Gotchi.Portfolios.Managers
             if (AssetOwned(portfolio, coin))
             {
                 var asset = RetrieveAsset(portfolio, coin);
-                asset.Units += amountInValue;
+                asset.Units += (float) amountInValue / coin.Price;
                 asset.Profit -= amountInValue;
                 asset.PriceWhenLastBought = coin.Price;
             }
@@ -96,7 +96,7 @@ namespace Gotchi.Portfolios.Managers
             portfolio.BalanceLastUpdated = DateTime.UtcNow;
         }
 
-        public void SellAsset(Portfolio portfolio, CryptoCoin coin, int units) 
+        public void SellAsset(Portfolio portfolio, CryptoCoin coin, float units) 
         {
             var asset = RetrieveAsset(portfolio, coin);
 
@@ -144,7 +144,7 @@ namespace Gotchi.Portfolios.Managers
                 Name = coin.Name,
                 Slug = coin.Slug,
                 Symbol = coin.Symbol,
-                Units = amountInValue,
+                Units = (float) amountInValue / coin.Price,
                 Profit = 0 - amountInValue,
 
                 PriceWhenLastBought = coin.Price,
