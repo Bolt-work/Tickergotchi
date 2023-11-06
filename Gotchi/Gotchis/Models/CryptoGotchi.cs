@@ -8,6 +8,7 @@ public class CryptoGotchi : CoreModelBase
     public Person Owner;
     public string? Name { get; set; }
     public int Level { get; set; }
+    public DateTime Created { get; set; }
     public int Hunger { get; set; }
     public int HungerMax { get; set; }
     public int FoodUnitsConsumed { get; set; }

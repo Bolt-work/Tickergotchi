@@ -44,5 +44,5 @@ public class GotchiServiceDataAccess: IPersonDataAccess,
 
     public GotchiDTO GotchiById(string gotchiId) => _gotchiDataAccess.GotchiById(gotchiId);
     public ICollection<GotchiDTO> GotchisByOwnerId(string ownerId) => _gotchiDataAccess.GotchisByOwnerId(ownerId);
-
+    public ICollection<GotchiDTO> GotchisAll() => _gotchiDataAccess.GotchisAll();
 }

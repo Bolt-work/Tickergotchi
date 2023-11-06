@@ -1,7 +1,130 @@
 ﻿@page "/ManageGotchi"
 
+@using BlazorUI.Models;
+@using Gotchi.Gotchis.CommandServices;
+@using Gotchi.Gotchis.DTOs;
+
+@inject GotchiHostService _gotchiHostService
+
 <h3>Ranch</h3>
 
-@code {
+<h4>Create Gotchi</h4>
+<EditForm Model="@createGotchiModel" OnValidSubmit="@CreateGotchi">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
 
+    <div class="col-12 row">
+        <label class="col-2 font-weight-bold">Owner id:</label>
+        <InputText id="coinId" @bind-Value="createGotchiModel.OwnerId" />
+    </div>
+    <div class="col-12 row">
+        <label class="col-2 font-weight-bold">Gotchi Name:</label>
+        <InputText id="Amount" @bind-Value="createGotchiModel.Name" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+</EditForm>
+
+<h4>Feed Gotchi</h4>
+<EditForm Model="@feedGotchiUiModel" OnValidSubmit="@FeedGotchi">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="col-12 row">
+        <label class="col-2 font-weight-bold">Gotchi Id:</label>
+        <InputText id="coinId" @bind-Value="feedGotchiUiModel.GotchiId" />
+    </div>
+    <div class="col-12 row">
+        <label class="col-2 font-weight-bold">Portfolio Id:</label>
+        <InputText id="Amount" @bind-Value="feedGotchiUiModel.PortfolioId" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+</EditForm>
+
+<h4>Gotchis</h4>
+
+@if (gotchis is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    @foreach (var g in gotchis)
+    {
+        <p></p>
+        <h4>@g.Name</h4>
+        <table class="table table-striped">
+            <tbody>
+                <tr>
+                    <td>Id</td><td>@g.Id</td>
+                </tr>
+                <tr>
+                    <td>Owner Id</td>
+                    <td>@g.Owner.Id</td>
+                </tr>
+                <tr>
+                    <td>Level</td>
+                    <td>@g.Level</td>
+                </tr>
+                <tr>
+                    <td>Hunger</td>
+                    <td>@g.Hunger</td>
+                </tr>
+                <tr>
+                    <td>HungerMax</td>
+                    <td>@g.HungerMax</td>
+                </tr>
+                <tr>
+                    <td>FoodUnitsConsumed</td>
+                    <td>@g.FoodUnitsConsumed</td>
+                </tr>
+                <tr>
+                    <td>LastUpdated</td>
+                    <td>@g.LastUpdated</td>
+                </tr>
+                <tr>
+                    <td>Id</td>
+                    <td>@g.Id</td>
+                </tr>
+                <tr>
+                    <td>State</td>
+                    <td>@g.State</td>
+                </tr>
+                <tr>
+                    <td>PriceForFood</td>
+                    <td>@g.PriceForFood</td>
+                </tr>
+            </tbody>
+        </table>
+    }
+}
+
+@code {
+    private CreateGotchiUiModel createGotchiModel = new();
+    private FeedGotchiUiModel feedGotchiUiModel = new();
+    private ICollection<GotchiDTO> gotchis;
+
+    protected override async Task OnInitializedAsync()
+    {
+        gotchis = _gotchiHostService.DataAccess().GotchisAll();
+    }
+
+    private void CreateGotchi()
+    {
+        var command = new CreateGotchiCommand(createGotchiModel.OwnerId, createGotchiModel.Name);
+        _gotchiHostService.CommandService().Process(command);
+
+        createGotchiModel = new CreateGotchiUiModel();
+        gotchis = _gotchiHostService.DataAccess().GotchisAll();
+    }
+
+    private void FeedGotchi()
+    {
+        var command = new FeedGotchiCommand(feedGotchiUiModel.GotchiId, feedGotchiUiModel.PortfolioId);
+        _gotchiHostService.CommandService().Process(command);
+
+        feedGotchiUiModel = new FeedGotchiUiModel();
+        gotchis = _gotchiHostService.DataAccess().GotchisAll();
+    }
 }

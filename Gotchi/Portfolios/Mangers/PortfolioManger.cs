@@ -167,12 +167,35 @@ namespace Gotchi.Portfolios.Managers
 
         public void Update(Portfolio portfolio)
         {
-            portfolio.Balance = PortfolioUtilities.CalculatePortfolioBalance(portfolio.Balance, portfolio.BalanceLastUpdated);
-            portfolio.BalanceLastUpdated = DateTime.UtcNow;
+            if (CoreHelper.NumberOfHoursPassed(portfolio.BalanceLastUpdated) > 0) 
+            {
+                portfolio.Balance = CalculatePortfolioBalance(portfolio.Balance, portfolio.BalanceLastUpdated);
+                portfolio.BalanceLastUpdated = DateTime.UtcNow;
+            }
+
             foreach (var asset in portfolio.Assets) 
             {
                 Update(asset);
             }
+        }
+
+        public static float CalculatePortfolioBalance(float balance, DateTime balanceLastUpdated) => CalculatePortfolioBalance(balance, balanceLastUpdated, DateTime.UtcNow);
+
+        public static float CalculatePortfolioBalance(float balance, DateTime balanceLastUpdated, DateTime currentDataTime)
+        {
+            if (balance < 1)
+                return 0;
+
+            var hours = CoreHelper.NumberOfHoursPassed(balanceLastUpdated, currentDataTime);
+            float newBalance = balance;
+            for (int i = hours; i > 0; i--)
+            {
+                newBalance = newBalance - GameSettings.Values().DeductionBaseAmount;
+                float deductionPercentage = (float)GameSettings.Values().DeductionPercentage / 100;
+                newBalance -= (float)newBalance * deductionPercentage;
+            }
+
+            return (newBalance > 0) ? newBalance : 0;
         }
 
         public void Update(Asset asset)

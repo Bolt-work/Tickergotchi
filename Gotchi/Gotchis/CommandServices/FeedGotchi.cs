@@ -9,7 +9,6 @@ public class FeedGotchiCommand : ICoreCommand
 {
     public readonly string? GotchiId;
     public readonly string? PortfolioId;
-    public readonly int FoodAmount;
 
     public FeedGotchiCommand(string? gotchiId, string? portfolioId)
     {

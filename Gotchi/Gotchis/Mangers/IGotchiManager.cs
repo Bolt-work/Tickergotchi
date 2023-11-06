@@ -9,6 +9,7 @@ namespace Gotchi.Gotchis.Managers
         void FeedGotchi(CryptoGotchi gotchi);
         CryptoGotchi GetGotchiById(string? gotchiId);
         IEnumerable<CryptoGotchi> GetGotchisByOwnerId(string? ownerId);
+        IEnumerable<CryptoGotchi> GotchisAll();
         bool Store(CryptoGotchi gotchi);
     }
 }

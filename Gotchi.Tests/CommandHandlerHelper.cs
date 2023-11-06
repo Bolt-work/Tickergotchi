@@ -39,9 +39,9 @@ public static class CommandHandlerHelper
 
     public static MockPortfolioRepository MockPortfolioRepository() => new MockPortfolioRepository();
     public static MockPortfolioRepository MockPortfolioRepositoryWithData() => new MockPortfolioRepository(true);
-    public static PortfolioManager PortfolioManager(IPortfolioRepository portfolioRepository) => new PortfolioManager(portfolioRepository);
-    public static PortfolioManager PortfolioManager() => new PortfolioManager(MockPortfolioRepository());
-    public static PortfolioManager PortfolioManagerWithData() => new PortfolioManager(MockPortfolioRepositoryWithData());
+    public static PortfolioManager PortfolioManager(IPortfolioRepository portfolioRepository) => new PortfolioManager(portfolioRepository, MockCryptoCoinRepositoryWithData());
+    public static PortfolioManager PortfolioManager() => new PortfolioManager(MockPortfolioRepository(), MockCryptoCoinRepositoryWithData());
+    public static PortfolioManager PortfolioManagerWithData() => new PortfolioManager(MockPortfolioRepositoryWithData(), MockCryptoCoinRepositoryWithData());
 
     public static MockGotchiRepository MockGotchiRepository() => new MockGotchiRepository();
     public static MockGotchiRepository MockGotchiRepositoryWithData() => new MockGotchiRepository(true);

@@ -1,0 +1,35 @@
+﻿@using global::Gotchi.CryptoCoins.DTOs;
+
+<h3>@CryptoCoin.Name</h3>
+<div>
+    <p>
+    <label class="col-2 font-weight-bold">CoinMarketId Id: @CryptoCoin.Id</label>
+    </p>
+
+    <p>
+    <label class="col-2 font-weight-bold">Slug  : @CryptoCoin.Slug</label>
+    </p>
+
+    <p>
+    <label class="col-2 font-weight-bold">Symbol: @CryptoCoin.Symbol</label>
+    </p>
+
+    <p>
+    <label class="col-2 font-weight-bold">Price : $@CryptoCoin.Price</label>
+    </p>
+
+    <br/>
+
+    <p>
+    <label class="col-2 font-weight-bold">Last Updated: @CryptoCoin.LastUpdated</label>
+    </p>
+
+    <p>
+    <label class="col-2 font-weight-bold">CoinMarket Last Updated: @CryptoCoin.CoinMarketLastUpdated</label>
+    </p>
+</div>
+
+@code {
+    [Parameter]
+    public CryptoCoinDTO CryptoCoin { get; set; }
+}

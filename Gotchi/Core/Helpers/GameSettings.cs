@@ -36,6 +36,7 @@ public static class GameSettings
         public int FoodHungerValue { get; set; }
         public int FoodBaseCost { get; set; }
         public int FoodAddedCost { get; set;}
+        public int UpdateGotchiInMinutes { get; set; }
     }
 }
 

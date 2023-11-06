@@ -12,3 +12,12 @@ public class GotchiIsDeadException : CoreManagerException
             )
     { }
 }
+
+public class GotchiIsFullException : CoreManagerException
+{
+    public GotchiIsFullException(CryptoGotchi gotchi)
+    : base(
+        $"Gotchi is full, Id : {gotchi.Id}, Name : {gotchi.Name}"
+        )
+    { }
+}

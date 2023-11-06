@@ -5,7 +5,6 @@ using Gotchi.Gotchis.Mangers;
 using Gotchi.Gotchis.Models;
 using Gotchi.Gotchis.Repository;
 using Gotchi.Persons.Models;
-using Gotchi.Portfolios.Models;
 
 namespace Gotchi.Gotchis.Managers;
 
@@ -27,7 +26,7 @@ public class GotchiManager : CoreManagerBase, IGotchiManager
         if (_gotchiRepository.Exists(id))
             throw new ModelWithIdAlreadyExistsException<CryptoGotchi>(id);
 
-        return BuildGotchi(owner, gotchiId, name);
+        return BuildGotchi(owner, id, name);
     }
 
     private CryptoGotchi BuildGotchi(Person owner, string? gotchiId, string? name) 
@@ -38,6 +37,7 @@ public class GotchiManager : CoreManagerBase, IGotchiManager
         return new CryptoGotchi(gotchiId, owner, name)
         {
             Level = 0,
+            Created = DateTime.UtcNow,
             Hunger = GameSettings.Values().StartingMaxHunger,
             HungerMax = GameSettings.Values().StartingMaxHunger,
             FoodUnitsConsumed = 0,
@@ -72,20 +72,41 @@ public class GotchiManager : CoreManagerBase, IGotchiManager
         return gotchis;
     }
 
+    public IEnumerable<CryptoGotchi> GotchisAll()
+    {
+        var gotchis = _gotchiRepository.GetAll();
+        Update(gotchis);
+        return gotchis;
+    }
+
     public bool Store(CryptoGotchi gotchi) 
     {
         return _gotchiRepository.Upsert(gotchi);
     }
 
+    public void Update(IEnumerable<CryptoGotchi> gotchis) 
+    {
+        foreach (var gotchi in gotchis) 
+        { 
+            Update(gotchi); 
+        }
+    }
+
     public void Update(CryptoGotchi gotchi) 
     {
-        var hoursPassed = CoreHelper.NumberOfHoursPassed(gotchi.LastUpdated);
-        gotchi.LastUpdated = DateTime.UtcNow;
-        
-        for (int i = 0; i < hoursPassed; i++) 
+        gotchi.PriceForFood = FindPriceOfFood(gotchi);
+
+        var minutesPassed = CoreHelper.NumberOfMinutesPassed(gotchi.LastUpdated);
+        var iterations = minutesPassed / GameSettings.Values().UpdateGotchiInMinutes;
+
+        for (int i = 0; i < iterations; i++) 
         {
+            gotchi.LastUpdated = DateTime.UtcNow;
+
             if (gotchi.State == GotchiState.Dead)
                 break;
+
+            gotchi.Level = CoreHelper.NumberOfDaysPassed(gotchi.Created);
 
             gotchi.Hunger -= GameSettings.Values().HungerAmountPerHour;
 
@@ -94,8 +115,6 @@ public class GotchiManager : CoreManagerBase, IGotchiManager
                 gotchi.State = GotchiState.Dead;
             }
         }
-
-        gotchi.PriceForFood = FindPriceOfFood(gotchi);
     }
 
     private float FindPriceOfFood(CryptoGotchi gotchi) 
@@ -108,8 +127,16 @@ public class GotchiManager : CoreManagerBase, IGotchiManager
     {
         Update(gotchi);
         CheckIfDead(gotchi);
+
+        if (gotchi.Hunger == gotchi.HungerMax)
+            throw new GotchiIsFullException(gotchi);
+
         gotchi.Hunger += GameSettings.Values().FoodHungerValue;
         gotchi.FoodUnitsConsumed++;
+
+        if(gotchi.Hunger > gotchi.HungerMax)
+            gotchi.Hunger = gotchi.HungerMax;
+       
         Update(gotchi);
     }
 

@@ -1,6 +1,8 @@
 ﻿using FluentAssertions;
 using Gotchi.Core.Helpers;
+using Gotchi.Gotchis.Managers;
 using Gotchi.Portfolios;
+using Gotchi.Portfolios.Managers;
 
 namespace Gotchi.Tests.Portfolios;
 
@@ -15,7 +17,7 @@ public class PortfolioUtilitiesTests
         DateTime current = now;
 
         // Act
-        var result = PortfolioUtilities.CalculatePortfolioBalance(balance, lastUpdated, current);
+        var result = PortfolioManager.CalculatePortfolioBalance(balance, lastUpdated, current);
 
         // Assert
         var shouldBalance = balance - GameSettings.Values().DeductionBaseAmount;
@@ -36,7 +38,7 @@ public class PortfolioUtilitiesTests
         DateTime current = now;
 
         // Act
-        var result = PortfolioUtilities.CalculatePortfolioBalance(balance, lastUpdated, current);
+        var result = PortfolioManager.CalculatePortfolioBalance(balance, lastUpdated, current);
 
         // Assert
         result.Should().Be(0);

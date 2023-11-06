@@ -26,4 +26,10 @@ public class GotchiDataAccess : IGotchiDataAccess
         var gotchiModels = _gotchiManager.GetGotchisByOwnerId(ownerId);
         return _mapper.Map<ICollection<GotchiDTO>>(gotchiModels);
     }
+
+    public ICollection<GotchiDTO> GotchisAll()
+    {
+        var gotchiModels = _gotchiManager.GotchisAll();
+        return _mapper.Map<ICollection<GotchiDTO>>(gotchiModels);
+    }
 }
