@@ -39,8 +39,8 @@ public class CreatePersonCommandHandlerTests
         // Assert
         var person = _personRepo.GetById(personId);
         person.Should().NotBeNull();
-        person.FirstName.Should().Be("First");
-        person.LastName.Should().Be("Last");
+        person.UserName.Should().Be("First");
+        person.Password.Should().Be("Last");
     }
 
     [Fact]

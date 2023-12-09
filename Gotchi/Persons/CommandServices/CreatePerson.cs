@@ -7,13 +7,13 @@ namespace Gotchi.Persons.CommandServices;
 public class CreatePersonCommand : ICoreCommand
 {
     public string PersonsId;
-    public string? FirstName { get; set; } = null!;
-    public string? LastName { get; set; } = null!;
-    public CreatePersonCommand(string personId, string? firstName = null, string? lastName = null) 
+    public string? UserName;
+    public string? Password;
+    public CreatePersonCommand(string personId, string userName, string password) 
     {
         PersonsId = personId;
-        FirstName = firstName;
-        LastName = lastName;
+        UserName = userName;
+        Password = password;
     }
 }
 
@@ -29,7 +29,7 @@ public class CreatePersonCommandHandler : CoreCommandHandlerBase<CreatePersonCom
 
     public override void Handle(CreatePersonCommand command) 
     {
-        var person = _personManager.Create(command.PersonsId, command.FirstName, command.LastName);
+        var person = _personManager.Create(command.PersonsId, command.UserName, command.Password);
         _personManager.Store(person);
     }
 }
