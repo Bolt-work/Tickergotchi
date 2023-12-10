@@ -16,4 +16,13 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\CoinMarketCap\CoinMarketCap.csproj" />
+    <ProjectReference Include="..\Gotchi\Gotchi.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Areas\Identity\Pages\Shared\" />
+  </ItemGroup>
+
 </Project>

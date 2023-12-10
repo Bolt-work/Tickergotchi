@@ -1,14 +1,19 @@
-﻿@page "/loginB"
+﻿@page "/Register"
 @using GotchiWeb.Authentication;
 @inject UserAccountService userAccountService
 @inject IJSRuntime js
 @inject AuthenticationStateProvider authStateProvider
 @inject NavigationManager navManager
 
+@using Gotchi
+@using Gotchi.Persons.CommandServices
+@using Gotchi.Persons.DTOs
+@inject GotchiHostService _gotchiHostService
+
 <div class="row">
     <div class="col-lg-4 offset-lg-4 pt-4 pb-4 border">
         <div class="mb-3 text-center">
-            <h3>Login</h3>
+            <h3>Register</h3>
         </div>
         <div class="mb-3">
             <label> User Name</label>
@@ -18,8 +23,12 @@
             <label> Password</label>
             <input @bind="model.Password" class="form-control" placeholder="Password" />
         </div>
+        <div class="mb-3">
+            <label> Re-enter password</label>
+            <input @bind="model.PasswordSecond" class="form-control" placeholder="Password" />
+        </div>
         <div class="mb-3 d-grid gap-2">
-            <button @onclick="Authenticate" class="btn btn-primary">Login</button>
+            <button @onclick="RegisterUser" class="btn btn-primary">Login</button>
         </div>
     </div>
 </div>
@@ -29,9 +38,27 @@
     {
         public string? Username { get; set; }
         public string? Password { get; set; }
+        public string? PasswordSecond { get; set; }
     }
 
     private Model model = new Model();
+
+    private async Task RegisterUser()
+    {
+        var command = new CreatePersonCommand(model.Username, model.Password);
+        _gotchiHostService.CommandService().Process(command);
+        var user = _gotchiHostService.DataAccess().PersonByUserName(model.Username);
+
+        var gotchiAuthenticationStateProvider = (GotchiAuthenticationStateProvider)authStateProvider;
+        await gotchiAuthenticationStateProvider.UpdateAuthenticationState(new UserSession
+            {
+                SerialNumber = user.UserName,
+                UserName = user.UserName,
+                Role = user.Role
+            });
+
+        navManager.NavigateTo("/", true);
+    }
 
     private async Task Authenticate()
     {

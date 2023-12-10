@@ -6,10 +6,10 @@ namespace Gotchi.Persons.CommandServices;
 
 public class CreatePersonCommand : ICoreCommand
 {
-    public string PersonsId;
+    public string? PersonsId;
     public string? UserName;
     public string? Password;
-    public CreatePersonCommand(string personId, string userName, string password) 
+    public CreatePersonCommand(string? userName, string? password, string? personId = null) 
     {
         PersonsId = personId;
         UserName = userName;

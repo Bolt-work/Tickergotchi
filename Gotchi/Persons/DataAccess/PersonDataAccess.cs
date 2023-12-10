@@ -14,13 +14,13 @@ public class PersonDataAccess : IPersonDataAccess
         _mapper = mapper;
     }
 
-    public PersonDTO PersonById(string id)
+    public PersonDTO PersonById(string? id)
     {
         var personModel = _personManager.GetPersonById(id);
         return _mapper.Map<PersonDTO>(personModel);
     }
 
-    public PersonDTO PersonByUserName(string userName)
+    public PersonDTO PersonByUserName(string? userName)
     {
         var personModel = _personManager.GetPersonByUserName(userName);
         return _mapper.Map<PersonDTO>(personModel);

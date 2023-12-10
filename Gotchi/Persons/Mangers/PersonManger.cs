@@ -17,14 +17,12 @@ namespace Gotchi.Persons.Managers
             _personRepository = personRepository;
         }
 
-        public Person Create(string? userName, string? password) => Create(CoreHelper.NewId(), userName, password);
-
         public Person Create(string? personId, string? userName, string? password)
         {
-            if (string.IsNullOrEmpty(personId)) 
-                throw new ArgumentStringNullOrEmptyException(nameof(personId));
-            
-            if(_personRepository.ExistsById(personId))
+            if (string.IsNullOrEmpty(personId))
+                personId = CoreHelper.NewId();
+
+            if (_personRepository.ExistsById(personId))
                 throw new ModelWithIdAlreadyExistsException<Person>(personId);
 
             var _userName = CheckAndCleanUserName(userName);

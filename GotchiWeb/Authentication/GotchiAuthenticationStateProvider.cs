@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components.Authorization;
+﻿using Gotchi;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using System.Security.Claims;
 
@@ -25,6 +26,7 @@ namespace GotchiWeb.Authentication
 
                 var claimPrincipal = new ClaimsPrincipal(new ClaimsIdentity(new ClaimsIdentity(new List<Claim>
                 {
+                    new Claim(ClaimTypes.SerialNumber, userSession.SerialNumber),
                     new Claim(ClaimTypes.Name, userSession.UserName),
                     new Claim(ClaimTypes.Role, userSession.Role)
                 }, "GotchiAuth")));
@@ -45,6 +47,7 @@ namespace GotchiWeb.Authentication
                 await _sessionStorage.SetAsync("UserSession", userSession);
                 claimsPrincipal = new ClaimsPrincipal(new ClaimsIdentity(new List<Claim>
                 {
+                    new Claim(ClaimTypes.SerialNumber, userSession.SerialNumber),
                     new Claim(ClaimTypes.Name, userSession.UserName),
                     new Claim(ClaimTypes.Role, userSession.Role)
                 }));

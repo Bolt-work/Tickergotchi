@@ -1,14 +1,18 @@
-﻿@page "/loginB"
+﻿@page "/Login"
 @using GotchiWeb.Authentication;
 @inject UserAccountService userAccountService
 @inject IJSRuntime js
 @inject AuthenticationStateProvider authStateProvider
 @inject NavigationManager navManager
 
+@using Gotchi
+@using Gotchi.Persons.DTOs
+@inject GotchiHostService _gotchiHostService
+
 <div class="row">
     <div class="col-lg-4 offset-lg-4 pt-4 pb-4 border">
         <div class="mb-3 text-center">
-            <h3>Login</h3>
+            <h3>Login v2</h3>
         </div>
         <div class="mb-3">
             <label> User Name</label>
@@ -35,18 +39,20 @@
 
     private async Task Authenticate()
     {
-        var userAccount = userAccountService.GetByUserName(model.Username);
-        if (userAccount == null || userAccount.Password != model.Password)
+        if (false == _gotchiHostService.DataAccess().CheckPasswordAndUserName(model.Password, model.Username))
         {
             await js.InvokeVoidAsync("alert", "Invalid User Name or Password");
             return;
         }
 
+        var person = _gotchiHostService.DataAccess().PersonByUserName(model.Username);
+
         var gotchiAuthenticationStateProvider = (GotchiAuthenticationStateProvider)authStateProvider;
         await gotchiAuthenticationStateProvider.UpdateAuthenticationState(new UserSession
             {
-                UserName = userAccount.UserName,
-                Role = userAccount.Role
+                SerialNumber = person.Id,
+                UserName = person.UserName,
+                Role = person.Role
             });
 
         navManager.NavigateTo("/", true);

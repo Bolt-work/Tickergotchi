@@ -1,3 +1,4 @@
+using Gotchi;
 using GotchiWeb.Authentication;
 using GotchiWeb.Data;
 using Microsoft.AspNetCore.Components;
@@ -21,6 +22,8 @@ namespace GotchiWeb
             builder.Services.AddScoped<AuthenticationStateProvider, GotchiAuthenticationStateProvider>();
             builder.Services.AddSingleton<UserAccountService>();
             builder.Services.AddSingleton<WeatherForecastService>();
+
+            builder.Services.AddSingleton(new GotchiHostService(new string[0]));
 
             var app = builder.Build();
 
