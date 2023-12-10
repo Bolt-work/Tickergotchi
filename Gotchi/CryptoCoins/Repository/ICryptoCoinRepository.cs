@@ -11,6 +11,8 @@ namespace Gotchi.CryptoCoins.Repository
         CryptoCoin GetByName(string name);
         IEnumerable<CryptoCoin> GetBySlug(string slug);
         IEnumerable<CryptoCoin> GetBySymbol(string symbol);
+        CryptoCoin GetFirstEntry();
+        bool HasAnyEntries();
         void Insert(IList<CryptoCoin> models);
     }
 }

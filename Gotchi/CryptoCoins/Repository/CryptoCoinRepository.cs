@@ -1,5 +1,6 @@
 ﻿using Gotchi.Core.Repository;
 using Gotchi.Portfolios.Models;
+using MongoDB.Driver;
 
 namespace Gotchi.CryptoCoins.Repository;
 
@@ -23,5 +24,7 @@ public class CryptoCoinRepository : RepositoryBase<CryptoCoin>, ICryptoCoinRepos
     public IEnumerable<CryptoCoin> GetAll() => base.GetAllEntries();
 
     public bool Exists(string coinMarketId) => base.EntryExists(coinMarketId);
+    public bool HasAnyEntries() => base.EntriesAny();
+    public CryptoCoin GetFirstEntry() => base.ConnectToMongo().FindSync(_ => true).FirstOrDefault();
 
 }

@@ -1,4 +1,5 @@
 ﻿using CoinMarketCap;
+using Gotchi.Core.Helpers;
 using Gotchi.Core.Managers;
 using Gotchi.CryptoCoins.Repository;
 using Gotchi.Portfolios.Models;
@@ -9,6 +10,8 @@ public class CryptoCoinManager : CoreManagerBase, ICryptoCoinManager
 {
     private ICryptoCoinRepository _cryptoCoinRepository;
     private ICoinMarketApi _coinMarketApi;
+
+    private static bool _updating = false;
     public CryptoCoinManager(ICryptoCoinRepository cryptoCoinRepository, ICoinMarketApi coinMarketApi)
     {
         _cryptoCoinRepository = cryptoCoinRepository;
@@ -17,6 +20,10 @@ public class CryptoCoinManager : CoreManagerBase, ICryptoCoinManager
 
     public bool UpdateCoinValues()
     {
+        if(_updating)
+            return false;
+
+        _updating = true;
         var jsonModel = _coinMarketApi.CallApi();
 
         var coins = new List<CryptoCoin>();
@@ -45,6 +52,7 @@ public class CryptoCoinManager : CoreManagerBase, ICryptoCoinManager
         _cryptoCoinRepository.DeleteAll();
         _cryptoCoinRepository.Insert(coins);
 
+        _updating = false;
         return true;
     }
 
@@ -53,8 +61,37 @@ public class CryptoCoinManager : CoreManagerBase, ICryptoCoinManager
     {
         var cryptoCoin = _cryptoCoinRepository.GetByCoinMarketId(coinMarketId);
         return ThrowIfModelNotFound(cryptoCoin, coinMarketId);
-    } 
-    public CryptoCoin CryptoCoinByName(string name) => _cryptoCoinRepository.GetByName(name);
-    public IEnumerable<CryptoCoin> CryptoCoinBySlug(string slug) => _cryptoCoinRepository.GetBySlug(slug);
-    public IEnumerable<CryptoCoin> CryptoCoinBySymbol(string symbol) => _cryptoCoinRepository.GetBySymbol(symbol);
+    }
+    public CryptoCoin CryptoCoinByName(string name) 
+    {
+        CheckToUpdateDatabase();
+        return _cryptoCoinRepository.GetByName(name);
+    }
+    public IEnumerable<CryptoCoin> CryptoCoinBySlug(string slug) 
+    {
+        CheckToUpdateDatabase();
+        return _cryptoCoinRepository.GetBySlug(slug);
+    }
+    public IEnumerable<CryptoCoin> CryptoCoinBySymbol(string symbol) 
+    {
+        CheckToUpdateDatabase();
+        return _cryptoCoinRepository.GetBySymbol(symbol);
+    }
+
+    private void CheckToUpdateDatabase() 
+    {
+        if (_cryptoCoinRepository.HasAnyEntries())
+        {
+            var firstCoin = _cryptoCoinRepository.GetFirstEntry();
+            var minsPassed = CoreHelper.NumberOfMinutesPassed(firstCoin.LastUpdated);
+            if (minsPassed >= GameSettings.Values().UpdateCoinValuesDbInMinutes)
+            {
+                UpdateCoinValues();
+            }
+        }
+        else 
+        {
+            UpdateCoinValues();
+        }
+    }
 }

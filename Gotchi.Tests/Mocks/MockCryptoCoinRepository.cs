@@ -47,5 +47,15 @@ public class MockCryptoCoinRepository : MockRepositoryBase<CryptoCoin>, ICryptoC
         return _db.Where(x => x.Symbol == symbol).ToList();
     }
 
+    public CryptoCoin GetFirstEntry()
+    {
+        return _db.FirstOrDefault()!;
+    }
+
+    public bool HasAnyEntries()
+    {
+        return _db.Any(); 
+    }
+
     public void Insert(IList<CryptoCoin> models) => base.InsertEntries(models);
 }

@@ -79,6 +79,11 @@ public abstract class RepositoryBase<T> where T : CoreModelBase
         return ConnectToMongo().Find(Filter(key, value)).Any();
     }
 
+    protected bool EntriesAny() 
+    {
+        return ConnectToMongo().Find(_ => true).Any();
+    }
+
     protected ICollection<T> GetAllEntries()
     {
         return ConnectToMongo().Find(_ => true).ToList();

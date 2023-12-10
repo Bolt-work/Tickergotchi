@@ -31,7 +31,11 @@ public class GotchiServiceDataAccess: IPersonDataAccess,
     }
 
     public PersonDTO PersonById(string id) => _personDataAccess.PersonById(id);
+    public PersonDTO PersonByUserName(string userName) => _personDataAccess.PersonByUserName(userName);
     public ICollection<PersonDTO> PersonsAll() => _personDataAccess.PersonsAll();
+    public bool CheckPasswordAndUserName(string? password, string userName) => _personDataAccess.CheckPasswordAndUserName(password, userName);
+    public bool CheckPasswordAndPersonId(string? password, string personId) => _personDataAccess.CheckPasswordAndPersonId(password, personId);
+    public bool DoesUserNameAlreadyExist(string? userName) => _personDataAccess.DoesUserNameAlreadyExist(userName);
 
     public PortfolioDTO PortfolioById(string portfolioId) => _portfolioDataAccess.PortfolioById(portfolioId);
     public ICollection<PortfolioDTO> PortfoliosByPersonId(string personId) => _portfolioDataAccess.PortfoliosByPersonId(personId);

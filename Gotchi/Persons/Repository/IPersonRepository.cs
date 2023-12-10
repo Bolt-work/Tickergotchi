@@ -11,5 +11,6 @@ public interface IPersonRepository
     bool ExistsByUserName(string userName);
     IEnumerable<Person> GetAll();
     Person GetById(string personId);
+    Person GetByUserName(string userName);
     bool Upsert(Person model);
 }

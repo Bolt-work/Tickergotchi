@@ -8,5 +8,4 @@ public class CoreManagerBase
         var checkObject = model ?? throw new ModelNotFoundException<T>(identifier);
         return (T)checkObject;
     }
-
 }

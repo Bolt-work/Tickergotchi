@@ -16,6 +16,8 @@ public class CreatePersonCommandHandlerTests
     private ILogger<CreatePersonCommandHandler> _logger;
     private CreatePersonCommandHandler _commandHandler;
 
+    private string _passwordHash = "EB970EB0951C6CDEAC1EC0CC723FC91E30B0C26EE6F3B5EE0E574DB7F487DC55";
+
     public CreatePersonCommandHandlerTests()
     {
         //Dependencies
@@ -31,7 +33,7 @@ public class CreatePersonCommandHandlerTests
         // Arrange
         _personRepo.DeleteAll();
         var personId = CoreHelper.NewId();
-        var command = new CreatePersonCommand(personId, "First", "Last");
+        var command = new CreatePersonCommand(personId, "userName", "Last");
 
         //Act
         _commandHandler.Handle(command);
@@ -39,8 +41,8 @@ public class CreatePersonCommandHandlerTests
         // Assert
         var person = _personRepo.GetById(personId);
         person.Should().NotBeNull();
-        person.UserName.Should().Be("First");
-        person.Password.Should().Be("Last");
+        person.UserName.Should().Be("userName");
+        person.Password.Should().Be(_passwordHash);
     }
 
     [Fact]

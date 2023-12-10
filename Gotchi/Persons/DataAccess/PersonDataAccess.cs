@@ -20,9 +20,19 @@ public class PersonDataAccess : IPersonDataAccess
         return _mapper.Map<PersonDTO>(personModel);
     }
 
+    public PersonDTO PersonByUserName(string userName)
+    {
+        var personModel = _personManager.GetPersonByUserName(userName);
+        return _mapper.Map<PersonDTO>(personModel);
+    }
+
     public ICollection<PersonDTO> PersonsAll()
     {
         var personModel = _personManager.GetAllPersons();
         return _mapper.Map<ICollection<PersonDTO>>(personModel);
     }
+
+    public bool CheckPasswordAndUserName(string? password, string userName) => _personManager.CheckPasswordWithUserName(password, userName);
+    public bool CheckPasswordAndPersonId(string? password, string personId) => _personManager.CheckPasswordAndPersonId(password, personId);
+    public bool DoesUserNameAlreadyExist(string? userName) => _personManager.DoesUserNameAlreadyExist(userName);
 }

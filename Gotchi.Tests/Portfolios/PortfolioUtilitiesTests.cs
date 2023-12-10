@@ -20,11 +20,14 @@ public class PortfolioUtilitiesTests
         var result = PortfolioManager.CalculatePortfolioBalance(balance, lastUpdated, current);
 
         // Assert
-        var shouldBalance = balance - GameSettings.Values().DeductionBaseAmount;
-        shouldBalance -= (float)shouldBalance * (GameSettings.Values().DeductionPercentage / 100);
+        var shouldBalance = balance;
+        shouldBalance = shouldBalance - GameSettings.Values().DeductionBaseAmount;
+        float deductionPercentage = (float)GameSettings.Values().DeductionPercentage / 100;
+        shouldBalance -= (float)shouldBalance * deductionPercentage;
 
         shouldBalance = shouldBalance - GameSettings.Values().DeductionBaseAmount;
-        shouldBalance -= (float)shouldBalance * (GameSettings.Values().DeductionPercentage / 100);
+        deductionPercentage = (float)GameSettings.Values().DeductionPercentage / 100;
+        shouldBalance -= (float)shouldBalance * deductionPercentage;
 
         result.Should().Be(shouldBalance);
     }

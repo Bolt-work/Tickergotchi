@@ -6,7 +6,6 @@
   "HungerAmountPerHour": 1,
   "FoodHungerValue": 1,
   "FoodBaseCost": 100,
-  "FoodAddedCost": 1,
-  "UpdateGotchiInMinutes": 1,
-  "UpdateCoinValuesDbInMinutes": 60
+  "FoodAddedCost": 5,
+  "UpdateGotchiInMinutes": 1
 }

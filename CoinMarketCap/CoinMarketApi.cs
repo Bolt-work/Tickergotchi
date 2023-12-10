@@ -1,13 +1,6 @@
 ﻿using CoinMarketCap.DataModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 using System.Web;
 
 namespace CoinMarketCap;
@@ -29,11 +22,11 @@ public class CoinMarketApi : ICoinMarketApi
         _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
     }
 
-    public RootModel CallTestApi() => MakeAPICall(_testAddress, _testApiKey);
+    public RootModel CallTestApi() => MakeAPICall(_testAddress);
 
-    public RootModel CallApi() => MakeAPICall(_activeAddress, _apiKey);
+    public RootModel CallApi() => MakeAPICall(_activeAddress);
 
-    private RootModel MakeAPICall(string address, string apiKey)
+    private RootModel MakeAPICall(string address)
     {
         var URL = new UriBuilder($"https://{address}/v1/cryptocurrency/listings/latest");
 
@@ -52,7 +45,7 @@ public class CoinMarketApi : ICoinMarketApi
 
         var result = _httpClient.GetStringAsync(URL.ToString()).Result;
         ArgumentNullException.ThrowIfNull(result);
-        var json =  JsonSerializer.Deserialize<RootModel>(result);
+        var json = JsonSerializer.Deserialize<RootModel>(result);
         ArgumentNullException.ThrowIfNull(json);
         return json;
     }

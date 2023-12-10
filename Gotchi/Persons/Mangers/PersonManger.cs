@@ -21,40 +21,86 @@ namespace Gotchi.Persons.Managers
 
         public Person Create(string? personId, string? userName, string? password)
         {
-            var _id = personId ?? throw new ArgumentNullException(nameof(personId));
-            _id = _id.Trim();
-
-            if (string.IsNullOrEmpty(_id)) 
-                throw new ArgumentStringNullOrEmpty(nameof(personId));
+            if (string.IsNullOrEmpty(personId)) 
+                throw new ArgumentStringNullOrEmptyException(nameof(personId));
             
-            if(_personRepository.ExistsById(_id))
-                throw new ModelWithIdAlreadyExistsException<Person>(_id);
+            if(_personRepository.ExistsById(personId))
+                throw new ModelWithIdAlreadyExistsException<Person>(personId);
 
-            
-            var _userName = userName ?? throw new ArgumentNullException(nameof(userName));
-            _userName = _userName.Trim();
-
-            if (string.IsNullOrEmpty(_userName))
-                throw new ArgumentStringNullOrEmpty(nameof(userName));
-            
-            if (_personRepository.ExistsByUserName(_userName))
+            var _userName = CheckAndCleanUserName(userName);
+            if (DoesUserNameAlreadyExist(_userName))
                 throw new UserNameAlreadyUsedExceptions(_userName);
 
-            
-            var _password = password ?? throw new ArgumentNullException(nameof(password));
+            if (string.IsNullOrEmpty(password))
+                throw new ArgumentStringNullOrEmptyException(nameof(password));
 
-            return new Person(_id) 
+            var _password = GetHashString(password);
+
+            return new Person(personId) 
             {
                 UserName = userName,
-                Password = GetHashString(_password),
+                Password = _password,
+                Role = "User"
             };
         }
 
         public Person GetPersonById(string? personId)
         {
-            var id = personId ?? throw new ArgumentNullException(nameof(personId)); 
-            var person = _personRepository.GetById(id);
-            return ThrowIfModelNotFound(person, id);
+            if(string.IsNullOrEmpty(personId))
+                throw new ArgumentNullException(nameof(personId));
+            
+            var person = _personRepository.GetById(personId);
+            return ThrowIfModelNotFound(person, personId);
+        }
+
+        public Person GetPersonByUserName(string? userName)
+        {
+            var _userName = CheckAndCleanUserName(userName);
+            var person = _personRepository.GetByUserName(_userName);
+            return ThrowIfModelNotFound(person, _userName);
+        }
+
+        public bool DoesUserNameAlreadyExist(string? userName) 
+        {
+            var _userName = CheckAndCleanUserName(userName);
+            return _personRepository.ExistsByUserName(_userName);
+        }
+
+        public bool CheckPasswordWithUserName(string? password, string? userName) 
+        {
+            if (string.IsNullOrEmpty(password))
+                throw new ArgumentStringNullOrEmptyException(nameof(password));
+
+            var _userName = CheckAndCleanUserName(userName);
+            var person = _personRepository.GetByUserName(_userName);
+            ThrowIfModelNotFound(person, _userName);
+
+            return person.Password == GetHashString(password);
+        }
+
+        public bool CheckPasswordAndPersonId(string? password, string? personId)
+        {
+            if (string.IsNullOrEmpty(password))
+                throw new ArgumentStringNullOrEmptyException(nameof(password));
+
+            if (string.IsNullOrEmpty(personId))
+                throw new ArgumentStringNullOrEmptyException(nameof(personId));
+
+            var person = _personRepository.GetById(personId);
+            ThrowIfModelNotFound(person, personId);
+
+            return person.Password == GetHashString(password);
+        }
+
+        private string CheckAndCleanUserName(string? userName) 
+        {
+            var _userName = userName ?? throw new ArgumentNullException(nameof(userName));
+            _userName = _userName.Trim();
+
+            if (string.IsNullOrEmpty(_userName))
+                throw new ArgumentStringNullOrEmptyException(nameof(_userName));
+
+            return _userName;
         }
 
         public IEnumerable<Person> GetAllPersons()

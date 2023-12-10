@@ -23,8 +23,8 @@ public class ModelWithIdAlreadyExistsException<T> : CoreManagerException
         : base($"Model with id : {identifier}, Type {typeof(T).FullName}") { }
 }
 
-public class ArgumentStringNullOrEmpty : CoreManagerException
+public class ArgumentStringNullOrEmptyException : CoreManagerException
 {
-    public ArgumentStringNullOrEmpty(string argumentName)
+    public ArgumentStringNullOrEmptyException(string argumentName)
         : base($"Argument \"{argumentName}\" is null or empty") { }
 }

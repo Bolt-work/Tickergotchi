@@ -50,7 +50,7 @@ public class BuyAssetsCommandHandlerTests
         asset.PriceWhenLastBought.Should().Be(coin.Price);
         asset.Symbol.Should().Be(coin.Symbol);
 
-        asset.Units.Should().Be(100F);
+        asset.Units.Should().Be(0.0036864164F);
         asset.Profit.Should().Be(0 - 100F);
     }
 
@@ -73,7 +73,7 @@ public class BuyAssetsCommandHandlerTests
 
         var coin = _coinManager.CryptoCoinByCoinMarketId(coinId!);
         var asset = _portfolioRepo.GetByPortfolioId(portfolioId!).Assets.Single(x => x.CoinMarketId == coinId);
-        asset.Units.Should().Be(200F);
+        asset.Units.Should().Be(0.007372833F);
         asset.Profit.Should().Be(0 - 200F);
     }
 

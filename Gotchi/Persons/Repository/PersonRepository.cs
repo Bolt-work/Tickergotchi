@@ -14,6 +14,7 @@ public class PersonRepository : RepositoryBase<Person>, IPersonRepository
     public bool Delete(Person person) => base.DeleteEntry(person.Id);
     public bool DeleteAll() => base.DeleteAllEntries();
     public Person GetById(string personId) => base.GetEntryById(personId);
+    public Person GetByUserName(string userName) => base.GetByKeyStr("UserName", userName);
     public bool ExistsById(string id) => base.EntryExists(id);
     public bool ExistsByUserName(string userName) => base.EntryExistsByKey("UserName", userName);
     public IEnumerable<Person> GetAll() => base.GetAllEntries();
