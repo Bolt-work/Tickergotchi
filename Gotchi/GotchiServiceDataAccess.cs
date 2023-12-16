@@ -1,4 +1,5 @@
-﻿using Gotchi.CryptoCoins.DataAccess;
+﻿using Gotchi.Core.Services;
+using Gotchi.CryptoCoins.DataAccess;
 using Gotchi.CryptoCoins.DTOs;
 using Gotchi.Gotchis.DataAccess;
 using Gotchi.Gotchis.DTOs;
@@ -6,6 +7,7 @@ using Gotchi.Persons.DataAccess;
 using Gotchi.Persons.DTOs;
 using Gotchi.Portfolios.DataAccess;
 using Gotchi.Portfolios.DTOs;
+using Microsoft.Extensions.Logging;
 
 namespace Gotchi;
 
@@ -19,34 +21,64 @@ public class GotchiServiceDataAccess: IPersonDataAccess,
     private ICryptoCoinsDataAccess _cryptoCoinsDataAccess;
     private IGotchiDataAccess _gotchiDataAccess;
 
-    public GotchiServiceDataAccess(IPersonDataAccess personDataAccess,
+    private ILogger<GotchiServiceDataAccess> _logger;
+
+    public GotchiServiceDataAccess(ILogger<GotchiServiceDataAccess> logger, IPersonDataAccess personDataAccess,
         IPortfolioDataAccess portfolioDataAccess,
         ICryptoCoinsDataAccess cryptoCoinsDataAccess,
         IGotchiDataAccess gotchiDataAccess)
     {
+        _logger = logger;
         _personDataAccess = personDataAccess;
         _portfolioDataAccess = portfolioDataAccess;
         _cryptoCoinsDataAccess = cryptoCoinsDataAccess;
         _gotchiDataAccess = gotchiDataAccess;
     }
 
-    public PersonDTO PersonById(string? id) => _personDataAccess.PersonById(id);
-    public PersonDTO PersonByUserName(string? userName) => _personDataAccess.PersonByUserName(userName);
+    public PersonDTO PersonById(string? id) => ICL(_personDataAccess.PersonById, id, null!);
+    public PersonDTO PersonByUserName(string? userName) => ICL(_personDataAccess.PersonByUserName, userName, null!);
     public ICollection<PersonDTO> PersonsAll() => _personDataAccess.PersonsAll();
     public bool CheckPasswordAndUserName(string? password, string? userName) => _personDataAccess.CheckPasswordAndUserName(password, userName);
     public bool CheckPasswordAndPersonId(string? password, string? personId) => _personDataAccess.CheckPasswordAndPersonId(password, personId);
     public bool DoesUserNameAlreadyExist(string? userName) => _personDataAccess.DoesUserNameAlreadyExist(userName);
 
-    public PortfolioDTO PortfolioById(string portfolioId) => _portfolioDataAccess.PortfolioById(portfolioId);
+    public PortfolioDTO PortfolioById(string portfolioId) => ICL(_portfolioDataAccess.PortfolioById, portfolioId, null!);
     public ICollection<PortfolioDTO> PortfoliosByPersonId(string personId) => _portfolioDataAccess.PortfoliosByPersonId(personId);
     public ICollection<PortfolioDTO> PortfoliosAll() => _portfolioDataAccess.PortfoliosAll();
 
-    public CryptoCoinDTO CryptoCoinByCoinMarketId(string coinMarketId) => _cryptoCoinsDataAccess.CryptoCoinByCoinMarketId(coinMarketId);
-    public CryptoCoinDTO CryptoCoinByName(string name) => _cryptoCoinsDataAccess.CryptoCoinByName(name);
+    public CryptoCoinDTO CryptoCoinByCoinMarketId(string coinMarketId) => ICL(_cryptoCoinsDataAccess.CryptoCoinByCoinMarketId, coinMarketId, null!);
+    public CryptoCoinDTO CryptoCoinByName(string name) => ICL(_cryptoCoinsDataAccess.CryptoCoinByName, name, null!);
     public ICollection<CryptoCoinDTO> CryptoCoinBySlug(string slug) => _cryptoCoinsDataAccess.CryptoCoinBySlug(slug);
     public ICollection<CryptoCoinDTO> CryptoCoinBySymbol(string symbol) => _cryptoCoinsDataAccess.CryptoCoinBySymbol(symbol);
 
-    public GotchiDTO GotchiById(string gotchiId) => _gotchiDataAccess.GotchiById(gotchiId);
+    public GotchiDTO GotchiById(string gotchiId) => ICL(_gotchiDataAccess.GotchiById, gotchiId, null!);
     public ICollection<GotchiDTO> GotchisByOwnerId(string ownerId) => _gotchiDataAccess.GotchisByOwnerId(ownerId);
     public ICollection<GotchiDTO> GotchisAll() => _gotchiDataAccess.GotchisAll();
+
+    //Invoke, Catch, Log - dear god i need to fix this!
+    private T ICL<T>(Func<T> method,T error) 
+    {
+        try 
+        {
+            return method();
+        }
+        catch (Exception ex) 
+        {
+            _logger.LogError(ex, "Error");
+            return error;
+        }
+    }
+
+    private T ICL<T>(Func<string, T> method, string arg, T error)
+    {
+        try
+        {
+            return method(arg);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error");
+            return error;
+        }
+    }
 }

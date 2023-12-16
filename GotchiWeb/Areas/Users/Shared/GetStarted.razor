@@ -1,0 +1,56 @@
+﻿@using Gotchi
+@using Gotchi.Portfolios.CommandService
+@using Gotchi.Gotchis.CommandServices
+@using System.ComponentModel.DataAnnotations;
+
+@inject IJSRuntime js
+@inject GotchiHostService _gotchiHostService
+
+@if (UserId is null)
+{
+    <p> User not logged in.</p>
+}
+else
+{
+    @if (!_showForm)
+    {
+        <button class="btn btn-outline-primary" @onclick="ToggleShowForm">Get Started!</button>
+    }
+    else
+    {
+        <EditForm Model="@_model" OnValidSubmit="@SubmitGettingStarted">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+            <div class="col-12 row">
+                <label class="col-2 font-weight-bold">CoinMarket Id:</label>
+                <InputText id="coinId" @bind-Value="_model.GotchiName" />
+                &nbsp;<ValidationMessage For="@(() => _model.GotchiName)" />
+            </div>
+
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </EditForm>
+    }
+}
+
+@code {
+    [Parameter]
+    public string? UserId {get; set;}
+
+    private Model _model = new Model();
+    private bool _showForm = false;
+
+    private void ToggleShowForm() => _showForm = !_showForm;
+
+    private void SubmitGettingStarted()
+    {
+        _gotchiHostService.CommandService().Process(new CreatePortfolioCommand(UserId));
+        _gotchiHostService.CommandService().Process(new CreateGotchiCommand(UserId, _model.GotchiName));
+    }
+
+    private class Model
+    {
+        [Required(ErrorMessage = "Name is required")]
+        [Range(1, 10, ErrorMessage = "Name length  must be between  1  10")]
+        public string? GotchiName { get; set;}    
+    }
+}
