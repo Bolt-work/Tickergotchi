@@ -33,6 +33,8 @@ public class CreatePortfolioCommandHandler : CoreCommandHandlerBase<CreatePortfo
     {
         var accountHolder = _personManager.GetPersonById(command.PersonsId);
         var portfolio = _portfolioManager.CreatePortfolio(accountHolder, command.PortfolioId);
+        var updatedAccountHolder = _personManager.SetPersonActivePortfolio(accountHolder, portfolio);
         _portfolioManager.Store(portfolio);
+        _personManager.Store(updatedAccountHolder);
     }
 }

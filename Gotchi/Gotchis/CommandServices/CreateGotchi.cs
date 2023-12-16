@@ -35,6 +35,8 @@ public class CreateGotchiCommandHandler: CoreCommandHandlerBase<CreateGotchiComm
     {
         var owner = _personManager.GetPersonById(command.OwnerId);
         var gotchi = _gotchiManager.CreateCryptoGotchi(owner, command.Name, command.GotchiId);
+        var updatedOwner = _personManager.SetPersonActiveGotchi(owner, gotchi);
         _gotchiManager.Store(gotchi);
+        _personManager.Store(updatedOwner);
     }
 }

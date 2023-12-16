@@ -1,8 +1,17 @@
 ﻿using Gotchi.Core.Managers;
+using Gotchi.Persons.Models;
 using Gotchi.Portfolios.Models;
 
 namespace Gotchi.Portfolios.Managers;
 
+public class PersonAlreadyHasActivePortfolioException : CoreManagerException
+{
+    public PersonAlreadyHasActivePortfolioException(Person person)
+    : base(
+        $"Person with id {person.Id} already has active Portfolio"
+        )
+    { }
+}
 public class CannotAffordPurchaseOfAssetException : CoreManagerException
 {
     public CannotAffordPurchaseOfAssetException(Portfolio portfolio, CryptoCoin coin, float amountInValue) 
@@ -37,3 +46,4 @@ public class AssetDoesHaveEnoughUnitsToSell : CoreManagerException
             )
     { }
 }
+

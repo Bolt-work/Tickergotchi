@@ -23,6 +23,9 @@ public class GotchiManager : CoreManagerBase, IGotchiManager
         if(owner is null)
             throw new ModelIsNullException<Person>();
 
+        if (owner.ActiveGotchi is not null)
+            throw new PersonAlreadyHasActiveGotchiException(owner);
+
         if (_gotchiRepository.Exists(id))
             throw new ModelWithIdAlreadyExistsException<CryptoGotchi>(id);
 

@@ -1,8 +1,10 @@
 ﻿using Gotchi.Core.Helpers;
 using Gotchi.Core.Managers;
+using Gotchi.Gotchis.Models;
 using Gotchi.Persons.Mangers;
 using Gotchi.Persons.Models;
 using Gotchi.Persons.Repository;
+using Gotchi.Portfolios.Models;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -38,8 +40,34 @@ namespace Gotchi.Persons.Managers
             {
                 UserName = userName,
                 Password = _password,
-                Role = "User"
+                Role = "User",
+                ActivePortfolio = null,
+                ActiveGotchi = null,
             };
+        }
+
+        public Person SetPersonActivePortfolio(Person person, Portfolio portfolio) 
+        {
+            person.ActivePortfolio = portfolio.Id;
+            return person;
+        }
+
+        public Person ClearPersonActivePortfolio(Person person)
+        {
+            person.ActivePortfolio = null;
+            return person;
+        }
+
+        public Person SetPersonActiveGotchi(Person person, CryptoGotchi gotchi)
+        {
+            person.ActiveGotchi = gotchi.Id;
+            return person;
+        }
+
+        public Person ClearPersonActiveGotchi(Person person)
+        {
+            person.ActiveGotchi = null;
+            return person;
         }
 
         public Person GetPersonById(string? personId)
@@ -90,17 +118,6 @@ namespace Gotchi.Persons.Managers
             return person.Password == GetHashString(password);
         }
 
-        private string CheckAndCleanUserName(string? userName) 
-        {
-            var _userName = userName ?? throw new ArgumentNullException(nameof(userName));
-            _userName = _userName.Trim();
-
-            if (string.IsNullOrEmpty(_userName))
-                throw new ArgumentStringNullOrEmptyException(nameof(_userName));
-
-            return _userName;
-        }
-
         public IEnumerable<Person> GetAllPersons()
         {
             return _personRepository.GetAll();
@@ -114,6 +131,17 @@ namespace Gotchi.Persons.Managers
         public bool Store(Person person)
         {
             return _personRepository.Upsert(person);
+        }
+
+        private string CheckAndCleanUserName(string? userName)
+        {
+            var _userName = userName ?? throw new ArgumentNullException(nameof(userName));
+            _userName = _userName.Trim();
+
+            if (string.IsNullOrEmpty(_userName))
+                throw new ArgumentStringNullOrEmptyException(nameof(_userName));
+
+            return _userName;
         }
 
         private static byte[] GetHash(string inputString)

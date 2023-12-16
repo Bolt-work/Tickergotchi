@@ -8,6 +8,9 @@ public class Person : CoreModelBase
     public string? Role { get; set; }
     public string? Password { get; set; }
 
+    public string? ActivePortfolio { get; set; }
+    public string? ActiveGotchi{ get; set; }
+
     public Person(string id)
     {
         Id = id;

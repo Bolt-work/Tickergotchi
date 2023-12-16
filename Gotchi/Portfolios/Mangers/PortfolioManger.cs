@@ -23,6 +23,9 @@ namespace Gotchi.Portfolios.Managers
         {
             var id = portfolioId ?? CoreHelper.NewId();
 
+            if (accountHolder.ActivePortfolio != null)
+                throw new PersonAlreadyHasActivePortfolioException(accountHolder);
+
             if (_portfolioRepository.Exists(id))
                 throw new ModelWithIdAlreadyExistsException<Portfolio>(id);
 
