@@ -39,13 +39,15 @@
 
     private async Task Authenticate()
     {
-        if (false == _gotchiHostService.DataAccess().CheckPasswordAndUserName(model.Password, model.Username))
+        if (false == await _gotchiHostService.DataAccess().CheckPasswordAndUserNameAsync(model.Password, model.Username))
         {
             await js.InvokeVoidAsync("alert", "Invalid User Name or Password");
             return;
         }
 
-        var person = _gotchiHostService.DataAccess().PersonByUserName(model.Username);
+        var person = await _gotchiHostService.DataAccess().PersonByUserNameAsync(model.Username);
+        if (person is null)
+            return;
 
         var gotchiAuthenticationStateProvider = (GotchiAuthenticationStateProvider)authStateProvider;
         await gotchiAuthenticationStateProvider.UpdateAuthenticationState(new UserSession

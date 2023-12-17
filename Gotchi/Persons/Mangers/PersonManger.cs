@@ -86,36 +86,10 @@ namespace Gotchi.Persons.Managers
             return ThrowIfModelNotFound(person, _userName);
         }
 
-        public bool DoesUserNameAlreadyExist(string? userName) 
+        private bool DoesUserNameAlreadyExist(string? userName)
         {
             var _userName = CheckAndCleanUserName(userName);
             return _personRepository.ExistsByUserName(_userName);
-        }
-
-        public bool CheckPasswordWithUserName(string? password, string? userName) 
-        {
-            if (string.IsNullOrEmpty(password))
-                throw new ArgumentStringNullOrEmptyException(nameof(password));
-
-            var _userName = CheckAndCleanUserName(userName);
-            var person = _personRepository.GetByUserName(_userName);
-            ThrowIfModelNotFound(person, _userName);
-
-            return person.Password == GetHashString(password);
-        }
-
-        public bool CheckPasswordAndPersonId(string? password, string? personId)
-        {
-            if (string.IsNullOrEmpty(password))
-                throw new ArgumentStringNullOrEmptyException(nameof(password));
-
-            if (string.IsNullOrEmpty(personId))
-                throw new ArgumentStringNullOrEmptyException(nameof(personId));
-
-            var person = _personRepository.GetById(personId);
-            ThrowIfModelNotFound(person, personId);
-
-            return person.Password == GetHashString(password);
         }
 
         public IEnumerable<Person> GetAllPersons()
@@ -133,15 +107,87 @@ namespace Gotchi.Persons.Managers
             return _personRepository.Upsert(person);
         }
 
+        #region Data Access
+
+        public async Task<Person?> GetPersonByIdAsync(string? personId)
+        {
+            if (string.IsNullOrEmpty(personId))
+                return null;
+
+            return await _personRepository.GetByIdAsync(personId);
+        }
+
+        public async Task<Person?> GetPersonByUserNameAsync(string? userName)
+        {
+            var _userName = CleanUserName(userName);
+            if(string.IsNullOrEmpty(_userName))
+                return null;
+
+            return await _personRepository.GetByUserNameAsync(_userName);
+        }
+
+        public async Task<bool> CheckPasswordWithUserName(string? password, string? userName)
+        {
+            if (string.IsNullOrEmpty(password))
+                return false;
+
+            var _userName = CleanUserName(userName);
+            if (string.IsNullOrEmpty(_userName))
+                return false;
+
+            var person = await _personRepository.GetByUserNameAsync(_userName);
+            if(person is null)
+                return false;
+
+            return person.Password == GetHashString(password);
+        }
+
+        public async Task<bool> CheckPasswordAndPersonId(string? password, string? personId)
+        {
+            if (string.IsNullOrEmpty(password))
+                return false;
+
+            if (string.IsNullOrEmpty(personId))
+                return false;
+
+            var person = await _personRepository.GetByIdAsync(personId);
+            if(person is null)
+                return false;
+
+            return person.Password == GetHashString(password);
+        }
+
+        public async Task<bool> DoesUserNameAlreadyExistAsync(string? userName)
+        {
+            if (string.IsNullOrEmpty(userName))
+                return true;
+
+            var _userName = CleanUserName(userName);
+            if (string.IsNullOrEmpty(_userName))
+                return true;
+
+            return await _personRepository.ExistsByUserNameAsync(_userName);
+        }
+
+        #endregion
+
         private string CheckAndCleanUserName(string? userName)
         {
             var _userName = userName ?? throw new ArgumentNullException(nameof(userName));
-            _userName = _userName.Trim();
+            _userName = CleanUserName(_userName);
 
             if (string.IsNullOrEmpty(_userName))
                 throw new ArgumentStringNullOrEmptyException(nameof(_userName));
 
             return _userName;
+        }
+
+        private string? CleanUserName(string? userName) 
+        {
+            if (string.IsNullOrEmpty(userName))
+                return "";
+
+            return userName.Trim();
         }
 
         private static byte[] GetHash(string inputString)

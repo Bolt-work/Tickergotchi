@@ -4,11 +4,13 @@ namespace Gotchi.Persons.DataAccess
 {
     public interface IPersonDataAccess
     {
-        bool CheckPasswordAndPersonId(string? password, string personId);
-        bool CheckPasswordAndUserName(string? password, string userName);
-        bool DoesUserNameAlreadyExist(string? userName);
+        Task<bool> CheckPasswordAndPersonIdAsync(string? password, string? personId);
+        Task<bool> CheckPasswordAndUserNameAsync(string? password, string? userName);
+        Task<bool> DoesUserNameAlreadyExistAsync(string? userName);
         PersonDTO PersonById(string? id);
+        Task<PersonDTO?> PersonByIdAsync(string? id);
         PersonDTO PersonByUserName(string? userName);
+        Task<PersonDTO?> PersonByUserNameAsync(string? userName);
         ICollection<PersonDTO> PersonsAll();
     }
 }

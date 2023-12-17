@@ -36,11 +36,13 @@ public class GotchiServiceDataAccess: IPersonDataAccess,
     }
 
     public PersonDTO PersonById(string? id) => ICL(_personDataAccess.PersonById, id, null!);
+    public async Task<PersonDTO?> PersonByIdAsync(string? id) => await _personDataAccess.PersonByIdAsync(id);
     public PersonDTO PersonByUserName(string? userName) => ICL(_personDataAccess.PersonByUserName, userName, null!);
+    public async Task<PersonDTO?> PersonByUserNameAsync(string? userName) => await _personDataAccess.PersonByUserNameAsync(userName);
     public ICollection<PersonDTO> PersonsAll() => _personDataAccess.PersonsAll();
-    public bool CheckPasswordAndUserName(string? password, string? userName) => _personDataAccess.CheckPasswordAndUserName(password, userName);
-    public bool CheckPasswordAndPersonId(string? password, string? personId) => _personDataAccess.CheckPasswordAndPersonId(password, personId);
-    public bool DoesUserNameAlreadyExist(string? userName) => _personDataAccess.DoesUserNameAlreadyExist(userName);
+    public async Task<bool> CheckPasswordAndUserNameAsync(string? password, string? userName) => await _personDataAccess.CheckPasswordAndUserNameAsync(password, userName);
+    public async Task<bool> CheckPasswordAndPersonIdAsync(string? password, string? personId) => await _personDataAccess.CheckPasswordAndPersonIdAsync(password, personId);
+    public async Task<bool> DoesUserNameAlreadyExistAsync(string? userName) => await _personDataAccess.DoesUserNameAlreadyExistAsync(userName);
 
     public PortfolioDTO PortfolioById(string portfolioId) => ICL(_portfolioDataAccess.PortfolioById, portfolioId, null!);
     public ICollection<PortfolioDTO> PortfoliosByPersonId(string personId) => _portfolioDataAccess.PortfoliosByPersonId(personId);

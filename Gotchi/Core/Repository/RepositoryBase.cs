@@ -69,6 +69,11 @@ public abstract class RepositoryBase<T> where T : CoreModelBase
         return ConnectToMongo().Find(x => x.Id == id).FirstOrDefault();
     }
 
+    protected async Task<T> GetEntryByIdAsync(string id)
+    {
+        return await ConnectToMongo().Find(x => x.Id == id).FirstOrDefaultAsync();
+    }
+
     protected bool EntryExists(string id)
     {
         return ConnectToMongo().Find(x => x.Id == id).Any();
@@ -79,9 +84,19 @@ public abstract class RepositoryBase<T> where T : CoreModelBase
         return ConnectToMongo().Find(Filter(key, value)).Any();
     }
 
+    protected async Task<bool> EntryExistsByKeyAsync(string key, string value)
+    {
+        return await ConnectToMongo().Find(Filter(key, value)).AnyAsync();
+    }
+
     protected bool EntriesAny() 
     {
         return ConnectToMongo().Find(_ => true).Any();
+    }
+
+    protected async Task<bool> EntriesAnyAsync()
+    {
+        return await ConnectToMongo().Find(_ => true).AnyAsync();
     }
 
     protected ICollection<T> GetAllEntries()
@@ -92,6 +107,11 @@ public abstract class RepositoryBase<T> where T : CoreModelBase
     protected T GetByKeyStr(string key, string value)
     {
         return ConnectToMongo().Find(Filter(key, value)).SingleOrDefault();
+    }
+
+    protected async Task<T> GetByKeyStrAsync(string key, string value)
+    {
+        return await ConnectToMongo().Find(Filter(key, value)).SingleOrDefaultAsync();
     }
 
     protected ICollection<T> GetManyByKeyStr(string key, string value)

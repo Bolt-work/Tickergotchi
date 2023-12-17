@@ -20,9 +20,26 @@ public class PersonDataAccess : IPersonDataAccess
         return _mapper.Map<PersonDTO>(personModel);
     }
 
+    public async Task<PersonDTO?> PersonByIdAsync(string? id)
+    {
+        var personModel = await _personManager.GetPersonByIdAsync(id);
+        if (personModel is null)
+            return null;
+        return _mapper.Map<PersonDTO>(personModel);
+    }
+
     public PersonDTO PersonByUserName(string? userName)
     {
         var personModel = _personManager.GetPersonByUserName(userName);
+        return _mapper.Map<PersonDTO>(personModel);
+    }
+
+    public async Task<PersonDTO?> PersonByUserNameAsync(string? userName)
+    {
+        var personModel = await _personManager.GetPersonByUserNameAsync(userName);
+        if(personModel is null)
+            return null;
+
         return _mapper.Map<PersonDTO>(personModel);
     }
 
@@ -32,7 +49,7 @@ public class PersonDataAccess : IPersonDataAccess
         return _mapper.Map<ICollection<PersonDTO>>(personModel);
     }
 
-    public bool CheckPasswordAndUserName(string? password, string userName) => _personManager.CheckPasswordWithUserName(password, userName);
-    public bool CheckPasswordAndPersonId(string? password, string personId) => _personManager.CheckPasswordAndPersonId(password, personId);
-    public bool DoesUserNameAlreadyExist(string? userName) => _personManager.DoesUserNameAlreadyExist(userName);
+    public async Task<bool> CheckPasswordAndUserNameAsync(string? password, string? userName) => await _personManager.CheckPasswordWithUserName(password, userName);
+    public async Task<bool> CheckPasswordAndPersonIdAsync(string? password, string? personId) => await _personManager.CheckPasswordAndPersonId(password, personId);
+    public async Task<bool> DoesUserNameAlreadyExistAsync(string? userName) => await _personManager.DoesUserNameAlreadyExistAsync(userName);
 }
