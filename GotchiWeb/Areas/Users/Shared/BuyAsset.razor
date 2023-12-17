@@ -1,0 +1,105 @@
+﻿@using Gotchi
+@using Gotchi.CryptoCoins.DTOs
+
+@inject GotchiHostService _gotchiHostService
+
+<h3>Find Crypto Coin</h3>
+
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a class="nav-link @(activeTab == 1 ? "active" : "")" @onclick="() => ChangeTab(1)">CoinMarketId</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link @(activeTab == 2 ? "active" : "")" @onclick="() => ChangeTab(2)">Name</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link @(activeTab == 3 ? "active" : "")" @onclick="() => ChangeTab(3)">Slug</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link @(activeTab == 4 ? "active" : "")" @onclick="() => ChangeTab(4)">Symbol</a>
+    </li>
+</ul>
+
+<div class="tab-content">
+    <br/>
+    <div class="tab-pane col-12 row @(activeTab == 1 ? "active" : "")">
+        <label class="col-2 font-weight-bold">Coin Market Id:</label>
+        <input type="text" @bind="_findCoinModel.CoinMarketId" placeholder="Enter the coins Coin Market Id" />
+    </div>
+    <div class="tab-pane col-12 row @(activeTab == 2 ? "active" : "")">
+        <label class="col-2 font-weight-bold">Name:</label>
+        <input type="text" @bind="_findCoinModel.CoinName" placeholder="Enter the coins Name" />
+    </div>
+    <div class="tab-pane col-12 row @(activeTab == 3 ? "active" : "")">
+        <label class="col-2 font-weight-bold">Slug:</label>
+        <input type="text" @bind="_findCoinModel.CoinSlug" placeholder="Enter the coins Slug" />
+    </div>
+    <div class="tab-pane col-12 row @(activeTab == 4 ? "active" : "")">
+        <label class="col-2 font-weight-bold">Symbol:</label>
+        <input type="text" @bind="_findCoinModel.CoinSymbol" placeholder="Enter the coins Symbol" />
+    </div>
+    <br/>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</div>
+
+@if (_noCoinFound)
+{
+    <label class="col-2 font-weight-bold">*No Crypto coins found.</label>
+}
+
+
+
+@code {
+    private FindCoinModel _findCoinModel = new();
+    private bool _noCoinFound = false;
+
+    private CryptoCoinDTO displayCoinSingle = null!;
+    private ICollection<CryptoCoinDTO> displayCoinList = new List<CryptoCoinDTO>();
+
+    private int activeTab = 1;
+
+    private void ChangeTab(int tab)
+    {
+        activeTab = tab;
+        _findCoinModel = new();
+    }
+
+    private void GetCoinDetails()
+    {
+        displayCoinSingle = null!;
+        displayCoinList = new List<CryptoCoinDTO>();
+
+        _noCoinFound = false;
+
+        if (_findCoinModel.CoinMarketId != null)
+        {
+            displayCoinSingle = _gotchiHostService.DataAccess().CryptoCoinByCoinMarketId(_findCoinModel.CoinMarketId);
+            if (displayCoinSingle is null) 
+            { _noCoinFound = true; }
+            _findCoinModel = new();
+        }
+        else if (_findCoinModel.CoinName != null)
+        {
+            displayCoinSingle = _gotchiHostService.DataAccess().CryptoCoinByName(_findCoinModel.CoinName);
+            _findCoinModel = new();
+        }
+        else if (_findCoinModel.CoinSlug != null)
+        {
+            displayCoinList = _gotchiHostService.DataAccess().CryptoCoinBySlug(_findCoinModel.CoinSlug);
+            _findCoinModel = new();
+        }
+        else if (_findCoinModel.CoinSymbol != null)
+        {
+            displayCoinList = _gotchiHostService.DataAccess().CryptoCoinBySymbol(_findCoinModel.CoinSymbol);
+            _findCoinModel = new();
+        }
+    }
+
+    private class FindCoinModel
+    {
+        public string? CoinMarketId { get; set; } = null;
+        public string? CoinName { get; set; } = null;
+        public string? CoinSlug { get; set; } = null;
+        public string? CoinSymbol { get; set; } = null;
+    }
+}

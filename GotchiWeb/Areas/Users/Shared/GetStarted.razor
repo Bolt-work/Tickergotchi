@@ -4,14 +4,20 @@
 @using System.ComponentModel.DataAnnotations;
 
 @inject IJSRuntime js
+@inject NavigationManager navManager
 @inject GotchiHostService _gotchiHostService
 
 @if (UserId is null)
 {
     <p> User not logged in.</p>
 }
+else if (ReloadAddress is null)
+{
+    <p> No reload address.</p>
+}
 else
 {
+    <h3>Lets get started!</h3>
     @if (!_showForm)
     {
         <button class="btn btn-outline-primary" @onclick="ToggleShowForm">Get Started!</button>
@@ -22,7 +28,7 @@ else
             <DataAnnotationsValidator />
             <ValidationSummary />
             <div class="col-12 row">
-                <label class="col-2 font-weight-bold">CoinMarket Id:</label>
+                <label class="col-2 font-weight-bold">Tickergotchi name:</label>
                 <InputText id="coinId" @bind-Value="_model.GotchiName" />
                 &nbsp;<ValidationMessage For="@(() => _model.GotchiName)" />
             </div>
@@ -35,6 +41,8 @@ else
 @code {
     [Parameter]
     public string? UserId {get; set;}
+    [Parameter]
+    public string? ReloadAddress { get; set; }
 
     private Model _model = new Model();
     private bool _showForm = false;
@@ -43,14 +51,19 @@ else
 
     private void SubmitGettingStarted()
     {
+        if (UserId is null || ReloadAddress is null || _model.GotchiName is null)
+            return;
+
         _gotchiHostService.CommandService().Process(new CreatePortfolioCommand(UserId));
         _gotchiHostService.CommandService().Process(new CreateGotchiCommand(UserId, _model.GotchiName));
+        navManager.NavigateTo(ReloadAddress, true);
     }
 
     private class Model
     {
         [Required(ErrorMessage = "Name is required")]
-        [Range(1, 10, ErrorMessage = "Name length  must be between  1  10")]
+        [StringLength(20, ErrorMessage = "Name is too long.")]
+        [MinLength(1, ErrorMessage = "Name is too short.")]
         public string? GotchiName { get; set;}    
     }
 }

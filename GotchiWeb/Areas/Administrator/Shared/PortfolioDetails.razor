@@ -1,0 +1,89 @@
+﻿
+@using Gotchi
+@using Gotchi.Portfolios.DTOs
+@inject GotchiHostService _gotchiHostService
+
+@if (_portfolio is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Account Holder Id</th>
+                <th>Balance</th>
+                <th>Assets Count</th>
+                <th>BalanceLastUpdated</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@_portfolio.Id</td>
+                <td>@_portfolio.AccountHolder.Id</td>
+                <td>@_portfolio.Balance</td>
+                <td>@_portfolio.Assets.Count</td>
+                <td>@_portfolio.BalanceLastUpdated</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <br/><br/>
+    <h3>Assets</h3>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>CoinMarketId</th>
+                <th>Name</th>
+                <th>Slug</th>
+                <th>Symbol</th>
+
+                <th>PriceWhenLastBought</th>
+                <th>Profit</th>
+                <th>Units</th>
+                <th>CurrentPrice</th>
+                <th>CoinMarketLastUpdated</th>
+                <th>CoinLastUpdated</th>
+                <th>IsValid</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var asset in _portfolio.Assets)
+            {
+                <tr>
+                    <td>@asset.Id</td>
+                    <td>@asset.CoinMarketId</td>
+                    <td>@asset.Name</td>
+                    <td>@asset.Slug</td>
+                    <td>@asset.Symbol</td>
+
+                    <td>@asset.PriceWhenLastBought</td>
+                    <td>@asset.Profit</td>
+                    <td>@asset.Units</td>
+                    <td>@asset.CurrentPrice</td>
+                    <td>@asset.CoinMarketLastUpdated</td>
+                    <td>@asset.CoinLastUpdated</td>
+                    <td>@asset.IsValid</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+
+    [Parameter]
+    public string? PortfolioId { get; set; }
+    private PortfolioDTO _portfolio = null!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (PortfolioId is null)
+            return;
+
+        _portfolio = _gotchiHostService.DataAccess().PortfolioById(PortfolioId);
+    }
+}

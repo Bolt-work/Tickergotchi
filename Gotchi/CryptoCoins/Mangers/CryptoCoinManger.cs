@@ -59,6 +59,7 @@ public class CryptoCoinManager : CoreManagerBase, ICryptoCoinManager
 
     public CryptoCoin CryptoCoinByCoinMarketId(string coinMarketId) 
     {
+        CheckToUpdateDatabase();
         var cryptoCoin = _cryptoCoinRepository.GetByCoinMarketId(coinMarketId);
         return ThrowIfModelNotFound(cryptoCoin, coinMarketId);
     }

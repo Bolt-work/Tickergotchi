@@ -1,12 +1,12 @@
-﻿@page "/ViewPortfolio/{portfolioId}"
+﻿@page "/Portfolio/"
 
 @using Gotchi
-@using Gotchi.Portfolios.CommandService;
+@using Gotchi.Portfolios.CommandService
 @using Gotchi.Portfolios.DTOs
-@using System.ComponentModel.DataAnnotations;
-@using System.Security.Claims;
+@using System.ComponentModel.DataAnnotations
+@using System.Security.Claims
 
-@using GotchiWeb.Areas.Users.Shared;
+@using GotchiWeb.Areas.Users.Shared
 
 @inject IJSRuntime js
 @inject GotchiHostService _gotchiHostService
@@ -53,36 +53,7 @@
     <button type="submit" class="btn btn-primary">Submit</button>
 </EditForm>
 
-@if (_portfolio is null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Account Holder Id</th>
-                <th>Balance</th>
-                <th>Assets Count</th>
-                <th>BalanceLastUpdated</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>@_portfolio.Id</td>
-                <td>@_portfolio.AccountHolder.Id</td>
-                <td>@_portfolio.Balance</td>
-                <td>@_portfolio.Assets.Count</td>
-                <td>@_portfolio.BalanceLastUpdated</td>
-            </tr>
-        </tbody>
-    </table>
-}
-
-<h4>Assets</h4>
-
+<BuyAsset></BuyAsset>
 
 @if (_loadState == LoadState.NotLoaded)
 {
@@ -90,50 +61,62 @@ else
 }
 else if(_loadState == LoadState.NotFound)
 {
-    <GetStarted UserId="@_userId"></GetStarted>
+    <GetStarted UserId="@_userId" ReloadAddress="/Portfolio/"></GetStarted>
 }
-else
+else if (_portfolio is not null)
 {
+        <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Balance</th>
+                <th>Assets Count</th>
+                <th>BalanceLastUpdated</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@_portfolio.Balance</td>
+                <td>@_portfolio.Assets.Count</td>
+                <td>@_portfolio.BalanceLastUpdated</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <br/>
+    <h4>Assets</h4>
     <table class="table table-striped">
         <thead>
             <tr>
-                <th>Id</th>
                 <th>CoinMarketId</th>
                 <th>Name</th>
                 <th>Slug</th>
                 <th>Symbol</th>
 
-                <th>PriceWhenLastBought</th>
                 <th>Profit</th>
                 <th>Units</th>
                 <th>CurrentPrice</th>
-                <th>CoinMarketLastUpdated</th>
-                <th>CoinLastUpdated</th>
-                <th>IsValid</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var asset in _portfolio.Assets)
             {
                 <tr>
-                    <td>@asset.Id</td>
                     <td>@asset.CoinMarketId</td>
                     <td>@asset.Name</td>
                     <td>@asset.Slug</td>
                     <td>@asset.Symbol</td>
 
-                    <td>@asset.PriceWhenLastBought</td>
                     <td>@asset.Profit</td>
                     <td>@asset.Units</td>
                     <td>@asset.CurrentPrice</td>
-                    <td>@asset.CoinMarketLastUpdated</td>
-                    <td>@asset.CoinLastUpdated</td>
-                    <td>@asset.IsValid</td>
                 </tr>
             }
         </tbody>
     </table>
 }
+
+<BuyAsset></BuyAsset>
+
 
 @code {
 
@@ -155,7 +138,7 @@ else
     {
         var authState =  await authenticationState;
         _userId = authState.User.Claims.First(x => x.Type == ClaimTypes.SerialNumber).Value;
-        _portfolio = _gotchiHostService.DataAccess().PortfoliosByPersonId(_userId).FirstOrDefault();
+        _portfolio = GetPortfolio(_userId);
 
         if (_portfolio is null)
         {
@@ -173,7 +156,7 @@ else
         _gotchiHostService.CommandService().Process(command);
 
         buyAssetModel = new BuyAssetUiModel();
-        _portfolio = _gotchiHostService.DataAccess().PortfolioById(portfolioId);
+        _portfolio = GetPortfolio(_userId);
     }
 
     private async Task SellAsset()
@@ -182,7 +165,12 @@ else
         _gotchiHostService.CommandService().Process(command);
 
         sellAssetModel = new SellAssetUiModel();
-        _portfolio = _gotchiHostService.DataAccess().PortfolioById(portfolioId);
+        _portfolio = GetPortfolio(_userId);
+    }
+
+    private PortfolioDTO GetPortfolio(string userId)
+    {
+        return _gotchiHostService.DataAccess().PortfoliosByPersonId(_userId).FirstOrDefault();
     }
 
 
@@ -211,4 +199,49 @@ else
         [Required(ErrorMessage = "Number of units is required")]
         public float Units { get; set; }
     }
+
+    private void ShowPopup()
+    {
+        // Call the JavaScript function to show the popup
+        js.InvokeVoidAsync("showPopup");
+    }
+
+    /*
+     
+    private Timer timer;
+
+    protected override void OnInitialized()
+        {
+        // Start the timer when the component is initialized
+        timer = new Timer(TimerCallback, null, TimeSpan.Zero, TimeSpan.FromSeconds(60));
+    }
+
+    private void TimerCallback(object state)
+        {
+        // Code to be executed every 60 seconds
+        // For example, you can update data or perform some periodic task
+
+        // Ensure UI updates are performed on the UI thread
+        InvokeAsync(() =>
+            {
+            // Toggle the value to show/hide the element
+            shouldShowElement = !shouldShowElement;
+
+            // Notify Blazor that the state has changed
+            StateHasChanged();
+    });
+    }
+
+    private void ShowElement()
+        {
+        // Toggle the value to show/hide the element immediately
+        shouldShowElement = !shouldShowElement;
+    }
+
+    // Don't forget to stop the timer when the component is disposed
+    public void Dispose()
+        {
+        timer?.Dispose();
+    }
+    */
 }
