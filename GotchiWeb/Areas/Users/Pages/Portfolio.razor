@@ -13,27 +13,6 @@
 
 <h3>Portfolio</h3>
 
-<h4>Buy Asset</h4>
-<EditForm Model="@buyAssetModel" OnValidSubmit="@BuyAsset">
-    <DataAnnotationsValidator />
-    
-    @*<ValidationSummary />*@
-    <div class="col-12 row">
-        <label class="col-2 font-weight-bold">CoinMarket Id:</label>
-        <InputText id="coinId" @bind-Value="buyAssetModel.CoinMarketId" />
-        &nbsp;<ValidationMessage For="@(() => buyAssetModel.CoinMarketId)" />
-    </div>
-
-    <div class="col-12 row">
-        <label class="col-2 font-weight-bold">Value:</label>
-        <InputNumber id="Amount" @bind-Value="buyAssetModel.AmountInValue" />
-        &nbsp;<ValidationMessage For="@(() => buyAssetModel.CoinMarketId)" />
-    </div>
-
-
-    <button type="submit" class="btn btn-primary">Submit</button>
-</EditForm>
-
 <h4>Sell Asset</h4>
 <EditForm Model="@sellAssetModel" OnValidSubmit="@SellAsset">
     <DataAnnotationsValidator />
@@ -123,9 +102,9 @@ else if (_portfolio is not null)
     [Parameter]
     public string? portfolioId { get; set; }
 
-    private LoadState _loadState = LoadState.NotFound;
+    private LoadState _loadState = LoadState.NotLoaded;
     private string? _userId;
-    private PortfolioDTO _portfolio = null!;
+    private PortfolioDTO? _portfolio = null!;
 
     private BuyAssetUiModel buyAssetModel = new();
     private SellAssetUiModel sellAssetModel = new();
@@ -138,7 +117,7 @@ else if (_portfolio is not null)
     {
         var authState =  await authenticationState;
         _userId = authState.User.Claims.First(x => x.Type == ClaimTypes.SerialNumber).Value;
-        _portfolio = GetPortfolio(_userId);
+        _portfolio = await _gotchiHostService.DataAccess().PortfolioByPersonIdAsync(_userId);
 
         if (_portfolio is null)
         {
@@ -156,7 +135,7 @@ else if (_portfolio is not null)
         _gotchiHostService.CommandService().Process(command);
 
         buyAssetModel = new BuyAssetUiModel();
-        _portfolio = GetPortfolio(_userId);
+        //_portfolio = GetPortfolio(_userId);
     }
 
     private async Task SellAsset()
@@ -165,12 +144,12 @@ else if (_portfolio is not null)
         _gotchiHostService.CommandService().Process(command);
 
         sellAssetModel = new SellAssetUiModel();
-        _portfolio = GetPortfolio(_userId);
+        //_portfolio = GetPortfolio(_userId);
     }
 
-    private PortfolioDTO GetPortfolio(string userId)
+    private async Task<PortfolioDTO?> GetPortfolio(string userId)
     {
-        return _gotchiHostService.DataAccess().PortfoliosByPersonId(_userId).FirstOrDefault();
+        return await _gotchiHostService.DataAccess().PortfolioByPersonIdAsync(_userId);
     }
 
 

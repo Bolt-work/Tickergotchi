@@ -12,4 +12,5 @@ public interface IPortfolioRepository
     IEnumerable<Portfolio> GetAll();
     bool Upsert(Portfolio model);
     IEnumerable<Portfolio> GetByPersonId(string personId);
+    Task<Portfolio?> GetByPersonIdAsync(string personId);
 }

@@ -2,51 +2,68 @@
 @using Gotchi.CryptoCoins.DTOs
 
 @inject GotchiHostService _gotchiHostService
+<h4>Buy Asset</h4>
 
-<h3>Find Crypto Coin</h3>
-
-<ul class="nav nav-tabs">
-    <li class="nav-item">
-        <a class="nav-link @(activeTab == 1 ? "active" : "")" @onclick="() => ChangeTab(1)">CoinMarketId</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link @(activeTab == 2 ? "active" : "")" @onclick="() => ChangeTab(2)">Name</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link @(activeTab == 3 ? "active" : "")" @onclick="() => ChangeTab(3)">Slug</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link @(activeTab == 4 ? "active" : "")" @onclick="() => ChangeTab(4)">Symbol</a>
-    </li>
-</ul>
-
-<div class="tab-content">
-    <br/>
-    <div class="tab-pane col-12 row @(activeTab == 1 ? "active" : "")">
-        <label class="col-2 font-weight-bold">Coin Market Id:</label>
-        <input type="text" @bind="_findCoinModel.CoinMarketId" placeholder="Enter the coins Coin Market Id" />
-    </div>
-    <div class="tab-pane col-12 row @(activeTab == 2 ? "active" : "")">
-        <label class="col-2 font-weight-bold">Name:</label>
-        <input type="text" @bind="_findCoinModel.CoinName" placeholder="Enter the coins Name" />
-    </div>
-    <div class="tab-pane col-12 row @(activeTab == 3 ? "active" : "")">
-        <label class="col-2 font-weight-bold">Slug:</label>
-        <input type="text" @bind="_findCoinModel.CoinSlug" placeholder="Enter the coins Slug" />
-    </div>
-    <div class="tab-pane col-12 row @(activeTab == 4 ? "active" : "")">
-        <label class="col-2 font-weight-bold">Symbol:</label>
-        <input type="text" @bind="_findCoinModel.CoinSymbol" placeholder="Enter the coins Symbol" />
-    </div>
-    <br/>
-    <button type="submit" class="btn btn-primary">Submit</button>
-</div>
-
-@if (_noCoinFound)
+@if (!_showFindCoins)
 {
-    <label class="col-2 font-weight-bold">*No Crypto coins found.</label>
+    <button class="btn btn-primary" @onclick="ToggleShowFindCoins">Find Crypto coins</button>
 }
+else
+{
+    <div class="container border p-3 ">
+        <h3>Find Crypto Coin</h3>
+        <hr>
 
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link @(activeTab == 1 ? "active" : "")" @onclick="() => ChangeTab(1)">CoinMarketId</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link @(activeTab == 2 ? "active" : "")" @onclick="() => ChangeTab(2)">Name</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link @(activeTab == 3 ? "active" : "")" @onclick="() => ChangeTab(3)">Slug</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link @(activeTab == 4 ? "active" : "")" @onclick="() => ChangeTab(4)">Symbol</a>
+            </li>
+        </ul>
+
+        <div class="tab-content">
+            <br />
+            <div class="tab-pane col-12 row @(activeTab == 1 ? "active" : "")">
+                <label class="col-2 font-weight-bold">Coin Market Id:</label>
+                <input type="text" @bind="_findCoinModel.CoinMarketId" placeholder="Enter the coins Coin Market Id" />
+            </div>
+            <div class="tab-pane col-12 row @(activeTab == 2 ? "active" : "")">
+                <label class="col-2 font-weight-bold">Name:</label>
+                <input type="text" @bind="_findCoinModel.CoinName" placeholder="Enter the coins Name" />
+            </div>
+            <div class="tab-pane col-12 row @(activeTab == 3 ? "active" : "")">
+                <label class="col-2 font-weight-bold">Slug:</label>
+                <input type="text" @bind="_findCoinModel.CoinSlug" placeholder="Enter the coins Slug" />
+            </div>
+            <div class="tab-pane col-12 row @(activeTab == 4 ? "active" : "")">
+                <label class="col-2 font-weight-bold">Symbol:</label>
+                <input type="text" @bind="_findCoinModel.CoinSymbol" placeholder="Enter the coins Symbol" />
+            </div>
+            <br />
+            <div class="row">
+                <div class="col">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button class="btn btn-primary" @onclick="ToggleShowFindCoins">Close</button>
+                </div>
+            </div>
+        </div>
+
+        @if (_noCoinFound)
+        {
+            <label class="col-2 font-weight-bold">*No Crypto coins found.</label>
+        }
+
+    </div>
+
+}
 
 
 @code {
@@ -57,6 +74,9 @@
     private ICollection<CryptoCoinDTO> displayCoinList = new List<CryptoCoinDTO>();
 
     private int activeTab = 1;
+    private bool _showFindCoins = false;
+
+    private void ToggleShowFindCoins() => _showFindCoins = !_showFindCoins;
 
     private void ChangeTab(int tab)
     {
@@ -74,7 +94,7 @@
         if (_findCoinModel.CoinMarketId != null)
         {
             displayCoinSingle = _gotchiHostService.DataAccess().CryptoCoinByCoinMarketId(_findCoinModel.CoinMarketId);
-            if (displayCoinSingle is null) 
+            if (displayCoinSingle is null)
             { _noCoinFound = true; }
             _findCoinModel = new();
         }

@@ -54,6 +54,11 @@ public class MockPortfolioRepository : MockRepositoryBase<Portfolio> , IPortfoli
         return _db.Where(x => x.AccountHolder.Id == personId).ToList();
     }
 
+    public Task<Portfolio?> GetByPersonIdAsync(string personId)
+    {
+        throw new NotImplementedException();
+    }
+
     public Portfolio GetByPortfolioId(string portfolioId)
     {
         return _db.SingleOrDefault(x => x.Id == portfolioId)!;

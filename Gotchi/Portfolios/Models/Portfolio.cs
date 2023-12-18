@@ -8,6 +8,7 @@ public class Portfolio : CoreModelBase
     public Person AccountHolder;
     public float Balance { get; set; }
     public DateTime BalanceLastUpdated { get; set; }
+    public DateTime BalanceNextUpdated { get; set; }
     public IList<Asset> Assets;
 
     public Portfolio(string id, Person accountHolder)

@@ -46,6 +46,7 @@ public class GotchiServiceDataAccess: IPersonDataAccess,
 
     public PortfolioDTO PortfolioById(string portfolioId) => ICL(_portfolioDataAccess.PortfolioById, portfolioId, null!);
     public ICollection<PortfolioDTO> PortfoliosByPersonId(string personId) => _portfolioDataAccess.PortfoliosByPersonId(personId);
+    public async Task<PortfolioDTO?> PortfolioByPersonIdAsync(string personId) => await _portfolioDataAccess.PortfolioByPersonIdAsync(personId);
     public ICollection<PortfolioDTO> PortfoliosAll() => _portfolioDataAccess.PortfoliosAll();
 
     public CryptoCoinDTO CryptoCoinByCoinMarketId(string coinMarketId) => ICL(_cryptoCoinsDataAccess.CryptoCoinByCoinMarketId, coinMarketId, null!);

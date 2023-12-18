@@ -16,5 +16,6 @@ namespace Gotchi.Portfolios.Managers
         void Update(Portfolio portfolio);
         float WithdrawFromAccount(Portfolio portfolio, float amount);
         IEnumerable<Portfolio> PortfolioAll();
+        Task<Portfolio?> GetByPersonIdAsync(string? personId);
     }
 }

@@ -51,7 +51,7 @@ else
 
     private void SubmitGettingStarted()
     {
-        if (UserId is null || ReloadAddress is null || _model.GotchiName is null)
+        if (string.IsNullOrWhiteSpace(UserId) || string.IsNullOrWhiteSpace(ReloadAddress) || string.IsNullOrWhiteSpace(_model.GotchiName))
             return;
 
         _gotchiHostService.CommandService().Process(new CreatePortfolioCommand(UserId));

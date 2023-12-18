@@ -52,7 +52,7 @@
         var gotchiAuthenticationStateProvider = (GotchiAuthenticationStateProvider)authStateProvider;
         await gotchiAuthenticationStateProvider.UpdateAuthenticationState(new UserSession
             {
-                SerialNumber = user.UserName,
+                SerialNumber = user.Id,
                 UserName = user.UserName,
                 Role = user.Role
             });

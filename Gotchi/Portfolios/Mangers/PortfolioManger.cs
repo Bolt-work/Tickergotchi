@@ -1,22 +1,24 @@
 ﻿using Gotchi.Core.Helpers;
 using Gotchi.Core.Managers;
 using Gotchi.CryptoCoins.Managers;
-using Gotchi.CryptoCoins.Repository;
 using Gotchi.Persons.Models;
 using Gotchi.Portfolios.Models;
 using Gotchi.Portfolios.Repository;
+using Microsoft.Extensions.Logging;
 
 namespace Gotchi.Portfolios.Managers
 {
     public class PortfolioManager : CoreManagerBase, IPortfolioManager
     {
         private IPortfolioRepository _portfolioRepository;
-        private ICryptoCoinRepository _cryptoCoinRepository;
+        private ICryptoCoinManager _cryptoCoinManager;
+        private ILogger _logger;
 
-        public PortfolioManager(IPortfolioRepository portfolioRepository, ICryptoCoinRepository cryptoCoinRepository)
+        public PortfolioManager(IPortfolioRepository portfolioRepository, ICryptoCoinManager cryptoCoinManager, ILogger<PortfolioManager> logger)
         {
             _portfolioRepository = portfolioRepository;
-            _cryptoCoinRepository = cryptoCoinRepository;
+            _cryptoCoinManager = cryptoCoinManager;
+            _logger = logger;
         }
 
         public Portfolio CreatePortfolio(Person accountHolder, string? portfolioId = null)
@@ -29,9 +31,11 @@ namespace Gotchi.Portfolios.Managers
             if (_portfolioRepository.Exists(id))
                 throw new ModelWithIdAlreadyExistsException<Portfolio>(id);
 
+            var timeNow = DateTime.UtcNow;
             return new Portfolio(id, accountHolder) 
             {
-                BalanceLastUpdated = DateTime.UtcNow,
+                BalanceLastUpdated = timeNow,
+                BalanceNextUpdated = timeNow.AddHours(1),
                 Balance = GameSettings.Values().StartingBalance
             };
         }
@@ -59,6 +63,28 @@ namespace Gotchi.Portfolios.Managers
             { 
                 Update(p); 
             }
+            return portfolio;
+        }
+
+        public async Task<Portfolio?> GetByPersonIdAsync(string? personId) 
+        {
+            if (string.IsNullOrWhiteSpace(personId))
+                return null;
+
+            var portfolio = await _portfolioRepository.GetByPersonIdAsync(personId);
+            if (portfolio is null)
+                return null;
+
+            try 
+            {
+                Update(portfolio);
+            }
+            catch (Exception ex) 
+            {
+                _logger.LogError("While updating portfolio",ex);
+                return null;
+            }
+
             return portfolio;
         }
 
@@ -97,6 +123,7 @@ namespace Gotchi.Portfolios.Managers
 
             portfolio.Balance = balance - amountInValue;
             portfolio.BalanceLastUpdated = DateTime.UtcNow;
+            portfolio.BalanceNextUpdated = portfolio.BalanceLastUpdated.AddHours(1);
         }
 
         public void SellAsset(Portfolio portfolio, CryptoCoin coin, float units) 
@@ -116,6 +143,7 @@ namespace Gotchi.Portfolios.Managers
 
             portfolio.Balance += value;
             portfolio.BalanceLastUpdated = DateTime.UtcNow;
+            portfolio.BalanceNextUpdated = portfolio.BalanceLastUpdated.AddHours(1);
         }
 
         private bool AssetOwned(Portfolio portfolio, CryptoCoin coin) 
@@ -174,6 +202,7 @@ namespace Gotchi.Portfolios.Managers
             {
                 portfolio.Balance = CalculatePortfolioBalance(portfolio.Balance, portfolio.BalanceLastUpdated);
                 portfolio.BalanceLastUpdated = DateTime.UtcNow;
+                portfolio.BalanceNextUpdated = portfolio.BalanceLastUpdated.AddHours(1);
             }
 
             foreach (var asset in portfolio.Assets) 
@@ -206,7 +235,7 @@ namespace Gotchi.Portfolios.Managers
             if(asset.CoinMarketId is null)
                 throw new ArgumentNullException(nameof(asset));
 
-            var coin = _cryptoCoinRepository.GetByCoinMarketId(asset.CoinMarketId);
+            var coin = _cryptoCoinManager.CryptoCoinByCoinMarketId(asset.CoinMarketId);
 
             if (coin is null)
             {
