@@ -7,5 +7,6 @@
   "FoodHungerValue": 1,
   "FoodBaseCost": 100,
   "FoodAddedCost": 5,
-  "UpdateGotchiInMinutes": 1
+  "UpdateGotchiInMinutes": 1,
+  "UpdateCoinValuesDbInMinutes": 60
 }

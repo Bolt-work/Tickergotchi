@@ -32,7 +32,6 @@
     <button type="submit" class="btn btn-primary">Submit</button>
 </EditForm>
 
-<BuyAsset></BuyAsset>
 
 @if (_loadState == LoadState.NotLoaded)
 {
@@ -92,15 +91,12 @@ else if (_portfolio is not null)
             }
         </tbody>
     </table>
-}
 
-<BuyAsset></BuyAsset>
+    <BuyAsset PortfolioId="@_portfolio.Id"></BuyAsset>
+}
 
 
 @code {
-
-    [Parameter]
-    public string? portfolioId { get; set; }
 
     private LoadState _loadState = LoadState.NotLoaded;
     private string? _userId;
@@ -127,6 +123,8 @@ else if (_portfolio is not null)
         {
             _loadState = LoadState.FoundPortfolio;    
         }
+
+        StateHasChanged();
     }
 
     private async Task BuyAsset()

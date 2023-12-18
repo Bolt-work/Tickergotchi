@@ -79,6 +79,29 @@ public class CryptoCoinManager : CoreManagerBase, ICryptoCoinManager
         return _cryptoCoinRepository.GetBySymbol(symbol);
     }
 
+    #region Data Access
+    public async Task<CryptoCoin?> CryptoCoinByCoinMarketIdAsync(string coinMarketId)
+    {
+        CheckToUpdateDatabase();
+        return await _cryptoCoinRepository.GetByCoinMarketIdAsync(coinMarketId);
+    }
+    public async Task<CryptoCoin?> CryptoCoinByNameAsync(string name)
+    {
+        CheckToUpdateDatabase();
+        return await _cryptoCoinRepository.GetByNameAsync(name);
+    }
+    public async Task<IEnumerable<CryptoCoin>> CryptoCoinBySlugAsync(string slug)
+    {
+        CheckToUpdateDatabase();
+        return await _cryptoCoinRepository.GetBySlugAsync(slug);
+    }
+    public async Task<IEnumerable<CryptoCoin>> CryptoCoinBySymbolAsync(string symbol)
+    {
+        CheckToUpdateDatabase();
+        return await _cryptoCoinRepository.GetBySymbolAsync(symbol);
+    }
+    #endregion
+
     private void CheckToUpdateDatabase() 
     {
         if (_cryptoCoinRepository.HasAnyEntries())

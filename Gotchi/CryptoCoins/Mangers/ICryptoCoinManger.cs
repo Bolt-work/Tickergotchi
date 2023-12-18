@@ -10,5 +10,9 @@ namespace Gotchi.CryptoCoins.Managers
         CryptoCoin CryptoCoinByName(string name);
         IEnumerable<CryptoCoin> CryptoCoinBySlug(string slug);
         IEnumerable<CryptoCoin> CryptoCoinBySymbol(string symbol);
+        Task<CryptoCoin?> CryptoCoinByCoinMarketIdAsync(string coinMarketId);
+        Task<CryptoCoin?> CryptoCoinByNameAsync(string name);
+        Task<IEnumerable<CryptoCoin>> CryptoCoinBySlugAsync(string slug);
+        Task<IEnumerable<CryptoCoin>> CryptoCoinBySymbolAsync(string symbol);
     }
 }

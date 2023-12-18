@@ -53,6 +53,10 @@ public class GotchiServiceDataAccess: IPersonDataAccess,
     public CryptoCoinDTO CryptoCoinByName(string name) => ICL(_cryptoCoinsDataAccess.CryptoCoinByName, name, null!);
     public ICollection<CryptoCoinDTO> CryptoCoinBySlug(string slug) => _cryptoCoinsDataAccess.CryptoCoinBySlug(slug);
     public ICollection<CryptoCoinDTO> CryptoCoinBySymbol(string symbol) => _cryptoCoinsDataAccess.CryptoCoinBySymbol(symbol);
+    public async Task<CryptoCoinDTO?> CryptoCoinByCoinMarketIdAsync(string coinMarketId) => await _cryptoCoinsDataAccess.CryptoCoinByCoinMarketIdAsync(coinMarketId);
+    public async Task<CryptoCoinDTO?> CryptoCoinByNameAsync(string name) => await _cryptoCoinsDataAccess.CryptoCoinByNameAsync(name);
+    public async Task<ICollection<CryptoCoinDTO>> CryptoCoinBySlugAsync(string slug) => await _cryptoCoinsDataAccess.CryptoCoinBySlugAsync(slug);
+    public async Task<ICollection<CryptoCoinDTO>> CryptoCoinBySymbolAsync(string symbol) => await _cryptoCoinsDataAccess.CryptoCoinBySymbolAsync(symbol);
 
     public GotchiDTO GotchiById(string gotchiId) => ICL(_gotchiDataAccess.GotchiById, gotchiId, null!);
     public ICollection<GotchiDTO> GotchisByOwnerId(string ownerId) => _gotchiDataAccess.GotchisByOwnerId(ownerId);

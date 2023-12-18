@@ -4,7 +4,11 @@
 @inject GotchiHostService _gotchiHostService
 <h4>Buy Asset</h4>
 
-@if (!_showFindCoins)
+@if (string.IsNullOrWhiteSpace(PortfolioId))
+{
+    <p> No PortfolioId id ...</p>
+}
+else if (!_showFindCoins)
 {
     <button class="btn btn-primary" @onclick="ToggleShowFindCoins">Find Crypto coins</button>
 }
@@ -50,15 +54,58 @@ else
             <br />
             <div class="row">
                 <div class="col">
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="submit" class="btn btn-primary" @onclick="GetCoinDetails">Submit</button>
                     <button class="btn btn-primary" @onclick="ToggleShowFindCoins">Close</button>
                 </div>
             </div>
         </div>
 
-        @if (_noCoinFound)
+        <br />
+        @if (!_firstRun)
         {
-            <label class="col-2 font-weight-bold">*No Crypto coins found.</label>
+            <h4>Results</h4>
+            <hr />
+
+            @if (!_displayResultsList.Any())
+            {
+                <label class="col-2 font-weight-bold">*No Crypto coins found.</label>
+            }
+            else
+            {
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>CoinMarketId</th>
+                            <th>Name</th>
+                            <th>Slug</th>
+                            <th>Symbol</th>
+                            <th>Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var coin in _displayResultsList)
+                        {
+                            <tr>
+                                <td>@coin.Id</td>
+                                <td>@coin.Name</td>
+                                <td>@coin.Slug</td>
+                                <td>@coin.Symbol</td>
+                                <td>@coin.Price</td>
+                                <button class="btn btn-primary active" @onclick="() => ShowBuyCoinMenu(PortfolioId, coin.Id)">Buy</button>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        }
+
+        @if (_showBuyMenu)
+        {
+            <h3>Buy Coin</h3> 
+            <hr />
+            <label class="col-2 font-weight-bold">Amount $: </label>
+            <input type="text" @bind="_buyCoinModel.Amount" placeholder="Enter amount" />
+            <button class="btn btn-primary active" @onclick="() => BuyCoin(_buyCoinModel.PortfolioId, _buyCoinModel.CoinMarketId, _buyCoinModel.Amount)">Buy</button>
         }
 
     </div>
@@ -67,16 +114,37 @@ else
 
 
 @code {
+
+    [Parameter]
+    public string? PortfolioId { get; set; }
+
+    private CryptoCoinDTO? _resultCoinSingle = null;
+    private ICollection<CryptoCoinDTO> _resultCoinList = new List<CryptoCoinDTO>();
+    private ICollection<CryptoCoinDTO> _displayResultsList = new List<CryptoCoinDTO>();
     private FindCoinModel _findCoinModel = new();
-    private bool _noCoinFound = false;
+    private BuyCoinModel _buyCoinModel = new();
 
-    private CryptoCoinDTO displayCoinSingle = null!;
-    private ICollection<CryptoCoinDTO> displayCoinList = new List<CryptoCoinDTO>();
-
-    private int activeTab = 1;
     private bool _showFindCoins = false;
+    private int activeTab = 1;
+    private bool _firstRun = true;
 
-    private void ToggleShowFindCoins() => _showFindCoins = !_showFindCoins;
+    private bool _showBuyMenu = false;
+
+
+    private void ToggleShowFindCoins()
+    {
+        if (_showFindCoins == false)
+        {
+            _showFindCoins = true;
+            _firstRun = true;
+        }
+        else
+        {
+            _showFindCoins = false;
+            _firstRun = false;
+            CloseBuyCoinMenu();
+        }
+    }
 
     private void ChangeTab(int tab)
     {
@@ -84,35 +152,49 @@ else
         _findCoinModel = new();
     }
 
-    private void GetCoinDetails()
+    #region Find Coin
+    private async void GetCoinDetails()
     {
-        displayCoinSingle = null!;
-        displayCoinList = new List<CryptoCoinDTO>();
+        _resultCoinSingle = null;
+        _resultCoinList = new List<CryptoCoinDTO>();
+        _displayResultsList = new List<CryptoCoinDTO>();
 
-        _noCoinFound = false;
+        if (!string.IsNullOrWhiteSpace(_findCoinModel.CoinMarketId))
+        {
+            _resultCoinSingle = await _gotchiHostService.DataAccess().CryptoCoinByCoinMarketIdAsync(_findCoinModel.CoinMarketId!);
+            UpdateResults();
+        }
+        else if (!string.IsNullOrWhiteSpace(_findCoinModel.CoinName))
+        {
+            _resultCoinSingle = await _gotchiHostService.DataAccess().CryptoCoinByNameAsync(_findCoinModel.CoinName!);
+            UpdateResults();
+        }
+        else if (!string.IsNullOrWhiteSpace(_findCoinModel.CoinSlug))
+        {
+            _resultCoinList = await _gotchiHostService.DataAccess().CryptoCoinBySlugAsync(_findCoinModel.CoinSlug!);
+            UpdateResults();
+        }
+        else if (!string.IsNullOrWhiteSpace(_findCoinModel.CoinSymbol))
+        {
+            _resultCoinList = await _gotchiHostService.DataAccess().CryptoCoinBySymbolAsync(_findCoinModel.CoinSymbol!);
+            UpdateResults();
+        }
+    }
 
-        if (_findCoinModel.CoinMarketId != null)
+    private void UpdateResults()
+    {
+        if (_resultCoinSingle != null)
         {
-            displayCoinSingle = _gotchiHostService.DataAccess().CryptoCoinByCoinMarketId(_findCoinModel.CoinMarketId);
-            if (displayCoinSingle is null)
-            { _noCoinFound = true; }
-            _findCoinModel = new();
+            _displayResultsList.Add(_resultCoinSingle);
         }
-        else if (_findCoinModel.CoinName != null)
+        else if (_resultCoinList.Any())
         {
-            displayCoinSingle = _gotchiHostService.DataAccess().CryptoCoinByName(_findCoinModel.CoinName);
-            _findCoinModel = new();
+            _displayResultsList = _resultCoinList;
         }
-        else if (_findCoinModel.CoinSlug != null)
-        {
-            displayCoinList = _gotchiHostService.DataAccess().CryptoCoinBySlug(_findCoinModel.CoinSlug);
-            _findCoinModel = new();
-        }
-        else if (_findCoinModel.CoinSymbol != null)
-        {
-            displayCoinList = _gotchiHostService.DataAccess().CryptoCoinBySymbol(_findCoinModel.CoinSymbol);
-            _findCoinModel = new();
-        }
+
+        _firstRun = false;
+
+        StateHasChanged();
     }
 
     private class FindCoinModel
@@ -122,4 +204,38 @@ else
         public string? CoinSlug { get; set; } = null;
         public string? CoinSymbol { get; set; } = null;
     }
+
+    #endregion
+
+    #region Buy Menu
+    private void ShowBuyCoinMenu(string? portfolioId, string? coinId)
+    {
+        if (string.IsNullOrWhiteSpace(coinId))
+            return;
+
+        _buyCoinModel = new();
+        _buyCoinModel.PortfolioId = portfolioId;
+        _buyCoinModel.CoinMarketId = coinId;
+        _showBuyMenu = true;
+    }
+
+    private void CloseBuyCoinMenu()
+    {
+        _buyCoinModel = new();
+        _showBuyMenu = false;
+    }
+
+    private void BuyCoin(string? portfolioId, string? coinId, float amount)
+    {
+        var t = 0;
+    }
+
+
+    private class BuyCoinModel
+    {
+        public string? PortfolioId { get; set; } = null;
+        public string? CoinMarketId { get; set; } = null;
+        public float Amount { get; set; }
+    }
+    #endregion
 }

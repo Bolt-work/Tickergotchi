@@ -23,6 +23,11 @@ public class CryptoCoinRepository : RepositoryBase<CryptoCoin>, ICryptoCoinRepos
     public IEnumerable<CryptoCoin> GetBySymbol(string symbol) => base.GetManyByKeyStr("Symbol", symbol);
     public IEnumerable<CryptoCoin> GetAll() => base.GetAllEntries();
 
+    public async Task<CryptoCoin?> GetByCoinMarketIdAsync(string coinMarketId) => await base.GetByKeyStrAsync("Id", coinMarketId);
+    public async Task<CryptoCoin?> GetByNameAsync(string name) => await base.GetByKeyStrAsync("Name", name);
+    public async Task<IEnumerable<CryptoCoin>> GetBySlugAsync(string slug) => await base.GetManyByKeyStrAsync("Slug", slug);
+    public async Task<IEnumerable<CryptoCoin>> GetBySymbolAsync(string symbol) => await base.GetManyByKeyStrAsync("Symbol", symbol);
+
     public bool Exists(string coinMarketId) => base.EntryExists(coinMarketId);
     public bool HasAnyEntries() => base.EntriesAny();
     public CryptoCoin GetFirstEntry() => base.ConnectToMongo().FindSync(_ => true).FirstOrDefault();

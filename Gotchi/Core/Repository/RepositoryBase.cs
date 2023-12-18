@@ -119,6 +119,11 @@ public abstract class RepositoryBase<T> where T : CoreModelBase
         return ConnectToMongo().Find(Filter(key, value)).ToList();
     }
 
+    protected async Task<ICollection<T>> GetManyByKeyStrAsync(string key, string value)
+    {
+        return await ConnectToMongo().Find(Filter(key, value)).ToListAsync();
+    }
+
     protected FilterDefinition<T> FilterId(string id) => Filter("Id", id);
     protected FilterDefinition<T> Filter(string key, string id)
     {

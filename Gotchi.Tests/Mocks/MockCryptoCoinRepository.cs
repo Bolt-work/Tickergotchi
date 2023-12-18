@@ -32,9 +32,19 @@ public class MockCryptoCoinRepository : MockRepositoryBase<CryptoCoin>, ICryptoC
 
     public CryptoCoin GetByCoinMarketId(string coinMarketId) => base.GetEntryById(coinMarketId);
 
+    public Task<CryptoCoin?> GetByCoinMarketIdAsync(string coinMarketId)
+    {
+        throw new NotImplementedException();
+    }
+
     public CryptoCoin GetByName(string name)
     {
         return _db.SingleOrDefault(x => x.Name == name)!;
+    }
+
+    public Task<CryptoCoin?> GetByNameAsync(string name)
+    {
+        throw new NotImplementedException();
     }
 
     public IEnumerable<CryptoCoin> GetBySlug(string slug)
@@ -42,9 +52,19 @@ public class MockCryptoCoinRepository : MockRepositoryBase<CryptoCoin>, ICryptoC
         return _db.Where(x => x.Slug == slug).ToList();
     }
 
+    public Task<IEnumerable<CryptoCoin>> GetBySlugAsync(string slug)
+    {
+        throw new NotImplementedException();
+    }
+
     public IEnumerable<CryptoCoin> GetBySymbol(string symbol)
     {
         return _db.Where(x => x.Symbol == symbol).ToList();
+    }
+
+    public Task<IEnumerable<CryptoCoin>> GetBySymbolAsync(string symbol)
+    {
+        throw new NotImplementedException();
     }
 
     public CryptoCoin GetFirstEntry()
