@@ -92,7 +92,7 @@ else if (_portfolio is not null)
         </tbody>
     </table>
 
-    <BuyAsset PortfolioId="@_portfolio.Id"></BuyAsset>
+    <BuyAsset Portfolio="@_portfolio"></BuyAsset>
 }
 
 
@@ -124,7 +124,7 @@ else if (_portfolio is not null)
             _loadState = LoadState.FoundPortfolio;    
         }
 
-        StateHasChanged();
+        //StateHasChanged();
     }
 
     private async Task BuyAsset()
