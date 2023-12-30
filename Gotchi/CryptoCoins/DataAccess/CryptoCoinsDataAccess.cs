@@ -82,4 +82,19 @@ public class CryptoCoinsDataAccess : ICryptoCoinsDataAccess
         var cryptoCoinModel = await _cryptoCoinManager.CryptoCoinBySymbolAsync(symbol);
         return _mapper.Map<ICollection<CryptoCoinDTO>>(cryptoCoinModel);
     }
+
+    public async Task<IEnumerable<string?>> GetNameSuggestionsAsync(string prefix, int limit = 20) 
+    {
+        return await _cryptoCoinManager.GetNameSuggestionsAsync(prefix, limit);
+    }
+
+    public async Task<IEnumerable<string?>> GetSlugSuggestionsAsync(string prefix, int limit = 20)
+    {
+        return await _cryptoCoinManager.GetSlugSuggestionsAsync(prefix, limit);
+    }
+
+    public async Task<IEnumerable<string?>> GetSymbolSuggestionsAsync(string prefix, int limit = 20)
+    {
+        return await _cryptoCoinManager.GetSymbolSuggestionsAsync(prefix, limit);
+    }
 }

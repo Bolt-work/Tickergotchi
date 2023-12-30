@@ -4,13 +4,14 @@
 @using Gotchi.Portfolios.DTOs
 @using System.ComponentModel.DataAnnotations
 
+@inject NavigationManager navManager
 @inject GotchiHostService _gotchiHostService
 
 <h4>Buy Asset</h4>
 
 @if (Portfolio is null)
 {
-    <p> No PortfolioId id ...</p>
+    <p> No PortfolioId ...</p>
 }
 else if (!_showFindCoins)
 {
@@ -24,41 +25,81 @@ else
 
         <ul class="nav nav-tabs">
             <li class="nav-item">
-                <a class="nav-link @(activeTab == 1 ? "active" : "")" @onclick="() => ChangeTab(1)">CoinMarketId</a>
+                <a class="nav-link @(activeTab == 1 ? "active" : "")" @onclick="() => ChangeTab(1)">Name</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link @(activeTab == 2 ? "active" : "")" @onclick="() => ChangeTab(2)">Name</a>
+                <a class="nav-link @(activeTab == 2 ? "active" : "")" @onclick="() => ChangeTab(2)">Slug</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link @(activeTab == 3 ? "active" : "")" @onclick="() => ChangeTab(3)">Slug</a>
+                <a class="nav-link @(activeTab == 3 ? "active" : "")" @onclick="() => ChangeTab(3)">Symbol</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link @(activeTab == 4 ? "active" : "")" @onclick="() => ChangeTab(4)">Symbol</a>
+                <a class="nav-link @(activeTab == 4 ? "active" : "")" @onclick="() => ChangeTab(4)">CoinMarketId</a>
             </li>
         </ul>
 
         <div class="tab-content">
             <br />
             <div class="tab-pane col-12 row @(activeTab == 1 ? "active" : "")">
-                <label class="col-2 font-weight-bold">Coin Market Id:</label>
-                <input type="text" @bind="_findCoinModel.CoinMarketId" placeholder="Enter the coins Coin Market Id" />
+                <label class="col-2 font-weight-bold">Name:</label>
+                <input type="text" @bind="_findCoinModel.InputText" @oninput="GetNameSuggestions" placeholder="Enter the coins Name" />
+
+                <table class="table ">
+                    <tbody>
+                        @foreach (var suggestion in _findCoinModel.Suggestions)
+                        {
+                            <tr>
+                                <td>@suggestion</td>
+                                <td><button type="submit" class="btn btn-primary" @onclick="()=>GetCoinDetailsByName(suggestion)">Submit</button></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
             </div>
             <div class="tab-pane col-12 row @(activeTab == 2 ? "active" : "")">
-                <label class="col-2 font-weight-bold">Name:</label>
-                <input type="text" @bind="_findCoinModel.CoinName" placeholder="Enter the coins Name" />
+                <label class="col-2 font-weight-bold">Slug:</label>
+                <input type="text" @bind="_findCoinModel.InputText" @oninput="GetSlugSuggestions" placeholder="Enter the coins Slug" />
+
+                <table class="table ">
+                    <tbody>
+                        @foreach (var suggestion in _findCoinModel.Suggestions)
+                        {
+                            <tr>
+                                <td>@suggestion</td>
+                                <td><button type="submit" class="btn btn-primary" @onclick="()=>GetCoinDetailsBySlug(suggestion)">Submit</button></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
             </div>
             <div class="tab-pane col-12 row @(activeTab == 3 ? "active" : "")">
-                <label class="col-2 font-weight-bold">Slug:</label>
-                <input type="text" @bind="_findCoinModel.CoinSlug" placeholder="Enter the coins Slug" />
+                <label class="col-2 font-weight-bold">Symbol:</label>
+                <input type="text" @bind="_findCoinModel.InputText" @oninput="GetSymbolSuggestions" placeholder="Enter the coins Symbol" />
+
+                <table class="table ">
+                    <tbody>
+                        @foreach (var suggestion in _findCoinModel.Suggestions)
+                        {
+                            <tr>
+                                <td>@suggestion</td>
+                                <td><button type="submit" class="btn btn-primary" @onclick="()=>GetCoinDetailsBySymbol(suggestion)">Submit</button></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
             </div>
             <div class="tab-pane col-12 row @(activeTab == 4 ? "active" : "")">
-                <label class="col-2 font-weight-bold">Symbol:</label>
-                <input type="text" @bind="_findCoinModel.CoinSymbol" placeholder="Enter the coins Symbol" />
+                <label class="col-2 font-weight-bold">Coin Market Id:</label>
+                <input type="text" @bind="_findCoinModel.InputText" placeholder="Enter the coins Coin Market Id" />
+                <div class="row">
+                    <div class="col">
+                        <button type="submit" class="btn btn-primary" @onclick="()=>GetCoinDetailsByCoinMarketId(_findCoinModel.InputText)">Submit</button>
+                    </div>
+                </div>
             </div>
             <br />
             <div class="row">
                 <div class="col">
-                    <button type="submit" class="btn btn-primary" @onclick="GetCoinDetails">Submit</button>
                     <button class="btn btn-primary" @onclick="ToggleShowFindCoins">Close</button>
                 </div>
             </div>
@@ -70,7 +111,7 @@ else
             <h4>Results</h4>
             <hr />
 
-            @if (!_displayResultsList.Any())
+            @if (!_resultsModel.DisplayResultsList.Any())
             {
                 <label class="col-2 font-weight-bold">*No Crypto coins found.</label>
             }
@@ -87,14 +128,14 @@ else
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var coin in _displayResultsList)
+                        @foreach (var coin in _resultsModel.DisplayResultsList)
                         {
                             <tr>
                                 <td>@coin.Id</td>
                                 <td>@coin.Name</td>
                                 <td>@coin.Slug</td>
                                 <td>@coin.Symbol</td>
-                                <td>@coin.Price</td>
+                                <td>$@coin.Price</td>
                                 <button class="btn btn-primary active" @onclick="() => ShowBuyCoinMenu(Portfolio, coin.Id)">Buy</button>
                             </tr>
                         }
@@ -117,6 +158,7 @@ else
                 <div class="col">
                     <label class="col-2 font-weight-bold">Amount $: </label>
                     <input type="text" @bind="_buyCoinModel.Amount" placeholder="Enter amount" />
+                    <button class="btn btn-success active" @onclick="SetToMax">Max</button>
                     <button class="btn btn-primary active" @onclick="() => BuyCoin(_buyCoinModel.Portfolio, _buyCoinModel.CoinMarketId, _buyCoinModel.Amount)">Buy</button>
                 </div>
             </div>
@@ -131,10 +173,11 @@ else
     [Parameter]
     public PortfolioDTO? Portfolio { get; set; }
 
-    private CryptoCoinDTO? _resultCoinSingle = null;
-    private ICollection<CryptoCoinDTO> _resultCoinList = new List<CryptoCoinDTO>();
-    private ICollection<CryptoCoinDTO> _displayResultsList = new List<CryptoCoinDTO>();
+    [Parameter]
+    public string? ReloadAddress { get; set; } = "/Portfolio/";
+
     private FindCoinModel _findCoinModel = new();
+    private ResultsModel _resultsModel = new();
     private BuyCoinModel _buyCoinModel = new();
 
     private bool _showFindCoins = false;
@@ -167,56 +210,118 @@ else
     }
 
     #region Find Coin
-    private async void GetCoinDetails()
-    {
-        _resultCoinSingle = null;
-        _resultCoinList = new List<CryptoCoinDTO>();
-        _displayResultsList = new List<CryptoCoinDTO>();
 
-        if (!string.IsNullOrWhiteSpace(_findCoinModel.CoinMarketId))
-        {
-            _resultCoinSingle = await _gotchiHostService.DataAccess().CryptoCoinByCoinMarketIdAsync(_findCoinModel.CoinMarketId!);
-            UpdateResults();
-        }
-        else if (!string.IsNullOrWhiteSpace(_findCoinModel.CoinName))
-        {
-            _resultCoinSingle = await _gotchiHostService.DataAccess().CryptoCoinByNameAsync(_findCoinModel.CoinName!);
-            UpdateResults();
-        }
-        else if (!string.IsNullOrWhiteSpace(_findCoinModel.CoinSlug))
-        {
-            _resultCoinList = await _gotchiHostService.DataAccess().CryptoCoinBySlugAsync(_findCoinModel.CoinSlug!);
-            UpdateResults();
-        }
-        else if (!string.IsNullOrWhiteSpace(_findCoinModel.CoinSymbol))
-        {
-            _resultCoinList = await _gotchiHostService.DataAccess().CryptoCoinBySymbolAsync(_findCoinModel.CoinSymbol!);
-            UpdateResults();
-        }
+    private async void GetCoinDetailsByName(string? name)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+            return;
+
+        _resultsModel = new();
+        _resultsModel.ResultCoinSingle = await _gotchiHostService.DataAccess().CryptoCoinByNameAsync(name);
+        _findCoinModel = new();
+        UpdateResults();
+    }
+
+    private async void GetCoinDetailsBySlug(string? slug)
+    {
+        if (string.IsNullOrWhiteSpace(slug))
+            return;
+
+        _resultsModel = new();
+        _resultsModel.ResultCoinList = await _gotchiHostService.DataAccess().CryptoCoinBySlugAsync(slug);
+        _findCoinModel = new();
+        UpdateResults();
+    }
+
+    private async void GetCoinDetailsBySymbol(string? symbol)
+    {
+        if (string.IsNullOrWhiteSpace(symbol))
+            return;
+
+        _resultsModel = new();
+        _resultsModel.ResultCoinList = await _gotchiHostService.DataAccess().CryptoCoinBySymbolAsync(symbol);
+        _findCoinModel = new();
+        UpdateResults();
+    }
+
+    private async void GetCoinDetailsByCoinMarketId(string? coinMarketId)
+    {
+        if (string.IsNullOrWhiteSpace(coinMarketId))
+            return;
+
+        _resultsModel = new();
+        _resultsModel.ResultCoinSingle = await _gotchiHostService.DataAccess().CryptoCoinByCoinMarketIdAsync(coinMarketId);
+        _findCoinModel = new();
+        UpdateResults();
     }
 
     private void UpdateResults()
     {
-        if (_resultCoinSingle != null)
-        {
-            _displayResultsList.Add(_resultCoinSingle);
-        }
-        else if (_resultCoinList.Any())
-        {
-            _displayResultsList = _resultCoinList;
-        }
-
         _firstRun = false;
-
         StateHasChanged();
+    }
+
+
+    private void GetNameSuggestions(ChangeEventArgs e)
+    {
+        GetSuggestions(e, _gotchiHostService.DataAccess().GetNameSuggestionsAsync);
+    }
+
+    private void GetSlugSuggestions(ChangeEventArgs e)
+    {
+        GetSuggestions(e,_gotchiHostService.DataAccess().GetSlugSuggestionsAsync);
+    }
+
+    private void GetSymbolSuggestions(ChangeEventArgs e)
+    {
+        GetSuggestions(e, _gotchiHostService.DataAccess().GetSymbolSuggestionsAsync);
+    }
+
+    private async void GetSuggestions(ChangeEventArgs e, Func<string, int, Task<IEnumerable<string?>>> suggestionFunction)
+    {
+        if (e.Value is null)
+            return;
+
+        var input = e.Value.ToString();
+        if (string.IsNullOrWhiteSpace(input))
+        {
+            _findCoinModel.Suggestions = new List<string?>();
+            return;
+        }
+
+        _findCoinModel.Suggestions = await suggestionFunction(input, 8);
     }
 
     private class FindCoinModel
     {
-        public string? CoinMarketId { get; set; } = null;
-        public string? CoinName { get; set; } = null;
-        public string? CoinSlug { get; set; } = null;
-        public string? CoinSymbol { get; set; } = null;
+        public string? InputText { get; set; } = null;
+        public IEnumerable<string?> Suggestions = new List<string?>();
+    }
+
+    private class ResultsModel
+    {
+        public CryptoCoinDTO? ResultCoinSingle = null;
+        public ICollection<CryptoCoinDTO> ResultCoinList = new List<CryptoCoinDTO>();
+        private ICollection<CryptoCoinDTO> _displayResultsList = new List<CryptoCoinDTO>();
+
+        public ICollection<CryptoCoinDTO> DisplayResultsList
+        {
+            get 
+            { 
+                var _displayResultsList = new List<CryptoCoinDTO>();
+                if (ResultCoinSingle != null)
+                {
+                    _displayResultsList.Add(ResultCoinSingle);
+                }
+                else if (ResultCoinList.Any())
+                {
+                    _displayResultsList = ResultCoinList.ToList();
+                }
+                return _displayResultsList;
+            }
+            private set { _displayResultsList = value; }
+        }
+        
     }
 
     #endregion
@@ -233,6 +338,14 @@ else
         _showBuyMenu = true;
     }
 
+    private void SetToMax()
+    {
+        if (_buyCoinModel.Portfolio is null)
+            return;
+
+        _buyCoinModel.Amount = _buyCoinModel.Portfolio.Balance;
+    }
+
     private void CloseBuyCoinMenu()
     {
         _buyCoinModel = new();
@@ -243,6 +356,9 @@ else
     private void BuyCoin(PortfolioDTO? portfolio, string? coinId, float amount)
     {
         if (portfolio is null)
+            return;
+
+        if (string.IsNullOrWhiteSpace(ReloadAddress))
             return;
 
         if (string.IsNullOrWhiteSpace(portfolio.Id))
@@ -265,6 +381,7 @@ else
 
         var command = new BuyAssetsCommand(portfolio.Id, coinId, amount);
         _gotchiHostService.CommandService().Process(command);
+        navManager.NavigateTo(ReloadAddress, true);
     }
 
 

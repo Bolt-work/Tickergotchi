@@ -1,0 +1,186 @@
+﻿@using Gotchi
+@using Gotchi.Portfolios.CommandService
+@using Gotchi.Portfolios.DTOs
+
+@inject NavigationManager navManager
+@inject GotchiHostService _gotchiHostService
+
+@if (Portfolio is null)
+{
+    <p> No PortfolioId ...</p>
+}
+else if (AssetList.Count > 0)
+{
+    <div >
+        <h4>Assets</h4>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Slug</th>
+                    <th>Symbol</th>
+
+                    <th>Profit</th>
+                    <th>Units</th>
+                    <th>CurrentPrice</th>
+                    <th>Possible Profit</th>
+                    <th>Total Possible Profit</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var assetObj in AssetList)
+                {
+                    <tr>
+                        <td>@assetObj.Asset.Name</td>
+                        <td>@assetObj.Asset.Slug</td>
+                        <td>@assetObj.Asset.Symbol</td>
+
+                        <td>$@assetObj.Asset.Profit</td>
+                        <td>@assetObj.Asset.Units</td>
+                        <td>$@assetObj.Asset.CurrentPrice</td>
+                        <td>$@assetObj.PossibleProfit()</td>
+                        <td>$@assetObj.TotalPossibleProfit()</td>
+
+                        @if(assetObj.IsVisible)
+                        {
+                            <td><button type="submit" class="btn btn-primary" @onclick="assetObj.ToggleSellButton">Close</button></td>
+                        }
+                        else
+                        {
+                            <td><button type="submit" class="btn btn-primary" @onclick="assetObj.ToggleSellButton">Sell</button></td>
+                        }
+                        
+                    </tr>
+
+                    if (assetObj.IsVisible)
+                    {
+                        <tr style="border: 2px solid #dee2e6;">
+                            <td>
+                                Units: <input type="number" @bind="assetObj.QuantityToSell" /> 
+                                <button class="btn btn-success">Enter</button> 
+                                <button class="btn btn-success" @onclick="assetObj.MaxQuantityToSell">Max</button>
+                            </td>
+
+                            <td>$@assetObj.SaleValue()</td>
+                            <td><button class="btn btn-primary" @onclick="()=>SellAsset(assetObj.Asset.CoinMarketId)">Sell</button></td>
+
+                            @if (string.IsNullOrWhiteSpace(assetObj.SellErrorMessage))
+                            {
+                                <td class="col font-weight-bold text-danger">@assetObj.SellErrorMessage</td>
+                            }
+
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <hr />
+    <h3>No Assets</h3>
+    <hr />
+}
+
+@code {
+
+    [Parameter]
+    public PortfolioDTO? Portfolio { get; set; }
+
+    [Parameter]
+    public string? ReloadAddress { get; set; } = "/Portfolio/";
+
+    private IList<AssetListObject> AssetList = new List<AssetListObject>();
+
+    protected override void OnParametersSet()
+    {
+        if (Portfolio is null)
+            return;
+
+        var newAssetList = new List<AssetListObject>();
+        foreach (var asset in Portfolio.Assets)
+        {
+            newAssetList.Add(new AssetListObject(asset));
+        }
+
+        AssetList = newAssetList;
+    }
+
+    private void SellAsset(int coinMarketId)
+    {
+        if (Portfolio is null)
+            return;
+
+        if (Portfolio.Id is null)
+            return;
+
+        if (string.IsNullOrWhiteSpace(ReloadAddress))
+            return;
+
+        var assetObj = AssetList.SingleOrDefault(x => x.Asset.CoinMarketId == coinMarketId);
+
+        if (assetObj is null)
+            return;
+
+        if (assetObj.QuantityToSell <= 0)
+        {
+            assetObj.SellErrorMessage = "Quantity must be positive";
+            return;
+        }
+
+        if (assetObj.QuantityToSell > assetObj.Asset.Units)
+        {
+            assetObj.SellErrorMessage = "Do not have enough units";
+            return;
+        }
+
+        var sellCommand = new SellAssetsCommand(Portfolio.Id, coinMarketId.ToString(), assetObj.QuantityToSell);
+        _gotchiHostService.CommandService().Process(sellCommand);
+
+        navManager.NavigateTo(ReloadAddress, true);
+
+    }
+
+    private class AssetListObject
+    {
+        public AssetDTO Asset { get; set; }
+        public bool IsVisible = false;
+        public float QuantityToSell;
+        public string? SellErrorMessage = null;
+
+        public AssetListObject(AssetDTO asset)
+        {
+            Asset = asset;
+        }
+
+        public void ToggleSellButton()
+        {
+            IsVisible = !IsVisible;    
+        }
+
+        public float SaleValue()
+        {
+            if (QuantityToSell <= 0)
+                return 0;
+
+            return QuantityToSell * Asset.CurrentPrice;
+        }
+
+        public void MaxQuantityToSell()
+        {
+            QuantityToSell = Asset.Units;
+        }
+
+        public float PossibleProfit()
+        {
+            return Asset.Units * Asset.CurrentPrice;
+        }
+
+        public float TotalPossibleProfit()
+        {
+            return Asset.Profit + PossibleProfit();
+        }
+    }
+
+}

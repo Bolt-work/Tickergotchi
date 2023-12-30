@@ -12,5 +12,8 @@ namespace Gotchi.CryptoCoins.DataAccess
         Task<ICollection<CryptoCoinDTO>> CryptoCoinBySlugAsync(string slug);
         ICollection<CryptoCoinDTO> CryptoCoinBySymbol(string symbol);
         Task<ICollection<CryptoCoinDTO>> CryptoCoinBySymbolAsync(string symbol);
+        Task<IEnumerable<string?>> GetNameSuggestionsAsync(string prefix, int limit = 20);
+        Task<IEnumerable<string?>> GetSlugSuggestionsAsync(string prefix, int limit = 20);
+        Task<IEnumerable<string?>> GetSymbolSuggestionsAsync(string prefix, int limit = 20);
     }
 }

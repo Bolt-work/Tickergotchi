@@ -3,6 +3,7 @@ using Gotchi.Core.Helpers;
 using Gotchi.Core.Managers;
 using Gotchi.CryptoCoins.Repository;
 using Gotchi.Portfolios.Models;
+using Microsoft.VisualBasic;
 
 namespace Gotchi.CryptoCoins.Managers;
 
@@ -100,6 +101,25 @@ public class CryptoCoinManager : CoreManagerBase, ICryptoCoinManager
         CheckToUpdateDatabase();
         return await _cryptoCoinRepository.GetBySymbolAsync(symbol);
     }
+
+    public async Task<IEnumerable<string?>> GetNameSuggestionsAsync(string prefix, int limit = 20) 
+    {
+        CheckToPopulateDatabase();
+        return await _cryptoCoinRepository.GetNameSuggestionsAsync(prefix, limit);
+    }
+
+    public async Task<IEnumerable<string?>> GetSlugSuggestionsAsync(string prefix, int limit = 20)
+    {
+        CheckToPopulateDatabase();
+        return await _cryptoCoinRepository.GetSlugSuggestionsAsync(prefix, limit);
+    }
+
+    public async Task<IEnumerable<string?>> GetSymbolSuggestionsAsync(string prefix, int limit = 20)
+    {
+        CheckToPopulateDatabase();
+        return await _cryptoCoinRepository.GetSymbolSuggestionsAsync(prefix, limit);
+    }
+
     #endregion
 
     private void CheckToUpdateDatabase() 
@@ -114,6 +134,14 @@ public class CryptoCoinManager : CoreManagerBase, ICryptoCoinManager
             }
         }
         else 
+        {
+            UpdateCoinValues();
+        }
+    }
+
+    private void CheckToPopulateDatabase()
+    {
+        if (!_cryptoCoinRepository.HasAnyEntries())
         {
             UpdateCoinValues();
         }

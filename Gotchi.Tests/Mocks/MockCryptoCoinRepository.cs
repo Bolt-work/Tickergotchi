@@ -72,6 +72,21 @@ public class MockCryptoCoinRepository : MockRepositoryBase<CryptoCoin>, ICryptoC
         return _db.FirstOrDefault()!;
     }
 
+    public Task<IEnumerable<string?>> GetNameSuggestionsAsync(string prefix, int limit = 20)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<IEnumerable<string?>> GetSlugSuggestionsAsync(string prefix, int limit = 20)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<IEnumerable<string?>> GetSymbolSuggestionsAsync(string prefix, int limit = 20)
+    {
+        throw new NotImplementedException();
+    }
+
     public bool HasAnyEntries()
     {
         return _db.Any(); 

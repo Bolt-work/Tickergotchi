@@ -16,6 +16,9 @@ namespace Gotchi.CryptoCoins.Repository
         IEnumerable<CryptoCoin> GetBySymbol(string symbol);
         Task<IEnumerable<CryptoCoin>> GetBySymbolAsync(string symbol);
         CryptoCoin GetFirstEntry();
+        Task<IEnumerable<string?>> GetNameSuggestionsAsync(string prefix, int limit = 20);
+        Task<IEnumerable<string?>> GetSlugSuggestionsAsync(string prefix, int limit = 20);
+        Task<IEnumerable<string?>> GetSymbolSuggestionsAsync(string prefix, int limit = 20);
         bool HasAnyEntries();
         void Insert(IList<CryptoCoin> models);
     }

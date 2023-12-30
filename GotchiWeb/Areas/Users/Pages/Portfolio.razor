@@ -13,26 +13,6 @@
 
 <h3>Portfolio</h3>
 
-<h4>Sell Asset</h4>
-<EditForm Model="@sellAssetModel" OnValidSubmit="@SellAsset">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
-    <div class="col-12 row">
-        <label class="col-2 font-weight-bold">CoinMarket Id:</label>
-        <InputText id="coinId" @bind-Value="sellAssetModel.CoinMarketId" />
-        &nbsp;<ValidationMessage For="@(() => sellAssetModel.CoinMarketId)" />
-    </div>
-
-    <div class="col-12 row">
-        <label class="col-2 font-weight-bold">Units:</label>
-        <InputNumber id="Amount" @bind-Value="sellAssetModel.Units" />
-        &nbsp;<ValidationMessage For="@(() => sellAssetModel.Units)" />
-    </div>
-
-    <button type="submit" class="btn btn-primary">Submit</button>
-</EditForm>
-
-
 @if (_loadState == LoadState.NotLoaded)
 {
     <p><em>Loading...</em></p>
@@ -43,7 +23,8 @@ else if(_loadState == LoadState.NotFound)
 }
 else if (_portfolio is not null)
 {
-        <table class="table table-striped">
+    <h3>AssetsView</h3>
+    <table class="table table-striped">
         <thead>
             <tr>
                 <th>Balance</th>
@@ -59,39 +40,10 @@ else if (_portfolio is not null)
             </tr>
         </tbody>
     </table>
+    <br />
 
+    <AssetsView Portfolio="@_portfolio"></AssetsView>
     <br/>
-    <h4>Assets</h4>
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>CoinMarketId</th>
-                <th>Name</th>
-                <th>Slug</th>
-                <th>Symbol</th>
-
-                <th>Profit</th>
-                <th>Units</th>
-                <th>CurrentPrice</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var asset in _portfolio.Assets)
-            {
-                <tr>
-                    <td>@asset.CoinMarketId</td>
-                    <td>@asset.Name</td>
-                    <td>@asset.Slug</td>
-                    <td>@asset.Symbol</td>
-
-                    <td>@asset.Profit</td>
-                    <td>@asset.Units</td>
-                    <td>@asset.CurrentPrice</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-
     <BuyAsset Portfolio="@_portfolio"></BuyAsset>
 }
 
@@ -125,24 +77,6 @@ else if (_portfolio is not null)
         }
 
         //StateHasChanged();
-    }
-
-    private async Task BuyAsset()
-    {
-        var command = new BuyAssetsCommand(_portfolio.Id, buyAssetModel.CoinMarketId, buyAssetModel.AmountInValue);
-        _gotchiHostService.CommandService().Process(command);
-
-        buyAssetModel = new BuyAssetUiModel();
-        //_portfolio = GetPortfolio(_userId);
-    }
-
-    private async Task SellAsset()
-    {
-        var command = new SellAssetsCommand(_portfolio.Id, sellAssetModel.CoinMarketId, sellAssetModel.Units);
-        _gotchiHostService.CommandService().Process(command);
-
-        sellAssetModel = new SellAssetUiModel();
-        //_portfolio = GetPortfolio(_userId);
     }
 
     private async Task<PortfolioDTO?> GetPortfolio(string userId)
