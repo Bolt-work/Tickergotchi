@@ -29,6 +29,7 @@ public class CryptoCoinManager : CoreManagerBase, ICryptoCoinManager
 
         var coins = new List<CryptoCoin>();
         DateTime now = DateTime.UtcNow;
+        DateTime nextUpdated = now.AddMinutes(GameSettings.Values().UpdateCoinValuesDbInMinutes);
 
         var data = jsonModel.data ?? throw new CoinMarketApiModelPropertyIsNullExceptions(jsonModel, "data");
 
@@ -42,6 +43,7 @@ public class CryptoCoinManager : CoreManagerBase, ICryptoCoinManager
             coin.Symbol = datum.symbol;
             coin.CoinMarketLastUpdated = datum.last_updated;
             coin.LastUpdated = now;
+            coin.NextUpdated = nextUpdated;
 
             var quote = datum.quote ?? throw new CoinMarketApiModelPropertyIsNullExceptions(datum, "quote");
             var usd = quote.USD ?? throw new CoinMarketApiModelPropertyIsNullExceptions(quote, "USD");

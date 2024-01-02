@@ -15,6 +15,7 @@ public class AssetDTO : CoreModelBase
     public float CurrentPrice { get; set; }
     public DateTime CoinMarketLastUpdated { get; set; }
     public DateTime CoinLastUpdated { get; set; }
+    public DateTime CoinPriceNextUpdated { get; set; }
     public bool IsValid { get; set; }
 
     public float NetChange() 

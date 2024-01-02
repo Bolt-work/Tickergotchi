@@ -1,11 +1,4 @@
-﻿using Gotchi.Core.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Gotchi.CryptoCoins.DTOs;
+﻿namespace Gotchi.CryptoCoins.DTOs;
 
 public class CryptoCoinDTO
 {
@@ -19,4 +12,5 @@ public class CryptoCoinDTO
 
     public DateTime CoinMarketLastUpdated { get; set; }
     public DateTime LastUpdated { get; set; }
+    public DateTime NextUpdated { get; set; }
 }

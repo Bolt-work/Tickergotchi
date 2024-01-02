@@ -181,6 +181,7 @@ namespace Gotchi.Portfolios.Managers
                 PriceWhenLastBought = coin.Price,
                 CoinMarketLastUpdated = coin.CoinMarketLastUpdated,
                 CoinLastUpdated = coin.LastUpdated,
+                CoinPriceNextUpdated = coin.NextUpdated,
                 IsValid = true
             };
         }
@@ -198,17 +199,39 @@ namespace Gotchi.Portfolios.Managers
 
         public void Update(Portfolio portfolio)
         {
-            if (CoreHelper.NumberOfHoursPassed(portfolio.BalanceLastUpdated) > 0) 
+            var timeNow = DateTime.UtcNow;
+            var timePassed = timeNow - portfolio.BalanceLastUpdated;
+
+            while (timePassed.TotalHours > 0) 
             {
-                portfolio.Balance = CalculatePortfolioBalance(portfolio.Balance, portfolio.BalanceLastUpdated);
-                portfolio.BalanceLastUpdated = DateTime.UtcNow;
+                portfolio.Balance = CalculateBalance(portfolio.Balance);
+                portfolio.BalanceLastUpdated = portfolio.BalanceLastUpdated.AddHours(1);
                 portfolio.BalanceNextUpdated = portfolio.BalanceLastUpdated.AddHours(1);
+                timePassed = timeNow - portfolio.BalanceLastUpdated;
             }
+
+            var cleanUpThis = 0;
+            //if (CoreHelper.NumberOfHoursPassed(portfolio.BalanceLastUpdated) > 0) 
+            //{
+            //    portfolio.Balance = CalculatePortfolioBalance(portfolio.Balance, portfolio.BalanceLastUpdated);
+            //    portfolio.BalanceLastUpdated = DateTime.UtcNow;
+            //    portfolio.BalanceNextUpdated = portfolio.BalanceLastUpdated.AddHours(1);
+            //}
 
             foreach (var asset in portfolio.Assets) 
             {
                 Update(asset);
             }
+        }
+
+        public static float CalculateBalance(float balance) 
+        {
+            if(balance <= 0)
+                return 0;
+
+            float balanceDeductedBaseAmount = (float)balance - GameSettings.Values().DeductionBaseAmount;
+            float deductionPercentage = (float)GameSettings.Values().DeductionPercentage / 100;
+            return (float)balanceDeductedBaseAmount * deductionPercentage;
         }
 
         public static float CalculatePortfolioBalance(float balance, DateTime balanceLastUpdated) => CalculatePortfolioBalance(balance, balanceLastUpdated, DateTime.UtcNow);
@@ -246,6 +269,7 @@ namespace Gotchi.Portfolios.Managers
                 asset.CurrentPrice = coin.Price;
                 asset.CoinMarketLastUpdated = coin.CoinMarketLastUpdated;
                 asset.CoinLastUpdated = coin.LastUpdated;
+                asset.CoinPriceNextUpdated = coin.NextUpdated;
             }
         }
 

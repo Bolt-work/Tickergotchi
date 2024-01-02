@@ -13,4 +13,5 @@ public class CryptoCoin :CoreModelBase
 
     public DateTime CoinMarketLastUpdated { get; set; }
     public DateTime LastUpdated { get; set; }
+    public DateTime NextUpdated { get; set; }
 }

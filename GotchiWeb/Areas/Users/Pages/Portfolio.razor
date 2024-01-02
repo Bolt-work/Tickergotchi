@@ -25,18 +25,20 @@ else if (_portfolio is not null)
 {
     <h3>AssetsView</h3>
     <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Balance</th>
-                <th>Assets Count</th>
-                <th>BalanceLastUpdated</th>
-            </tr>
-        </thead>
         <tbody>
             <tr>
-                <td>@_portfolio.Balance</td>
-                <td>@_portfolio.Assets.Count</td>
-                <td>@_portfolio.BalanceLastUpdated</td>
+                <td><strong>Balance:</strong> $@_portfolio.Balance</td>
+
+                @if (_portfolio.Balance != 0 && _timeUntilBalanceCheck != TimeSpan.Zero)
+                {
+                    <td><strong> Time Until Balance Check: </strong> @_timeUntilBalanceCheck.ToString("mm':'ss")</td>
+                }
+
+                @if (_portfolio.Assets.Any())
+                {
+                    <td><strong>Time Until Coin Price Updated:</strong> @_timeUntilCoinPriceCheck.ToString("mm':'ss")</td>
+                }
+
             </tr>
         </tbody>
     </table>
@@ -54,15 +56,22 @@ else if (_portfolio is not null)
     private string? _userId;
     private PortfolioDTO? _portfolio = null!;
 
-    private BuyAssetUiModel buyAssetModel = new();
-    private SellAssetUiModel sellAssetModel = new();
+    private TimeSpan _timeUntilBalanceCheck = new();
+    private TimeSpan _timeUntilCoinPriceCheck = new();
+    private Timer timer;
 
     [CascadingParameter]
     private Task<AuthenticationState> authenticationState { get; set; }
 
+    protected override void OnParametersSet()
+    {
+        UpdateDisplayTime();
+    }
 
     protected override async Task OnInitializedAsync()
     {
+        timer = new Timer(TimerCallback, null, TimeSpan.Zero, TimeSpan.FromSeconds(1));
+
         var authState =  await authenticationState;
         _userId = authState.User.Claims.First(x => x.Type == ClaimTypes.SerialNumber).Value;
         _portfolio = await _gotchiHostService.DataAccess().PortfolioByPersonIdAsync(_userId);
@@ -75,13 +84,60 @@ else if (_portfolio is not null)
         {
             _loadState = LoadState.FoundPortfolio;    
         }
-
-        //StateHasChanged();
     }
 
-    private async Task<PortfolioDTO?> GetPortfolio(string userId)
+    private void UpdateDisplayTime()
     {
-        return await _gotchiHostService.DataAccess().PortfolioByPersonIdAsync(_userId);
+        if (_portfolio is null)
+            return;
+
+        _timeUntilBalanceCheck = TimeUntilUpdate(_portfolio.BalanceNextUpdated);
+
+        if (_portfolio.Assets.Any())
+        {
+            var asset = _portfolio.Assets.First();
+            _timeUntilCoinPriceCheck = TimeUntilUpdate(asset.CoinPriceNextUpdated);
+        }
+    }
+
+    private TimeSpan TimeUntilUpdate(DateTime timeOfNextUpdate)
+    {
+        return timeOfNextUpdate - DateTime.UtcNow;
+    }
+
+    private async void CheckToUpdatePortfolio()
+    {
+        if (_userId is null || _portfolio is null)
+            return;
+
+        var nowTime = DateTime.UtcNow.AddSeconds(1);
+        if (nowTime >= _portfolio.BalanceNextUpdated)
+        {
+            _portfolio = await _gotchiHostService.DataAccess().PortfolioByPersonIdAsync(_userId);
+        }
+        else if (_portfolio.Assets.Any())
+        {
+            var asset = _portfolio.Assets.First();
+            if (nowTime >= asset.CoinPriceNextUpdated)
+            {
+                _portfolio = await _gotchiHostService.DataAccess().PortfolioByPersonIdAsync(_userId);
+            }
+        } 
+    }
+
+    private void TimerCallback(object? state)
+    {
+        InvokeAsync(() =>
+            {
+                CheckToUpdatePortfolio();
+                UpdateDisplayTime();
+                StateHasChanged();
+            });
+    }
+
+    public void Dispose()
+    {
+        timer?.Dispose();
     }
 
 
@@ -90,31 +146,6 @@ else if (_portfolio is not null)
         NotLoaded,
         NotFound,
         FoundPortfolio
-    }
-
-    private class BuyAssetUiModel
-    {
-        [Required(ErrorMessage = "CoinMarket Id required")]
-        public string? CoinMarketId { get; set; }
-
-        [Required(ErrorMessage = "CoinMarket Id required")]
-        [Range(1, int.MaxValue, ErrorMessage = "Value should be greater than or equal to 1")]
-        public float AmountInValue { get; set; }
-    }
-
-    private class SellAssetUiModel
-    {
-        [Required(ErrorMessage = "CoinMarket Id is required")]
-        public string? CoinMarketId { get; set; }
-
-        [Required(ErrorMessage = "Number of units is required")]
-        public float Units { get; set; }
-    }
-
-    private void ShowPopup()
-    {
-        // Call the JavaScript function to show the popup
-        js.InvokeVoidAsync("showPopup");
     }
 
     /*
