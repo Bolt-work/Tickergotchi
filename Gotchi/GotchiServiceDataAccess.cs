@@ -45,6 +45,7 @@ public class GotchiServiceDataAccess: IPersonDataAccess,
     public async Task<bool> DoesUserNameAlreadyExistAsync(string? userName) => await _personDataAccess.DoesUserNameAlreadyExistAsync(userName);
 
     public PortfolioDTO PortfolioById(string portfolioId) => ICL(_portfolioDataAccess.PortfolioById, portfolioId, null!);
+    public async Task<PortfolioDTO?> PortfolioByIdAsync(string portfolioId) => await _portfolioDataAccess.PortfolioByIdAsync(portfolioId);
     public ICollection<PortfolioDTO> PortfoliosByPersonId(string personId) => _portfolioDataAccess.PortfoliosByPersonId(personId);
     public async Task<PortfolioDTO?> PortfolioByPersonIdAsync(string personId) => await _portfolioDataAccess.PortfolioByPersonIdAsync(personId);
     public ICollection<PortfolioDTO> PortfoliosAll() => _portfolioDataAccess.PortfoliosAll();

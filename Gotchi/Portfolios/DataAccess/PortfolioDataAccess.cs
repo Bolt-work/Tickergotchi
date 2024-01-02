@@ -35,6 +35,15 @@ internal class PortfolioDataAccess : IPortfolioDataAccess
         return _mapper.Map<PortfolioDTO>(portfolioModels);
     }
 
+    public async Task<PortfolioDTO?> PortfolioByIdAsync(string portfolioId)
+    {
+        var portfolioModels = await _portfolioManager.GetByPortfolioIdAsync(portfolioId);
+        if (portfolioModels is null)
+            return null;
+
+        return _mapper.Map<PortfolioDTO>(portfolioModels);
+    }
+
     public ICollection<PortfolioDTO> PortfoliosAll()
     {
         var portfolioModels = _portfolioManager.PortfolioAll();

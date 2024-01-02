@@ -58,7 +58,7 @@ else if (_portfolio is not null)
 
     private TimeSpan _timeUntilBalanceCheck = new();
     private TimeSpan _timeUntilCoinPriceCheck = new();
-    private Timer timer;
+    private Timer? timer;
 
     [CascadingParameter]
     private Task<AuthenticationState> authenticationState { get; set; }
@@ -74,7 +74,8 @@ else if (_portfolio is not null)
 
         var authState =  await authenticationState;
         _userId = authState.User.Claims.First(x => x.Type == ClaimTypes.SerialNumber).Value;
-        _portfolio = await _gotchiHostService.DataAccess().PortfolioByPersonIdAsync(_userId);
+
+        _portfolio = await GetActivePortfolio(_userId);
 
         if (_portfolio is null)
         {
@@ -84,6 +85,19 @@ else if (_portfolio is not null)
         {
             _loadState = LoadState.FoundPortfolio;    
         }
+    }
+
+    private async Task<PortfolioDTO?> GetActivePortfolio(string? userId)
+    {
+        if (string.IsNullOrWhiteSpace(userId))
+            return null;
+
+        var person = await _gotchiHostService.DataAccess().PersonByIdAsync(_userId);
+
+        if (person is null || string.IsNullOrWhiteSpace(person.ActivePortfolio))
+            return null;
+
+        return await _gotchiHostService.DataAccess().PortfolioByIdAsync(person.ActivePortfolio);
     }
 
     private void UpdateDisplayTime()
@@ -113,14 +127,14 @@ else if (_portfolio is not null)
         var nowTime = DateTime.UtcNow.AddSeconds(1);
         if (nowTime >= _portfolio.BalanceNextUpdated)
         {
-            _portfolio = await _gotchiHostService.DataAccess().PortfolioByPersonIdAsync(_userId);
+            _portfolio = await GetActivePortfolio(_userId);
         }
         else if (_portfolio.Assets.Any())
         {
             var asset = _portfolio.Assets.First();
             if (nowTime >= asset.CoinPriceNextUpdated)
             {
-                _portfolio = await _gotchiHostService.DataAccess().PortfolioByPersonIdAsync(_userId);
+                _portfolio = await GetActivePortfolio(_userId);
             }
         } 
     }
@@ -147,43 +161,4 @@ else if (_portfolio is not null)
         NotFound,
         FoundPortfolio
     }
-
-    /*
-     
-    private Timer timer;
-
-    protected override void OnInitialized()
-        {
-        // Start the timer when the component is initialized
-        timer = new Timer(TimerCallback, null, TimeSpan.Zero, TimeSpan.FromSeconds(60));
-    }
-
-    private void TimerCallback(object state)
-        {
-        // Code to be executed every 60 seconds
-        // For example, you can update data or perform some periodic task
-
-        // Ensure UI updates are performed on the UI thread
-        InvokeAsync(() =>
-            {
-            // Toggle the value to show/hide the element
-            shouldShowElement = !shouldShowElement;
-
-            // Notify Blazor that the state has changed
-            StateHasChanged();
-    });
-    }
-
-    private void ShowElement()
-        {
-        // Toggle the value to show/hide the element immediately
-        shouldShowElement = !shouldShowElement;
-    }
-
-    // Don't forget to stop the timer when the component is disposed
-    public void Dispose()
-        {
-        timer?.Dispose();
-    }
-    */
 }

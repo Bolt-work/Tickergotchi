@@ -19,6 +19,7 @@ public class PortfolioRepository : RepositoryBase<Portfolio>, IPortfolioReposito
     public bool Exists(string id) => base.EntryExists(id);
 
     #region Data Access
+    public async Task<Portfolio?> GetByPortfolioIdAsync(string portfolioId) => await base.GetEntryByIdAsync(portfolioId);
     public async Task<Portfolio?> GetByPersonIdAsync(string personId) => await base.GetByKeyStrAsync("AccountHolder.Id", personId);
     #endregion
 

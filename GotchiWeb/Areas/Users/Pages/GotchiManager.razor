@@ -1,5 +1,29 @@
-﻿<h3>Gotchi</h3>
+﻿@page "/Gotchi/"
+
+@using Gotchi
+@using Gotchi.Gotchis.CommandServices
+@using Gotchi.Gotchis.DTOs
+@using System.Security.Claims;
+
+@inject GotchiHostService _gotchiHostService
+
+<h3>Gotchi</h3>
+
 
 @code {
+
+    private string? _userId;
+    private GotchiDTO? _gotchi;
+
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationState { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        var authState = await authenticationState;
+        _userId = authState.User.Claims.First(x => x.Type == ClaimTypes.SerialNumber).Value;
+        _gotchi = _gotchiHostService.DataAccess().GotchisByOwnerId(_userId).First();
+    }
 
 }

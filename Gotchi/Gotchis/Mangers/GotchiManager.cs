@@ -82,6 +82,22 @@ public class GotchiManager : CoreManagerBase, IGotchiManager
         return gotchis;
     }
 
+    #region DataAccess
+    public IEnumerable<CryptoGotchi> GetGotchisByOwnerIdAsync(string? ownerId)
+    {
+        if (ownerId is null)
+            throw new ArgumentNullException(nameof(ownerId));
+
+        var gotchis = _gotchiRepository.GotchisByOwnerId(ownerId);
+        foreach (var gotchi in gotchis)
+        {
+            Update(gotchi);
+        }
+
+        return gotchis;
+    }
+    #endregion
+
     public bool Store(CryptoGotchi gotchi) 
     {
         return _gotchiRepository.Upsert(gotchi);

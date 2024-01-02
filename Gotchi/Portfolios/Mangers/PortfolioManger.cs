@@ -66,28 +66,6 @@ namespace Gotchi.Portfolios.Managers
             return portfolio;
         }
 
-        public async Task<Portfolio?> GetByPersonIdAsync(string? personId) 
-        {
-            if (string.IsNullOrWhiteSpace(personId))
-                return null;
-
-            var portfolio = await _portfolioRepository.GetByPersonIdAsync(personId);
-            if (portfolio is null)
-                return null;
-
-            try 
-            {
-                Update(portfolio);
-            }
-            catch (Exception ex) 
-            {
-                _logger.LogError("While updating portfolio",ex);
-                return null;
-            }
-
-            return portfolio;
-        }
-
         public IEnumerable<Portfolio> PortfolioAll()
         {
             var portfolio = _portfolioRepository.GetAll();
@@ -98,6 +76,44 @@ namespace Gotchi.Portfolios.Managers
             return portfolio;
         }
 
+        #region Data Access
+        public async Task<Portfolio?> GetByPersonIdAsync(string? personId)
+        {
+            if (string.IsNullOrWhiteSpace(personId))
+                return null;
+
+            var portfolio = await _portfolioRepository.GetByPersonIdAsync(personId);
+            return UpdateWithTryCatch(portfolio);
+        }
+
+        public async Task<Portfolio?> GetByPortfolioIdAsync(string? portfolioId)
+        {
+            if (string.IsNullOrWhiteSpace(portfolioId))
+                return null;
+
+            var portfolio = await _portfolioRepository.GetByPortfolioIdAsync(portfolioId);
+            return UpdateWithTryCatch(portfolio);
+        }
+
+        private Portfolio? UpdateWithTryCatch(Portfolio? portfolio)
+        {
+            if (portfolio is null)
+                return null;
+
+            try
+            {
+                Update(portfolio);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("While updating portfolio", ex);
+                return null;
+            }
+
+            return portfolio;
+        }
+
+        #endregion
         public void BuyAsset(Portfolio portfolio, CryptoCoin coin, float amountInValue) 
         {
             // Encase it updates

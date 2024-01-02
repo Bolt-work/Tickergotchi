@@ -1,7 +1,5 @@
 ﻿using Gotchi.Core.Repository;
 using Gotchi.Gotchis.Models;
-using Gotchi.Persons.Models;
-using Gotchi.Portfolios.Models;
 
 namespace Gotchi.Gotchis.Repository;
 
