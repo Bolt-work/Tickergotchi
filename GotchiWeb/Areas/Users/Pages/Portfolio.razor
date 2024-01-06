@@ -70,21 +70,14 @@ else if (_portfolio is not null)
 
     protected override async Task OnInitializedAsync()
     {
-        timer = new Timer(TimerCallback, null, TimeSpan.Zero, TimeSpan.FromSeconds(1));
-
         var authState =  await authenticationState;
         _userId = authState.User.Claims.First(x => x.Type == ClaimTypes.SerialNumber).Value;
 
         _portfolio = await GetActivePortfolio(_userId);
 
-        if (_portfolio is null)
-        {
-            _loadState = LoadState.NotFound;
-        } 
-        else
-        {
-            _loadState = LoadState.FoundPortfolio;    
-        }
+        _loadState = _portfolio is null ? LoadState.NotFound : LoadState.FoundPortfolio;
+
+        timer = new Timer(TimerCallback, null, TimeSpan.Zero, TimeSpan.FromSeconds(1));
     }
 
     private async Task<PortfolioDTO?> GetActivePortfolio(string? userId)

@@ -64,6 +64,7 @@ public class GotchiServiceDataAccess: IPersonDataAccess,
 
 
     public GotchiDTO GotchiById(string gotchiId) => ICL(_gotchiDataAccess.GotchiById, gotchiId, null!);
+    public async Task<GotchiDTO?> GotchiByIdAsync(string gotchiId) => await _gotchiDataAccess.GotchiByIdAsync(gotchiId);
     public ICollection<GotchiDTO> GotchisByOwnerId(string ownerId) => _gotchiDataAccess.GotchisByOwnerId(ownerId);
     public ICollection<GotchiDTO> GotchisAll() => _gotchiDataAccess.GotchisAll();
 

@@ -218,21 +218,13 @@ namespace Gotchi.Portfolios.Managers
             var timeNow = DateTime.UtcNow;
             var timePassed = timeNow - portfolio.BalanceLastUpdated;
 
-            while (timePassed.TotalHours > 0) 
+            while (timePassed.TotalHours >= 1) 
             {
                 portfolio.Balance = CalculateBalance(portfolio.Balance);
                 portfolio.BalanceLastUpdated = portfolio.BalanceLastUpdated.AddHours(1);
                 portfolio.BalanceNextUpdated = portfolio.BalanceLastUpdated.AddHours(1);
                 timePassed = timeNow - portfolio.BalanceLastUpdated;
             }
-
-            var cleanUpThis = 0;
-            //if (CoreHelper.NumberOfHoursPassed(portfolio.BalanceLastUpdated) > 0) 
-            //{
-            //    portfolio.Balance = CalculatePortfolioBalance(portfolio.Balance, portfolio.BalanceLastUpdated);
-            //    portfolio.BalanceLastUpdated = DateTime.UtcNow;
-            //    portfolio.BalanceNextUpdated = portfolio.BalanceLastUpdated.AddHours(1);
-            //}
 
             foreach (var asset in portfolio.Assets) 
             {

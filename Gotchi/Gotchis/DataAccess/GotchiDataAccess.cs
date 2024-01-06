@@ -21,6 +21,12 @@ public class GotchiDataAccess : IGotchiDataAccess
         return _mapper.Map<GotchiDTO>(gotchiModel);
     }
 
+    public async Task<GotchiDTO?> GotchiByIdAsync(string gotchiId)
+    {
+        var gotchiModel = await _gotchiManager.GetGotchiByIdAsync(gotchiId);
+        return _mapper.Map<GotchiDTO>(gotchiModel);
+    }
+
     public ICollection<GotchiDTO> GotchisByOwnerId(string ownerId)
     {
         var gotchiModels = _gotchiManager.GetGotchisByOwnerId(ownerId);

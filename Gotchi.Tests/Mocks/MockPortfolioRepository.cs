@@ -64,5 +64,10 @@ public class MockPortfolioRepository : MockRepositoryBase<Portfolio> , IPortfoli
         return _db.SingleOrDefault(x => x.Id == portfolioId)!;
     }
 
+    public Task<Portfolio?> GetByPortfolioIdAsync(string portfolioId)
+    {
+        throw new NotImplementedException();
+    }
+
     public bool Upsert(Portfolio model) => base.UpsertEntry(model);
 }

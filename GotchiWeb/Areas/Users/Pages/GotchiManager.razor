@@ -5,15 +5,82 @@
 @using Gotchi.Gotchis.DTOs
 @using System.Security.Claims;
 
+@using GotchiWeb.Areas.Users.Shared
+@using static Gotchi.Gotchis.DTOs.GotchiDTO;
+
 @inject GotchiHostService _gotchiHostService
 
 <h3>Gotchi</h3>
 
+<Component show=GShow gotchiManager=this></Component>
+<button class="btn btn-primary active" @onclick="() => GShow = !GShow">show</button>
+
+@if (TShow)
+{
+    <h3>Tshwo</h3>
+}
+else
+{
+    <h3>Not Tshwo</h3>
+}
+
+@if (_loadState == LoadState.NotLoaded)
+{
+    <p><em>Loading...</em></p>
+}
+else if (_loadState == LoadState.NotFound)
+{
+    <GetStarted UserId="@_userId" ReloadAddress="/Gotchi/"></GetStarted>
+}
+else if (_gotchi is not null)
+{
+    <table class="table table-striped">
+        <tbody>
+            <tr>
+                <td><strong>@_gotchi.Name   Lvl</strong> @_gotchi.Level</td>
+            </tr>
+        </tbody>
+    </table>
+    <br />
+    <hr />
+
+    @if (_gotchi.State == GotchiStateDTO.Dead)
+    {
+        <td><h2> Is Dead </h2></td>
+    }
+    else if (_gotchi.State == GotchiStateDTO.Alive)
+    {
+        <br />
+        <h2> Is Alive</h2>
+        <hr />
+
+        <table class="table table-striped">
+            <tbody>
+                <tr>
+                    <td><strong>Number of Stars: </strong> @_numberOfHearts</td>
+                    <td><strong>Exp of death: </strong> @_expTimeOfDeath?.ToString("dd':'hh':'mm':'ss")</td>
+                    <td><strong>Exp time till death: </strong> @_timeUntilDeath?.ToString("dd':'hh':'mm':'ss")</td>
+                </tr>
+            </tbody>
+        </table>
+        <br />
+    }
+}
+
 
 @code {
-
+    private bool GShow = false;
+    public bool TShow = false;
+    private LoadState _loadState = LoadState.NotLoaded;
     private string? _userId;
     private GotchiDTO? _gotchi;
+
+    private readonly int _numberStars = 12;
+    private int _numberOfHearts = 0;
+    private DateTime? _expTimeOfDeath = null;
+    private TimeSpan? _timeUntilDeath = null;
+
+    private Timer? timer;
 
     [CascadingParameter]
     private Task<AuthenticationState> authenticationState { get; set; }
@@ -23,7 +90,69 @@
 
         var authState = await authenticationState;
         _userId = authState.User.Claims.First(x => x.Type == ClaimTypes.SerialNumber).Value;
-        _gotchi = _gotchiHostService.DataAccess().GotchisByOwnerId(_userId).First();
+        _gotchi = await GetActiveGotchi(_userId);
+        _loadState = _gotchi is null ? LoadState.NotFound : LoadState.FoundGotchi;
+        UpdateDisplayNumbers();
+        timer = new Timer(TimerCallback, null, TimeSpan.Zero, TimeSpan.FromSeconds(1));
+    }
+
+    private async Task<GotchiDTO?> GetActiveGotchi(string? userId)
+    {
+        if (string.IsNullOrWhiteSpace(userId))
+            return null;
+
+        var person = await _gotchiHostService.DataAccess().PersonByIdAsync(_userId);
+
+        if (person is null || string.IsNullOrWhiteSpace(person.ActiveGotchi))
+            return null;
+
+        return await _gotchiHostService.DataAccess().GotchiByIdAsync(person.ActiveGotchi);
+    }
+
+    private void UpdateDisplayNumbers()
+    {
+        if (_gotchi is null)
+            return;
+
+        _numberOfHearts = _gotchi.NumberOfHearts(_numberStars);
+        _expTimeOfDeath = _gotchi.EstimatedTimeOfDeath();
+        _timeUntilDeath = _gotchi.EstimatedTimeTillDeath();
+    }
+
+    private async void CheckToUpdateGotchi()
+    {
+        if (_userId is null || _gotchi is null)
+            return;
+
+        var nowTime = DateTime.UtcNow.AddSeconds(1);
+        if (nowTime >= _gotchi.NextUpdated)
+        {
+            _gotchi = await GetActiveGotchi(_userId);
+        }
+    }
+
+    private void TimerCallback(object? state)
+    {
+        InvokeAsync(() =>
+            {
+                CheckToUpdateGotchi();
+                UpdateDisplayNumbers();
+                StateHasChanged();
+            });
+    }
+
+    public void Dispose()
+    {
+        timer?.Dispose();
+    }
+
+
+
+    private enum LoadState
+    {
+        NotLoaded,
+        NotFound,
+        FoundGotchi
     }
 
 }

@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Gotchi.Gotchis.DTOs.GotchiDTO;
 
 namespace Gotchi;
 
@@ -56,6 +57,8 @@ public class GotchiHostService : CoreHostService
 
             // Gotchi
             cfg.CreateMap<CryptoGotchi, GotchiDTO>();
+            cfg.CreateMap<GotchiState, GotchiStateDTO>();
+
         });
         
         return config.CreateMapper();

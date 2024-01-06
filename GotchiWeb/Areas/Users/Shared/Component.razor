@@ -1,0 +1,25 @@
+﻿@using GotchiWeb.Areas.Users.Pages;
+<h3>Component</h3>
+
+
+@if (show)
+{
+    <h3> show</h3>
+}
+else
+{
+    <h3> dont show</h3>
+}
+
+<button class="btn btn-primary active" @onclick="() => gotchiManager.TShow = !gotchiManager.TShow">Tshow</button>
+
+@code {
+
+    [Parameter]
+    public bool show { get; set; }
+
+
+    [Parameter]
+    public GotchiManager gotchiManager { get; set; }
+
+}

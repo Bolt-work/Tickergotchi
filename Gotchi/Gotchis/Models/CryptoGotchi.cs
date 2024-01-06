@@ -13,8 +13,10 @@ public class CryptoGotchi : CoreModelBase
     public int HungerMax { get; set; }
     public int FoodUnitsConsumed { get; set; }
     public DateTime LastUpdated { get; set; }
+    public DateTime NextUpdated { get; set; }
     public GotchiState State { get; set; }
     public float PriceForFood { get; set; }
+    public int LastHungerAmountPerHour { get; set; }
 
     public CryptoGotchi(string id, Person owner, string? name)
     {

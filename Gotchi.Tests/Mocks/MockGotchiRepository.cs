@@ -43,4 +43,9 @@ public class MockGotchiRepository : MockRepositoryBase<CryptoGotchi>, IGotchiRep
     {
         return _db.Where(x => x.Owner.Id == ownerId).ToList();
 }
+
+    public Task<CryptoGotchi?> GotchiByGotchiIdAsync(string gotchiId)
+    {
+        throw new NotImplementedException();
+    }
 }

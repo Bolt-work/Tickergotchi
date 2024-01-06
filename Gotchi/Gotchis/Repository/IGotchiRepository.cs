@@ -12,5 +12,6 @@ namespace Gotchi.Gotchis.Repository
         IEnumerable<CryptoGotchi> GetAll();
         bool Upsert(CryptoGotchi gotchi);
         IEnumerable<CryptoGotchi> GotchisByOwnerId(string ownerId);
+        Task<CryptoGotchi?> GotchiByGotchiIdAsync(string gotchiId);
     }
 }

@@ -15,6 +15,7 @@ public class GotchiRepository : RepositoryBase<CryptoGotchi>, IGotchiRepository
     public bool Delete(CryptoGotchi gotchi) => base.DeleteEntry(gotchi.Id);
     public bool DeleteAll() => base.DeleteAllEntries();
     public CryptoGotchi GotchiByGotchiId(string gotchiId) => base.GetEntryById(gotchiId);
+    public async Task<CryptoGotchi?> GotchiByGotchiIdAsync(string gotchiId) => await base.GetEntryByIdAsync(gotchiId);
     public IEnumerable<CryptoGotchi> GotchisByOwnerId(string ownerId) => base.GetManyByKeyStr("Owner.Id", ownerId);
     public IEnumerable<CryptoGotchi> GetAll() => base.GetAllEntries();
     public bool Exists(string id) => base.EntryExists(id);
