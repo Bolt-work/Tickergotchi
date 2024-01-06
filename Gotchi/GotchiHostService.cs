@@ -5,6 +5,9 @@ using Gotchi.CryptoCoins.DTOs;
 using Gotchi.Gotchis;
 using Gotchi.Gotchis.DTOs;
 using Gotchi.Gotchis.Models;
+using Gotchi.HighScores;
+using Gotchi.HighScores.DTOs;
+using Gotchi.HighScores.Models;
 using Gotchi.Persons;
 using Gotchi.Persons.DTOs;
 using Gotchi.Persons.Models;
@@ -59,6 +62,9 @@ public class GotchiHostService : CoreHostService
             cfg.CreateMap<CryptoGotchi, GotchiDTO>();
             cfg.CreateMap<GotchiState, GotchiStateDTO>();
 
+            // HighScore
+            cfg.CreateMap<HighScore, HighScoreDTO>();
+
         });
         
         return config.CreateMapper();
@@ -71,6 +77,7 @@ public class GotchiHostService : CoreHostService
         services.AddSingleton<GotchiServiceDataAccess>();
 
         CryptoCoinServiceConfig.Register(services);
+        HighScoreServiceConfig.Register(services);
         PersonServiceConfig.Register(services);
         PortfolioServiceConfig.Register(services);
         GotchiServiceConfig.Register(services);

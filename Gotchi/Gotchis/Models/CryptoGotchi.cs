@@ -17,6 +17,7 @@ public class CryptoGotchi : CoreModelBase
     public GotchiState State { get; set; }
     public float PriceForFood { get; set; }
     public int LastHungerAmountPerHour { get; set; }
+    public DateTime DateOfDeath { get; set; }
 
     public CryptoGotchi(string id, Person owner, string? name)
     {

@@ -103,6 +103,10 @@ public abstract class RepositoryBase<T> where T : CoreModelBase
     {
         return ConnectToMongo().Find(_ => true).ToList();
     }
+    protected async Task<ICollection<T>> GetAllEntriesAsync()
+    {
+        return await ConnectToMongo().Find(_ => true).ToListAsync();
+    }
 
     protected T GetByKeyStr(string key, string value)
     {

@@ -3,6 +3,8 @@ using Gotchi.CryptoCoins.DataAccess;
 using Gotchi.CryptoCoins.DTOs;
 using Gotchi.Gotchis.DataAccess;
 using Gotchi.Gotchis.DTOs;
+using Gotchi.HighScores.DataAccess;
+using Gotchi.HighScores.DTOs;
 using Gotchi.Persons.DataAccess;
 using Gotchi.Persons.DTOs;
 using Gotchi.Portfolios.DataAccess;
@@ -14,25 +16,29 @@ namespace Gotchi;
 public class GotchiServiceDataAccess: IPersonDataAccess, 
                                       IPortfolioDataAccess,
                                       ICryptoCoinsDataAccess,
-                                      IGotchiDataAccess
+                                      IGotchiDataAccess,
+                                      IHighScoreDataAccess
 {
     private IPersonDataAccess _personDataAccess;
     private IPortfolioDataAccess _portfolioDataAccess;
     private ICryptoCoinsDataAccess _cryptoCoinsDataAccess;
     private IGotchiDataAccess _gotchiDataAccess;
+    private IHighScoreDataAccess _highScoreDataAccess;
 
     private ILogger<GotchiServiceDataAccess> _logger;
 
     public GotchiServiceDataAccess(ILogger<GotchiServiceDataAccess> logger, IPersonDataAccess personDataAccess,
         IPortfolioDataAccess portfolioDataAccess,
         ICryptoCoinsDataAccess cryptoCoinsDataAccess,
-        IGotchiDataAccess gotchiDataAccess)
+        IGotchiDataAccess gotchiDataAccess,
+        IHighScoreDataAccess highScoreDataAccess)
     {
         _logger = logger;
         _personDataAccess = personDataAccess;
         _portfolioDataAccess = portfolioDataAccess;
         _cryptoCoinsDataAccess = cryptoCoinsDataAccess;
         _gotchiDataAccess = gotchiDataAccess;
+        _highScoreDataAccess = highScoreDataAccess;
     }
 
     public PersonDTO PersonById(string? id) => ICL(_personDataAccess.PersonById, id, null!);
@@ -67,6 +73,9 @@ public class GotchiServiceDataAccess: IPersonDataAccess,
     public async Task<GotchiDTO?> GotchiByIdAsync(string gotchiId) => await _gotchiDataAccess.GotchiByIdAsync(gotchiId);
     public ICollection<GotchiDTO> GotchisByOwnerId(string ownerId) => _gotchiDataAccess.GotchisByOwnerId(ownerId);
     public ICollection<GotchiDTO> GotchisAll() => _gotchiDataAccess.GotchisAll();
+
+
+    public async Task<HighScoreDTO?> GetHighScoresAsync() => await _highScoreDataAccess.GetHighScoresAsync();
 
     //Invoke, Catch, Log - dear god i need to fix this!
     private T ICL<T>(Func<T> method,T error) 

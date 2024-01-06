@@ -17,6 +17,7 @@ public class GotchiDTO
     public GotchiStateDTO State { get; set; }
     public float PriceForFood { get; set; }
     public int LastHungerAmountPerHour { get; set; }
+    public DateTime DateOfDeath { get; set; }
 
 
     public int NumberOfHearts(int totalDisplayNo) 

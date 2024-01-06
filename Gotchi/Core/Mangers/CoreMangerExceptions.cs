@@ -11,6 +11,12 @@ public class ModelIsNullException<T> : CoreManagerException
         : base($"Model is null, Type expected : {typeof(T).FullName}"){}
 }
 
+public class ParameterModelIsNullException<T> : CoreManagerException
+{
+    public ParameterModelIsNullException()
+        : base($"Parameter Model is null, Type expected : {typeof(T).FullName}") { }
+}
+
 public class ModelNotFoundException<T> : CoreManagerException
 {
     public ModelNotFoundException(string identifier)

@@ -1,0 +1,22 @@
+﻿using AutoMapper;
+using Gotchi.HighScores.DTOs;
+using Gotchi.HighScores.Mangers;
+
+namespace Gotchi.HighScores.DataAccess;
+
+public class HighScoreDataAccess : IHighScoreDataAccess
+{
+    IHighScoreManager _highScoreManger;
+    IMapper _mapper;
+    public HighScoreDataAccess(IHighScoreManager highScoreManger, IMapper mapper)
+    {
+        _highScoreManger = highScoreManger;
+        _mapper = mapper;
+    }
+
+    public async Task<HighScoreDTO?> GetHighScoresAsync()
+    {
+        var gotchiModel = await _highScoreManger.GetHighScoresAsync();
+        return _mapper.Map<HighScoreDTO>(gotchiModel);
+    }
+}
