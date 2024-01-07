@@ -1,0 +1,68 @@
+﻿@using Gotchi
+@using Gotchi.Portfolios.CommandService
+@using Gotchi.Portfolios.DTOs
+
+<h3>PortfolioManager</h3>
+
+@if (Portfolio is null)
+{
+    <h2>Portfolio not loaded</h2>
+}
+else
+{
+    <h3>AssetsView</h3>
+    <table class="table table-striped">
+        <tbody>
+            <tr>
+                <td><strong>Balance:</strong> $@Portfolio.Balance</td>
+
+                @if (Portfolio.Balance != 0 && TimeUntilBalanceCheck(Portfolio) != TimeSpan.Zero)
+                {
+                    <td><strong> Time Until Balance Check: </strong> @TimeUntilBalanceCheck(Portfolio).ToString("mm':'ss")</td>
+                }
+
+                @if (Portfolio.Assets.Any())
+                {
+                    <td><strong>Time Until Coin Price Updated:</strong> @TimeUntilCoinPriceCheck(Portfolio).ToString("mm':'ss")</td>
+                }
+
+            </tr>
+        </tbody>
+    </table>
+    <br />
+
+    <AssetsView Portfolio="@Portfolio"></AssetsView>
+    <br />
+    <BuyAsset Portfolio="@Portfolio"></BuyAsset>
+}
+
+@code {
+
+    [Parameter]
+    public PortfolioDTO? Portfolio { get; set; }
+
+    private TimeSpan TimeUntilBalanceCheck(PortfolioDTO? portfolio)
+    {
+        if (portfolio is null)
+            return TimeSpan.Zero;
+
+        return TimeUntilUpdate(portfolio.BalanceNextUpdated);
+    }
+
+    private TimeSpan TimeUntilCoinPriceCheck(PortfolioDTO? portfolio)
+    {
+        if (portfolio is null)
+            return TimeSpan.Zero;
+
+        if (!portfolio.Assets.Any())
+            return TimeSpan.Zero;
+
+        var asset = portfolio.Assets.First();
+        return TimeUntilUpdate(asset.CoinPriceNextUpdated);
+    }
+
+    private TimeSpan TimeUntilUpdate(DateTime timeOfNextUpdate)
+    {
+        return timeOfNextUpdate - DateTime.UtcNow;
+    }
+}

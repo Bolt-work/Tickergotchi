@@ -1,7 +1,145 @@
-﻿@page "/Gotchi/"
+﻿@page "/GamePage/"
+
+@using System.Security.Claims;
+
+@using Gotchi
+@using Gotchi.Gotchis.DTOs
+@using static Gotchi.Gotchis.DTOs.GotchiDTO
+@using Gotchi.Portfolios.DTOs;
+
+@using GotchiWeb.Areas.Users.Shared
+@using GotchiWeb.Areas.Users.Pages.Gotchis
+@using GotchiWeb.Areas.Users.Pages.Portfolios
+
+@inject GotchiHostService _gotchiHostService
 
 <h3>GamePage</h3>
 
+@if (_loadState == LoadState.NotLoaded)
+{
+    <p><em>Loading...</em></p>
+}
+else if (_loadState == LoadState.NotFound)
+{
+    <GetStarted UserId="@_userId" ReloadAddress="/Gotchi/"></GetStarted>
+}
+else
+{
+    if (_gotchi is not null)
+    {
+        <GotchiDisplay Gotchi="@_gotchi"></GotchiDisplay>
+        <FeedGotchi Gotchi="_gotchi" Portfolio="@_portfolio"></FeedGotchi>
+    }
+
+    if (_portfolio is not null)
+    {
+      <PortfolioManager Portfolio="@_portfolio"></PortfolioManager>  
+    }
+
+}
+
 @code {
 
+    private LoadState _loadState = LoadState.NotLoaded;
+    private string? _userId;
+    private GotchiDTO? _gotchi;
+    private PortfolioDTO? _portfolio;
+
+    private Timer? timer;
+
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationState { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        var authState = await authenticationState;
+        _userId = authState.User.Claims.First(x => x.Type == ClaimTypes.SerialNumber).Value;
+        _gotchi = await GetActiveGotchi(_userId);
+        _portfolio = await GetActivePortfolio(_userId);
+
+        _loadState = (_gotchi is null || _portfolio is null) ? LoadState.NotFound : LoadState.FoundGotchiAndPortfolio;
+
+        timer = new Timer(TimerCallback, null, TimeSpan.Zero, TimeSpan.FromSeconds(1));
+    }
+
+    private async Task<GotchiDTO?> GetActiveGotchi(string? userId)
+    {
+        if (string.IsNullOrWhiteSpace(userId))
+            return null;
+
+        var person = await _gotchiHostService.DataAccess().PersonByIdAsync(_userId);
+
+        if (person is null || string.IsNullOrWhiteSpace(person.ActiveGotchi))
+            return null;
+
+        return await _gotchiHostService.DataAccess().GotchiByIdAsync(person.ActiveGotchi);
+    }
+
+    private async Task<PortfolioDTO?> GetActivePortfolio(string? userId)
+    {
+        if (string.IsNullOrWhiteSpace(userId))
+            return null;
+
+        var person = await _gotchiHostService.DataAccess().PersonByIdAsync(_userId);
+
+        if (person is null || string.IsNullOrWhiteSpace(person.ActivePortfolio))
+            return null;
+
+        return await _gotchiHostService.DataAccess().PortfolioByIdAsync(person.ActivePortfolio);
+    }
+
+    private async void CheckToUpdateGotchi()
+    {
+        if (_userId is null || _gotchi is null)
+            return;
+
+        var nowTime = DateTime.UtcNow.AddSeconds(1);
+        if (nowTime >= _gotchi.NextUpdated)
+        {
+            _gotchi = await GetActiveGotchi(_userId);
+        }
+    }
+
+    private async void CheckToUpdatePortfolio()
+    {
+        if (_userId is null || _portfolio is null)
+            return;
+
+        var nowTime = DateTime.UtcNow.AddSeconds(1);
+        if (nowTime >= _portfolio.BalanceNextUpdated)
+        {
+            _portfolio = await GetActivePortfolio(_userId);
+        }
+        else if (_portfolio.Assets.Any())
+        {
+            var asset = _portfolio.Assets.First();
+            if (nowTime >= asset.CoinPriceNextUpdated)
+            {
+                _portfolio = await GetActivePortfolio(_userId);
+            }
+        }
+    }
+
+    private void TimerCallback(object? state)
+    {
+        InvokeAsync(() =>
+            {
+                CheckToUpdateGotchi();
+                CheckToUpdatePortfolio();
+                StateHasChanged();
+            });
+    }
+
+    public void Dispose()
+    {
+        timer?.Dispose();
+    }
+
+    private enum LoadState
+    {
+        NotLoaded,
+        NotFound,
+        FoundGotchiAndPortfolio
+    }
 }

@@ -1,0 +1,71 @@
+﻿@using Gotchi
+@using Gotchi.Gotchis.CommandServices;
+@using Gotchi.Gotchis.DTOs
+@using static Gotchi.Gotchis.DTOs.GotchiDTO
+@using Gotchi.Portfolios.DTOs
+
+@inject GotchiHostService _gotchiHostService
+
+
+@if (Gotchi is null)
+{
+    <h2>Gotchi not set</h2>
+}
+else if(Portfolio is null)
+{
+    <h2>Portfolio not set</h2>
+}
+else if (Gotchi.State == GotchiStateDTO.Alive)
+{
+    <hr />
+    <h3>FeedGotchi</h3>
+    <table class="table table-striped">
+        <tbody>
+            <tr>
+                <td><strong>Price of food : </strong>$@Gotchi.PriceForFood</td>
+            </tr>
+        </tbody>
+    </table>
+    @if (!string.IsNullOrWhiteSpace(_errorMessage))
+    {
+        <p><strong>@_errorMessage</strong></p>
+    }
+    <button class="btn btn-primary" @onclick="FeedGotchiButton">Feed</button>
+    <hr />
+}
+
+@code {
+    [Parameter]
+    public GotchiDTO? Gotchi { get; set; }
+
+    [Parameter]
+    public PortfolioDTO? Portfolio { get; set; }
+
+    private string? _errorMessage = string.Empty;
+
+    private void FeedGotchiButton()
+    {
+        if (Gotchi is null || Portfolio is null)
+            return;
+
+        if (Gotchi.State == GotchiStateDTO.Dead)
+            return;
+
+        if (Gotchi.Hunger == Gotchi.HungerMax)
+        {
+            _errorMessage = "Gotchi is already full";
+            return;
+        }
+
+        if (Portfolio.Balance < Gotchi.PriceForFood)
+        {
+            _errorMessage = "Can't afford Food";
+            return;
+        }
+
+        var command = new FeedGotchiCommand(Gotchi.Id, Portfolio.Id);
+        _gotchiHostService.CommandService().Process(command);
+        StateHasChanged();
+    }
+
+}

@@ -75,7 +75,7 @@ public class GotchiServiceDataAccess: IPersonDataAccess,
     public ICollection<GotchiDTO> GotchisAll() => _gotchiDataAccess.GotchisAll();
 
 
-    public async Task<HighScoreDTO?> GetHighScoresAsync() => await _highScoreDataAccess.GetHighScoresAsync();
+    public async Task<ICollection<HighScoreDTO>> GetHighScoresAsync() => await _highScoreDataAccess.GetHighScoresAsync();
 
     //Invoke, Catch, Log - dear god i need to fix this!
     private T ICL<T>(Func<T> method,T error) 

@@ -4,5 +4,5 @@ namespace Gotchi.HighScores.DataAccess;
 
 public interface IHighScoreDataAccess
 {
-    Task<HighScoreDTO?> GetHighScoresAsync();
+    Task<ICollection<HighScoreDTO>> GetHighScoresAsync();
 }

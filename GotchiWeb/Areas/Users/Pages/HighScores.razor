@@ -1,0 +1,38 @@
+﻿@page "/HighScore/"
+
+@using Gotchi
+@using Gotchi.HighScores.DTOs
+
+@inject GotchiHostService _gotchiHostService
+
+<h3>HighScores</h3>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>UserName</th>
+            <th>Score</th>
+            <th>GotchiName</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var entry in _highScores)
+        {
+            <tr>
+                <td>@entry.UserName</td>
+                <td>@entry.Score</td>
+                <td>@entry.GotchiName</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    private ICollection<HighScoreDTO> _highScores = new List<HighScoreDTO>();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        _highScores = await _gotchiHostService.DataAccess().GetHighScoresAsync();
+    }
+
+}

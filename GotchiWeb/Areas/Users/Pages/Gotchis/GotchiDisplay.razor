@@ -1,0 +1,54 @@
+﻿@using Gotchi
+@using Gotchi.Gotchis.DTOs
+@using static Gotchi.Gotchis.DTOs.GotchiDTO
+
+
+<h3>GotchiDisplay</h3>
+
+@if (Gotchi is null)
+{
+    <h2>Gotchi not loaded</h2>
+}
+else
+{
+    <table class="table table-striped">
+        <tbody>
+            <tr>
+                <td><strong>@Gotchi.Name   Lvl</strong> @Gotchi.Level</td>
+            </tr>
+        </tbody>
+    </table>
+    <br />
+    <hr />
+
+    @if (Gotchi.State == GotchiStateDTO.Dead)
+    {
+        <td><h2> Is Dead </h2></td>
+    }
+    else if (Gotchi.State == GotchiStateDTO.Alive)
+    {
+        <br />
+        <h2> Is Alive</h2>
+        <hr />
+
+        <table class="table table-striped">
+            <tbody>
+                <tr>
+                    <td><strong>Number of Stars: </strong> @Gotchi.NumberOfHearts(_numberStars)</td>
+                    <td><strong>Exp of death: </strong> @Gotchi.EstimatedTimeOfDeath()?.ToString("dd':'hh':'mm':'ss")</td>
+                    <td><strong>Exp time till death: </strong> @Gotchi.EstimatedTimeTillDeath()?.ToString("dd':'hh':'mm':'ss")</td>
+                </tr>
+            </tbody>
+        </table>
+        <br />
+    }
+}
+
+
+@code {
+
+    [Parameter]
+    public GotchiDTO? Gotchi { get; set; }
+
+    private readonly int _numberStars = 12;
+}

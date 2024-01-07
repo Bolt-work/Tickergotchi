@@ -14,9 +14,9 @@ public class HighScoreDataAccess : IHighScoreDataAccess
         _mapper = mapper;
     }
 
-    public async Task<HighScoreDTO?> GetHighScoresAsync()
+    public async Task<ICollection<HighScoreDTO>> GetHighScoresAsync()
     {
         var gotchiModel = await _highScoreManger.GetHighScoresAsync();
-        return _mapper.Map<HighScoreDTO>(gotchiModel);
+        return _mapper.Map<ICollection<HighScoreDTO>>(gotchiModel);
     }
 }
