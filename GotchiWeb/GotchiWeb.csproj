@@ -23,7 +23,9 @@
 
   <ItemGroup>
     <Folder Include="Areas\Administrator\Pages\" />
+    <Folder Include="Areas\Administrator\Shared\" />
     <Folder Include="Areas\Identity\Pages\Shared\" />
+    <Folder Include="Areas\Users\Pages\Gotchis\" />
   </ItemGroup>
 
 </Project>

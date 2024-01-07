@@ -12,17 +12,6 @@
 
 <h3>Gotchi</h3>
 
-<Component show=GShow gotchiManager=this></Component>
-<button class="btn btn-primary active" @onclick="() => GShow = !GShow">show</button>
-
-@if (TShow)
-{
-    <h3>Tshwo</h3>
-}
-else
-{
-    <h3>Not Tshwo</h3>
-}
 
 @if (_loadState == LoadState.NotLoaded)
 {
@@ -69,8 +58,6 @@ else if (_gotchi is not null)
 
 
 @code {
-    private bool GShow = false;
-    public bool TShow = false;
     private LoadState _loadState = LoadState.NotLoaded;
     private string? _userId;
     private GotchiDTO? _gotchi;

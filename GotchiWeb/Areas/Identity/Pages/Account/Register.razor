@@ -62,6 +62,9 @@
 
     private async Task Authenticate()
     {
+        if (string.IsNullOrWhiteSpace(model.Username))
+            return;
+
         var userAccount = userAccountService.GetByUserName(model.Username);
         if (userAccount == null || userAccount.Password != model.Password)
         {
