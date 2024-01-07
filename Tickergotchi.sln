@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gotchi", "Gotchi\Gotchi.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gotchi.Tests", "Gotchi.Tests\Gotchi.Tests.csproj", "{6F5374FA-B32C-44F2-9296-E717CED5D8FC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorUI", "BlazorUI\BlazorUI.csproj", "{D9140C17-0830-473E-BBEF-7EE44735C0FA}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GotchiWeb", "GotchiWeb\GotchiWeb.csproj", "{1C7C055B-20D2-43CC-BBB1-D6A4ACA10C67}"
 EndProject
 Global
@@ -31,10 +29,6 @@ Global
 		{6F5374FA-B32C-44F2-9296-E717CED5D8FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6F5374FA-B32C-44F2-9296-E717CED5D8FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6F5374FA-B32C-44F2-9296-E717CED5D8FC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D9140C17-0830-473E-BBEF-7EE44735C0FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D9140C17-0830-473E-BBEF-7EE44735C0FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D9140C17-0830-473E-BBEF-7EE44735C0FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D9140C17-0830-473E-BBEF-7EE44735C0FA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1C7C055B-20D2-43CC-BBB1-D6A4ACA10C67}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1C7C055B-20D2-43CC-BBB1-D6A4ACA10C67}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1C7C055B-20D2-43CC-BBB1-D6A4ACA10C67}.Release|Any CPU.ActiveCfg = Release|Any CPU

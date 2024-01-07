@@ -45,7 +45,7 @@ public static class CommandHandlerHelper
 
     public static MockGotchiRepository MockGotchiRepository() => new MockGotchiRepository();
     public static MockGotchiRepository MockGotchiRepositoryWithData() => new MockGotchiRepository(true);
-    public static GotchiManager GotchiManager(IGotchiRepository portfolioRepository) => new GotchiManager(portfolioRepository);
-    public static GotchiManager GotchiManager() => new GotchiManager(MockGotchiRepository());
-    public static GotchiManager GotchiManagerWithData() => new GotchiManager(MockGotchiRepositoryWithData());
+    public static GotchiManager GotchiManager(IGotchiRepository portfolioRepository) => new GotchiManager(portfolioRepository, Logger<GotchiManager>());
+    public static GotchiManager GotchiManager() => new GotchiManager(MockGotchiRepository(), Logger<GotchiManager>());
+    public static GotchiManager GotchiManagerWithData() => new GotchiManager(MockGotchiRepositoryWithData(), Logger<GotchiManager>());
 }
