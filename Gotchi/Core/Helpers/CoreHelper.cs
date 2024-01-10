@@ -25,4 +25,12 @@ public static class CoreHelper
         return (days <= 0) ? 0 : days;
     }
 
+    public static string? CleanUserName(string? userName)
+    {
+        if (string.IsNullOrWhiteSpace(userName))
+            return "";
+
+        return userName.Trim();
+    }
+
 }

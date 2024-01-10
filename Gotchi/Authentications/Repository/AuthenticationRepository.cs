@@ -1,9 +1,10 @@
 ﻿using Gotchi.Authentications.Models;
+using Gotchi.Core.Helpers;
 using Gotchi.Core.Repository;
 
 namespace Gotchi.Authentications.Repository;
 
-public class AuthenticationRepository : RepositoryBase<AuthenticationModel>
+public class AuthenticationRepository : RepositoryBase<AuthenticationModel>, IAuthenticationRepository
 {
     public AuthenticationRepository(AuthenticationRepositorySettings settings)
         : base(settings)
@@ -11,11 +12,30 @@ public class AuthenticationRepository : RepositoryBase<AuthenticationModel>
     }
 
     public bool Upsert(AuthenticationModel model) => base.UpsertEntry(model);
-    public bool Delete(string id) => base.DeleteEntry(id);
-    public bool Delete(AuthenticationModel person) => base.DeleteEntry(person.Id);
-    public bool DeleteAll() => base.DeleteAllEntries();
+    public bool UserNameAlreadyExist(string? userName)
+    {
+        if(string.IsNullOrWhiteSpace(userName))
+            return true;
+
+       return base.EntryExistsByKey("UserName", userName);
+    }
+
+    public async Task<bool> UserNameAlreadyExistAsync(string? userName)
+    {
+        if (string.IsNullOrWhiteSpace(userName))
+            return true;
+
+        return await base.EntryExistsByKeyAsync("UserName", userName);
+    }
+
+    public async Task<AuthenticationModel?> GetByUserNameAsync(string? userName) 
+    {
+        var _userName = CoreHelper.CleanUserName(userName);
+        if(string.IsNullOrWhiteSpace(_userName))
+            return null;
+
+        return await base.GetByKeyStrAsync("UserName", _userName);
+    } 
+
     public AuthenticationModel GetByAuthObjectId(string personId) => base.GetEntryById(personId);
-    public bool ExistsByAuthId(string id) => base.EntryExists(id);
-    public bool ExistsByAuthObjectId(string id) => base.EntryExists(id);
-    public IEnumerable<AuthenticationModel> GetAll() => base.GetAllEntries();
 }

@@ -1,4 +1,7 @@
 ﻿using AutoMapper;
+using Gotchi.Authentications;
+using Gotchi.Authentications.DTOs;
+using Gotchi.Authentications.Models;
 using Gotchi.Core.Services;
 using Gotchi.CryptoCoins;
 using Gotchi.CryptoCoins.DTOs;
@@ -48,6 +51,10 @@ public class GotchiHostService : CoreHostService
     {
         var config = new MapperConfiguration(cfg => 
         {
+
+            //Authentications
+            cfg.CreateMap<AuthenticationModel, AuthenticationDTO>();
+
             // CryptoCoins
             cfg.CreateMap<CryptoCoin, CryptoCoinDTO>();
 
@@ -76,6 +83,7 @@ public class GotchiHostService : CoreHostService
 
         services.AddSingleton<GotchiServiceDataAccess>();
 
+        AuthenticationServiceConfig.Register(services);
         CryptoCoinServiceConfig.Register(services);
         HighScoreServiceConfig.Register(services);
         PersonServiceConfig.Register(services);
