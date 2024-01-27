@@ -27,7 +27,7 @@ else
 {
     if (_gotchi is not null)
     {
-        <GotchiDisplay Gotchi="@_gotchi"></GotchiDisplay>
+        <GotchiDisplay Gotchi="@_gotchi" Width="320" Height="256"></GotchiDisplay>
         <FeedGotchi Gotchi="_gotchi" Portfolio="@_portfolio"></FeedGotchi>
     }
 
@@ -44,20 +44,17 @@ else
     private string? _userId;
     private GotchiDTO? _gotchi;
     private PortfolioDTO? _portfolio;
-
     private Timer? timer;
 
     [CascadingParameter]
-    private Task<AuthenticationState> authenticationState { get; set; }
+    private Task<AuthenticationState> authenticationState { get; set; } = null!;
 
     protected override async Task OnInitializedAsync()
     {
-
         var authState = await authenticationState;
         _userId = authState.User.Claims.First(x => x.Type == ClaimTypes.SerialNumber).Value;
         _gotchi = await GetActiveGotchi(_userId);
         _portfolio = await GetActivePortfolio(_userId);
-
         _loadState = (_gotchi is null || _portfolio is null) ? LoadState.NotFound : LoadState.FoundGotchiAndPortfolio;
 
         timer = new Timer(TimerCallback, null, TimeSpan.Zero, TimeSpan.FromSeconds(1));

@@ -1,6 +1,6 @@
 ﻿using Gotchi.Gotchis.DTOs;
-using static Gotchi.Gotchis.DTOs.GotchiDTO;
 using System.Drawing;
+using static Gotchi.Gotchis.DTOs.GotchiDTO;
 
 namespace GotchiWeb.Areas.Users.Pages.Gotchis;
 
@@ -10,10 +10,16 @@ public class GotchiRender
     public int Y;
     public Direction Dir;
     public int Moves;
-    public int Speed = 20;
-    public int Width = 64;
-    public int Height = 64;
     public int TickCounter = 0;
+    public static readonly int Speed = 20;
+    public static readonly int Width = 64;
+    public static readonly int Height = 64;
+
+    public GotchiRender(int x, int y)
+    {
+        X = x;
+        Y = y;
+    }
 }
 
 public interface IGotchiRenderObjState
@@ -34,7 +40,7 @@ public static class PathPicker
         {
             return new IdlePath(firstCall: true);
         }
-        else 
+        else
         {
             return new LeftRightPath(firstCall: true);
         }
@@ -50,10 +56,11 @@ public class IdlePath : PathBase, IGotchiRenderObjState
     }
     public IGotchiRenderObjState? Move(GotchiRender renderObj, GotchiDTO gotchi, Rectangle rect)
     {
-        if (_firstCall) 
+        if (_firstCall)
         {
             renderObj.Dir = PickDir();
             renderObj.Moves = PickMoves();
+            renderObj.TickCounter = 0;
         }
 
         if (gotchi.State == GotchiStateDTO.Dead)
@@ -84,7 +91,7 @@ public class IdlePath : PathBase, IGotchiRenderObjState
 public class LeftRightPath : PathBase, IGotchiRenderObjState
 {
     private readonly bool _firstCall;
-    public LeftRightPath(bool firstCall) 
+    public LeftRightPath(bool firstCall)
     {
         _firstCall = firstCall;
     }
@@ -95,6 +102,7 @@ public class LeftRightPath : PathBase, IGotchiRenderObjState
         {
             renderObj.Dir = PickDir();
             renderObj.Moves = PickMoves();
+            renderObj.TickCounter = 0;
         }
 
         if (gotchi.State == GotchiStateDTO.Dead)
@@ -103,20 +111,20 @@ public class LeftRightPath : PathBase, IGotchiRenderObjState
         if (renderObj.Moves == 0)
             return null;
 
-        renderObj.Moves --;
+        renderObj.Moves--;
         renderObj.TickCounter++;
 
         if (renderObj.Dir == Direction.Left)
         {
             if (CanMoveLeft(renderObj, rect))
-                renderObj.X -= renderObj.Speed;
+                renderObj.X -= GotchiRender.Speed;
 
             return new LeftRightPath(firstCall: false);
         }
         else
         {
             if (CanMoveRight(renderObj, rect))
-                renderObj.X += renderObj.Speed;
+                renderObj.X += GotchiRender.Speed;
 
             return new LeftRightPath(firstCall: false);
         }
@@ -130,7 +138,7 @@ public class LeftRightPath : PathBase, IGotchiRenderObjState
         {
             return TranslateXY(x, 1, renderObj);
         }
-        else 
+        else
         {
             return TranslateXY(x, 0, renderObj);
         }
@@ -142,7 +150,6 @@ public class DeadPath : PathBase, IGotchiRenderObjState
 
     public IGotchiRenderObjState? Move(GotchiRender renderObj, GotchiDTO gotchi, Rectangle rect)
     {
-        renderObj.TickCounter++;
         return new DeadPath();
     }
 
@@ -188,7 +195,7 @@ public abstract class PathBase
 
     protected static bool CanMoveLeft(GotchiRender renderObj, Rectangle rect)
     {
-        var newXPos = renderObj.X - renderObj.Speed;
+        var newXPos = renderObj.X - GotchiRender.Speed;
 
         if (newXPos > rect.Left)
         {
@@ -202,9 +209,9 @@ public abstract class PathBase
 
     protected static bool CanMoveRight(GotchiRender renderObj, Rectangle rect)
     {
-        var newXPos = renderObj.X + renderObj.Speed;
+        var newXPos = renderObj.X + GotchiRender.Speed;
 
-        if ((newXPos + renderObj.Width) < rect.Right)
+        if ((newXPos + GotchiRender.Width) < rect.Right)
         {
             return true;
         }
@@ -214,11 +221,11 @@ public abstract class PathBase
         }
     }
 
-    protected static Point TranslateXY(int cellX, int cellY, GotchiRender renderObj) 
+    protected static Point TranslateXY(int cellX, int cellY, GotchiRender renderObj)
     {
-        var x = cellX * renderObj.Width;
-        var y = cellY * renderObj.Height;
-        return new Point(x, y); 
+        var x = cellX * GotchiRender.Width;
+        var y = cellY * GotchiRender.Height;
+        return new Point(x, y);
     }
 
 }
