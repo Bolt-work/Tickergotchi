@@ -32,11 +32,10 @@
 </div>
 
 @code{
-    // 
     private async Task Logout()
     {
         var customAuthStateProvider = (GotchiAuthenticationStateProvider)authStateProvider;
-        await customAuthStateProvider.UpdateAuthenticationState(null);
+        await customAuthStateProvider.LogoutAuthentication();
         navManager.NavigateTo("/", true);
     }
 }

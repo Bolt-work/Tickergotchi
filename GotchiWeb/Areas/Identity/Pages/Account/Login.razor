@@ -1,6 +1,5 @@
 ﻿@page "/Login"
 @using GotchiWeb.Authentication;
-@inject UserAccountService userAccountService
 @inject IJSRuntime js
 @inject AuthenticationStateProvider authStateProvider
 @inject NavigationManager navManager
@@ -8,6 +7,11 @@
 @using Gotchi
 @using Gotchi.Persons.DTOs
 @inject GotchiHostService _gotchiHostService
+
+@if (_showErrorMessage)
+{
+    <label class="col font-weight-bold text-danger">Invalid User Name or Password</label>
+}
 
 <div class="row">
     <div class="col-lg-4 offset-lg-4 pt-4 pb-4 border">
@@ -37,24 +41,23 @@
 
     private Model model = new Model();
 
+    private bool _showErrorMessage = false;
+
     private async Task Authenticate()
     {
-        if (false == await _gotchiHostService.DataAccess().CheckPasswordAndUserNameAsync(model.Password, model.Username))
+        var auth = await _gotchiHostService.DataAccess().AuthenticationByPasswordAndUserName(model.Password, model.Username);
+        if (auth is null)
         {
-            await js.InvokeVoidAsync("alert", "Invalid User Name or Password");
+            _showErrorMessage = true;
             return;
         }
-
-        var person = await _gotchiHostService.DataAccess().PersonByUserNameAsync(model.Username);
-        if (person is null)
-            return;
 
         var gotchiAuthenticationStateProvider = (GotchiAuthenticationStateProvider)authStateProvider;
         await gotchiAuthenticationStateProvider.UpdateAuthenticationState(new UserSession
             {
-                SerialNumber = person.Id,
-                UserName = person.UserName,
-                Role = person.Role
+                SerialNumber = auth.PersonId,
+                UserName = auth.UserName,
+                Role = auth.Role
             });
 
         navManager.NavigateTo("/", true);

@@ -20,7 +20,6 @@ namespace GotchiWeb
             builder.Services.AddServerSideBlazor();
             builder.Services.AddScoped<ProtectedSessionStorage>();
             builder.Services.AddScoped<AuthenticationStateProvider, GotchiAuthenticationStateProvider>();
-            builder.Services.AddSingleton<UserAccountService>();
             builder.Services.AddSingleton<WeatherForecastService>();
 
             builder.Services.AddSingleton(new GotchiHostService(new string[0]));

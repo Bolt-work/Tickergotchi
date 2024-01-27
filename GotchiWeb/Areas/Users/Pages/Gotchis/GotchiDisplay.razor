@@ -2,10 +2,13 @@
 @using Blazor.Extensions;
 @using Gotchi
 @using Gotchi.Gotchis.DTOs
+@using System.Timers;
 @using static Gotchi.Gotchis.DTOs.GotchiDTO
+@inject IJSRuntime JSRuntime
 
 @using Blazor.Extensions.Canvas
-
+@using System.Diagnostics;
+@using System.Drawing;
 
 <h3>GotchiDisplay</h3>
 
@@ -47,31 +50,137 @@ else
         <br />
     }
 }
-<img @ref="_spriteSheet" hidden id="spriteSheet" src="Assets/spritesheet.png" />
 
-<BECanvas Width="300" Height="400" @ref="_canvasReference"></BECanvas>
+<img @ref="_spriteSheet" hidden id="spriteSheet" src="images/Mon3.png" />
+
+<BECanvas Width="@_canvasWidth" Height="@_canvasHeight" @ref="_canvasReference"></BECanvas>
 
 
-@code {
-
+@code
+{
     [Parameter]
     public GotchiDTO? Gotchi { get; set; }
 
     private readonly int _numberStars = 12;
 
-    private Canvas2DContext _context;
+    private Canvas2DContext _context = null!;
+    private FrameRateLimiter _frameRateLimiter = null!;
+    private Timer _frameRateTimer = null!;
 
-    protected BECanvasComponent _canvasReference;
+    protected BECanvasComponent _canvasReference = null!;
     protected ElementReference _spriteSheet;
+    private readonly int _canvasWidth = 300;
+    private readonly int _canvasHeight = 400;
+    private GotchiRender? _gotchiRenderObj;
+    private IGotchiRenderObjState? _gotchiRenderObjState;
+
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        var x = _canvasWidth / 2;
+        var y = _canvasWidth / 2;
+        _gotchiRenderObj = new GotchiRender() { X = x, Y = y };
+
+        _frameRateTimer = new Timer(40); // 1000 milliseconds = 1 second
+        _frameRateTimer.Elapsed += TimerElapsed;
+        _frameRateTimer.AutoReset = true;
+        _frameRateTimer.Start();
+    }
+
+    private async void TimerElapsed(object? sender, ElapsedEventArgs e)
+    {
+        await InvokeAsync(() => StateHasChanged());
+    }
+
+    protected override void OnParametersSet()
+    {
+    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        this._context = await this._canvasReference.CreateCanvas2DAsync();
-        await this._context.SetFillStyleAsync("green");
+        if (_context is null)
+        {
+            this._context = await this._canvasReference.CreateCanvas2DAsync();
+        }
 
-        await this._context.FillRectAsync(10, 100, 100, 100);
+        if (_frameRateLimiter is null)
+        {
+            _frameRateLimiter = new FrameRateLimiter(25);
+        }
 
-        await this._context.SetFontAsync("48px serif");
-        await this._context.StrokeTextAsync("Hello Blazor!!!", 10, 100);
+        if (_frameRateLimiter.Check())
+        {
+            if (_gotchiRenderObjState is null)
+                _gotchiRenderObjState = PathPicker.Create();
+
+
+
+            await this._context.BeginBatchAsync();
+
+            var imagePoint = _gotchiRenderObjState.GetImage(_gotchiRenderObj, Gotchi);
+
+            await this._context.SetFillStyleAsync("white");
+            await this._context.FillRectAsync(0, 0, _canvasWidth, _canvasHeight);
+
+            await this._context.SetFillStyleAsync("black");
+            await this._context.SetLineWidthAsync(1);
+            await this._context.StrokeRectAsync(0, 0, _canvasWidth, _canvasHeight);
+
+            //Debug
+
+            var pathName = _gotchiRenderObjState is null ? "Null" : _gotchiRenderObjState.GetType().Name;
+            await this._context.SetLineWidthAsync(1);
+            await this._context.StrokeRectAsync(0, 0, _canvasWidth, 20);
+            await this._context.StrokeTextAsync("Dir: " + _gotchiRenderObj.Dir.ToString() + "\t" +
+                                                "Moves: " + _gotchiRenderObj.Moves + "\t" +
+                                                "Path: " + pathName + "\t" +
+                                                "X: " + _gotchiRenderObj.X.ToString() + "\t" +
+                                                "Y: " + _gotchiRenderObj.Y.ToString() + "\t" +
+                                                "Ticks: " + _gotchiRenderObj.TickCounter
+                                                , 0, 19);
+
+            await this._context.DrawImageAsync(_spriteSheet, imagePoint.X, imagePoint.Y, 64, 64, _gotchiRenderObj.X, _gotchiRenderObj.Y, 64, 64);
+            await this._context.EndBatchAsync();
+
+            if (_gotchiRenderObjState != null)
+                _gotchiRenderObjState = _gotchiRenderObjState.Move(_gotchiRenderObj, Gotchi, new System.Drawing.Rectangle(0, 0, _canvasWidth, _canvasHeight));
+        }
     }
+
+    public void Dispose()
+    {
+        _frameRateTimer.Stop();
+        _frameRateTimer.Dispose();
+    }
+
+    private class FrameRateLimiter
+    {
+        private Stopwatch stopwatch = new Stopwatch();
+        private int targetFrameRate;
+        private int millisecondsPerFrame;
+
+        public FrameRateLimiter(int targetFrameRate)
+        {
+            this.targetFrameRate = targetFrameRate;
+            this.millisecondsPerFrame = 1000 / targetFrameRate;
+            stopwatch.Start();
+        }
+
+        public bool Check()
+        {
+            var elapsedMilliseconds = (int)stopwatch.ElapsedMilliseconds;
+
+            if (elapsedMilliseconds >= millisecondsPerFrame)
+            {
+                stopwatch.Restart();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+    }
+
 }

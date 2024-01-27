@@ -24,15 +24,17 @@ namespace GotchiWeb.Authentication
                 if (userSession == null)
                     return await Task.FromResult(new AuthenticationState(_anonymous));
 
-                var claimPrincipal = new ClaimsPrincipal(new ClaimsIdentity(new ClaimsIdentity(new List<Claim>
-                {
-                    new Claim(ClaimTypes.SerialNumber, userSession.SerialNumber),
-                    new Claim(ClaimTypes.Name, userSession.UserName),
-                    new Claim(ClaimTypes.Role, userSession.Role)
-                }, "GotchiAuth")));
+                var builtClaimsPrincipal = BuildClaimsPrincipal(userSession);
+
+                // Check if anonymous
+                if (!builtClaimsPrincipal.Claims.Any())
+                    return await Task.FromResult(new AuthenticationState(_anonymous));
+
+
+                var claimPrincipal = new ClaimsPrincipal(new ClaimsIdentity(builtClaimsPrincipal.Claims, "GotchiAuth"));
                 return await Task.FromResult(new AuthenticationState(claimPrincipal));
             }
-            catch (Exception ex)
+            catch
             {
                 return await Task.FromResult(new AuthenticationState(_anonymous));
             }
@@ -40,25 +42,41 @@ namespace GotchiWeb.Authentication
 
         public async Task UpdateAuthenticationState(UserSession userSession) 
         {
-            ClaimsPrincipal claimsPrincipal;
+            ClaimsPrincipal claimsPrincipal = BuildClaimsPrincipal(userSession);
 
-            if (userSession != null)
-            {
-                await _sessionStorage.SetAsync("UserSession", userSession);
-                claimsPrincipal = new ClaimsPrincipal(new ClaimsIdentity(new List<Claim>
+            if (!claimsPrincipal.Claims.Any())
+                return;
+
+            await _sessionStorage.SetAsync("UserSession", userSession);
+            NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(claimsPrincipal)));
+        }
+
+        public async Task LogoutAuthentication() 
+        {
+            await _sessionStorage.DeleteAsync("UserSession");
+            NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(_anonymous)));
+        }
+
+        private ClaimsPrincipal BuildClaimsPrincipal(UserSession? userSession) 
+        {
+            if (userSession is null)
+                return _anonymous;
+
+            if(userSession.SerialNumber is null)
+                return _anonymous;
+
+            if (userSession.UserName is null)
+                return _anonymous;
+
+            if (userSession.Role is null)
+                return _anonymous;
+
+            return new ClaimsPrincipal(new ClaimsIdentity(new List<Claim>
                 {
                     new Claim(ClaimTypes.SerialNumber, userSession.SerialNumber),
                     new Claim(ClaimTypes.Name, userSession.UserName),
                     new Claim(ClaimTypes.Role, userSession.Role)
                 }));
-            }
-            else 
-            {
-                await _sessionStorage.DeleteAsync("UserSession");
-                claimsPrincipal = _anonymous;
-            }
-
-            NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(claimsPrincipal)));
         }
     }
 }

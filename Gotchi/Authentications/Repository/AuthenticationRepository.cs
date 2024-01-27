@@ -37,5 +37,5 @@ public class AuthenticationRepository : RepositoryBase<AuthenticationModel>, IAu
         return await base.GetByKeyStrAsync("UserName", _userName);
     } 
 
-    public AuthenticationModel GetByAuthObjectId(string personId) => base.GetEntryById(personId);
+    public AuthenticationModel GetByPersonId(string personId) => base.GetByKeyStr("PersonId", personId);
 }

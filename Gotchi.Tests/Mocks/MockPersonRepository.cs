@@ -11,8 +11,6 @@ public class MockPersonRepository : MockRepositoryBase<Person>,  IPersonReposito
     {
         TestPerson = new Person("testPersonId")
         {
-            UserName = "testFirst",
-            Password = "testLast"
         };
 
         if(addTestData)
@@ -24,7 +22,6 @@ public class MockPersonRepository : MockRepositoryBase<Person>,  IPersonReposito
     public bool Delete(string? id) => base.DeleteEntry(id);
     public bool DeleteAll() => base.DeleteAllEntries();
     public bool ExistsById(string id) => base.EntryExists(id);
-    public bool ExistsByUserName(string userName) => _db.Any(x => x.UserName == userName);
 
     public Task<bool> ExistsByUserNameAsync(string userName)
     {
@@ -38,8 +35,6 @@ public class MockPersonRepository : MockRepositoryBase<Person>,  IPersonReposito
     {
         throw new NotImplementedException();
     }
-
-    public Person GetByUserName(string userName) => _db.First(x => x.UserName == userName);
 
     public Task<Person?> GetByUserNameAsync(string userName)
     {

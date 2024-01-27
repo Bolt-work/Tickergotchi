@@ -1,4 +1,5 @@
-﻿using Gotchi.Gotchis.Models;
+﻿using Gotchi.Authentications.Models;
+using Gotchi.Gotchis.Models;
 using Gotchi.HighScores.Models;
 using Gotchi.Persons.Models;
 
@@ -6,7 +7,7 @@ namespace Gotchi.HighScores.Mangers;
 
 public interface IHighScoreManager
 {
-    HighScore AddHighScore(Person? user, CryptoGotchi? gotchi);
+    HighScore AddHighScore(Person? user, AuthenticationModel? auth, CryptoGotchi? gotchi);
     Task<ICollection<HighScore>> GetHighScoresAsync();
     bool Store(HighScore person);
 }

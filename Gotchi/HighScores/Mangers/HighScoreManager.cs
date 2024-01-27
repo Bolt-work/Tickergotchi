@@ -1,4 +1,5 @@
-﻿using Gotchi.Core.Managers;
+﻿using Gotchi.Authentications.Models;
+using Gotchi.Core.Managers;
 using Gotchi.Gotchis.Managers;
 using Gotchi.Gotchis.Models;
 using Gotchi.Gotchis.Repository;
@@ -19,10 +20,13 @@ public class HighScoreManager : CoreManagerBase, IHighScoreManager
         _logger = logger;
     }
 
-    public HighScore AddHighScore(Person? user, CryptoGotchi? gotchi)
+    public HighScore AddHighScore(Person? user, AuthenticationModel? auth, CryptoGotchi? gotchi)
     {
         if (user is null)
             throw new ParameterModelIsNullException<Person>();
+
+        if (auth is null)
+            throw new ParameterModelIsNullException<AuthenticationModel>();
 
         if (gotchi is null)
             throw new ParameterModelIsNullException<CryptoGotchi>();
@@ -32,7 +36,7 @@ public class HighScoreManager : CoreManagerBase, IHighScoreManager
 
         return new HighScore
         {
-            UserName = user.UserName,
+            UserName = auth.UserName,
             GotchiName = gotchi.Name,
             Score = gotchi.Level,
             DateSet = DateTime.UtcNow,

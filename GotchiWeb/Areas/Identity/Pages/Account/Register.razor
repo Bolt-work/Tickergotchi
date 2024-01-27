@@ -1,6 +1,5 @@
 ﻿@page "/Register"
 @using GotchiWeb.Authentication;
-@inject UserAccountService userAccountService
 @inject IJSRuntime js
 @inject AuthenticationStateProvider authStateProvider
 @inject NavigationManager navManager
@@ -15,10 +14,22 @@
         <div class="mb-3 text-center">
             <h3>Register</h3>
         </div>
+        @if (_showErrorUserNameMessage)
+        {
+            <div class="mb-3">
+                <label class="col font-weight-bold text-danger">User with that name already exists </label>
+            </div>
+        }
         <div class="mb-3">
             <label> User Name</label>
             <input @bind="model.Username" class="form-control" placeholder="User Name" />
         </div>
+        @if (_showErrorPasswordsDontMatch)
+        {
+            <div class="mb-3">
+                <label class="col font-weight-bold text-danger">Passwords don't match'</label>
+            </div>
+        }
         <div class="mb-3">
             <label> Password</label>
             <input @bind="model.Password" class="form-control" placeholder="Password" />
@@ -33,6 +44,12 @@
     </div>
 </div>
 
+@if (_showErrorCantFindAuthentication)
+{
+    <br />
+    <h3>Error could not find authentication</h3>
+}
+
 @code {
     private class Model
     {
@@ -42,43 +59,60 @@
     }
 
     private Model model = new Model();
+    private bool _showErrorUserNameMessage = false;
+    private bool _showErrorPasswordsDontMatch = false;
+    private bool _showErrorCantFindAuthentication = false;
 
     private async Task RegisterUser()
     {
+        _showErrorUserNameMessage = false;
+        _showErrorPasswordsDontMatch = false;
+        _showErrorCantFindAuthentication = false;
+
+        if (string.IsNullOrWhiteSpace(model.Username))
+        {
+            _showErrorUserNameMessage = true;
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(model.Password) || string.IsNullOrWhiteSpace(model.PasswordSecond))
+        {
+            _showErrorPasswordsDontMatch = true;
+            return;
+        }
+
+        if (model.Password != model.PasswordSecond)
+        {
+            _showErrorPasswordsDontMatch = true;
+            return;
+        }
+
+        var userNameAlreadyExists = await _gotchiHostService.DataAccess().UserNameAlreadyExistAsync(model.Username);
+        if (userNameAlreadyExists)
+        {
+            _showErrorUserNameMessage = true;
+            return;
+        }
+
         var command = new CreatePersonCommand(model.Username, model.Password);
         _gotchiHostService.CommandService().Process(command);
-        var user = _gotchiHostService.DataAccess().PersonByUserName(model.Username);
+        var auth = await _gotchiHostService.DataAccess().AuthenticationByPasswordAndUserName(model.Password, model.Username);
 
-        var gotchiAuthenticationStateProvider = (GotchiAuthenticationStateProvider)authStateProvider;
-        await gotchiAuthenticationStateProvider.UpdateAuthenticationState(new UserSession
-            {
-                SerialNumber = user.Id,
-                UserName = user.UserName,
-                Role = user.Role
-            });
-
-        navManager.NavigateTo("/", true);
-    }
-
-    private async Task Authenticate()
-    {
-        if (string.IsNullOrWhiteSpace(model.Username))
-            return;
-
-        var userAccount = userAccountService.GetByUserName(model.Username);
-        if (userAccount == null || userAccount.Password != model.Password)
+        if (auth is null)
         {
-            await js.InvokeVoidAsync("alert", "Invalid User Name or Password");
+            _showErrorCantFindAuthentication = true;
             return;
         }
 
         var gotchiAuthenticationStateProvider = (GotchiAuthenticationStateProvider)authStateProvider;
         await gotchiAuthenticationStateProvider.UpdateAuthenticationState(new UserSession
             {
-                UserName = userAccount.UserName,
-                Role = userAccount.Role
+                SerialNumber = auth.PersonId,
+                UserName = auth.UserName,
+                Role = auth.Role
             });
 
         navManager.NavigateTo("/", true);
     }
+
 }

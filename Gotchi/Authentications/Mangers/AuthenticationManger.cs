@@ -80,4 +80,25 @@ public class AuthenticationManger : CoreManagerBase, IAuthenticationManger
 
         return sb.ToString();
     }
+
+    public bool Store(AuthenticationModel auth) 
+    {
+        if (auth is null)
+            throw new ParameterModelIsNullException<AuthenticationModel>();
+
+        return _authenticationRepository.Upsert(auth);
+    }
+
+    public AuthenticationModel GetAuthenticationByPersonId(string? personId) 
+    {
+        if (string.IsNullOrWhiteSpace(personId))
+            throw new ArgumentStringNullOrEmptyException("PersonId");
+
+        var auth = _authenticationRepository.GetByPersonId(personId);
+
+        if (auth is null)
+            throw new ModelNotFoundException<AuthenticationModel>(personId);
+
+        return auth;
+    }
 }

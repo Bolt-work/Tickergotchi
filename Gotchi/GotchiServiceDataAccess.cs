@@ -1,4 +1,6 @@
-﻿using Gotchi.Core.Services;
+﻿using Gotchi.Authentications.DataAccess;
+using Gotchi.Authentications.DTOs;
+using Gotchi.Core.Services;
 using Gotchi.CryptoCoins.DataAccess;
 using Gotchi.CryptoCoins.DTOs;
 using Gotchi.Gotchis.DataAccess;
@@ -24,6 +26,7 @@ public class GotchiServiceDataAccess: IPersonDataAccess,
     private ICryptoCoinsDataAccess _cryptoCoinsDataAccess;
     private IGotchiDataAccess _gotchiDataAccess;
     private IHighScoreDataAccess _highScoreDataAccess;
+    private IAuthenticationDataAccess _authenticationDataAccess;
 
     private ILogger<GotchiServiceDataAccess> _logger;
 
@@ -31,7 +34,8 @@ public class GotchiServiceDataAccess: IPersonDataAccess,
         IPortfolioDataAccess portfolioDataAccess,
         ICryptoCoinsDataAccess cryptoCoinsDataAccess,
         IGotchiDataAccess gotchiDataAccess,
-        IHighScoreDataAccess highScoreDataAccess)
+        IHighScoreDataAccess highScoreDataAccess,
+        IAuthenticationDataAccess authenticationDataAccess)
     {
         _logger = logger;
         _personDataAccess = personDataAccess;
@@ -39,16 +43,12 @@ public class GotchiServiceDataAccess: IPersonDataAccess,
         _cryptoCoinsDataAccess = cryptoCoinsDataAccess;
         _gotchiDataAccess = gotchiDataAccess;
         _highScoreDataAccess = highScoreDataAccess;
+        _authenticationDataAccess = authenticationDataAccess;
     }
 
     public PersonDTO PersonById(string? id) => ICL(_personDataAccess.PersonById, id, null!);
     public async Task<PersonDTO?> PersonByIdAsync(string? id) => await _personDataAccess.PersonByIdAsync(id);
-    public PersonDTO PersonByUserName(string? userName) => ICL(_personDataAccess.PersonByUserName, userName, null!);
-    public async Task<PersonDTO?> PersonByUserNameAsync(string? userName) => await _personDataAccess.PersonByUserNameAsync(userName);
     public ICollection<PersonDTO> PersonsAll() => _personDataAccess.PersonsAll();
-    public async Task<bool> CheckPasswordAndUserNameAsync(string? password, string? userName) => await _personDataAccess.CheckPasswordAndUserNameAsync(password, userName);
-    public async Task<bool> CheckPasswordAndPersonIdAsync(string? password, string? personId) => await _personDataAccess.CheckPasswordAndPersonIdAsync(password, personId);
-    public async Task<bool> DoesUserNameAlreadyExistAsync(string? userName) => await _personDataAccess.DoesUserNameAlreadyExistAsync(userName);
 
     public PortfolioDTO PortfolioById(string portfolioId) => ICL(_portfolioDataAccess.PortfolioById, portfolioId, null!);
     public async Task<PortfolioDTO?> PortfolioByIdAsync(string portfolioId) => await _portfolioDataAccess.PortfolioByIdAsync(portfolioId);
@@ -76,6 +76,9 @@ public class GotchiServiceDataAccess: IPersonDataAccess,
 
 
     public async Task<ICollection<HighScoreDTO>> GetHighScoresAsync() => await _highScoreDataAccess.GetHighScoresAsync();
+
+    public async Task<AuthenticationDTO?> AuthenticationByPasswordAndUserName(string? password, string? userName) => await _authenticationDataAccess.AuthenticationByPasswordAndUserName(password, userName);
+    public async Task<bool> UserNameAlreadyExistAsync(string? userName) => await _authenticationDataAccess.UserNameAlreadyExistAsync(userName);
 
     //Invoke, Catch, Log - dear god i need to fix this!
     private T ICL<T>(Func<T> method,T error) 
