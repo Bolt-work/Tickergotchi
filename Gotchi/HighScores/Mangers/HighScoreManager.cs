@@ -2,7 +2,6 @@
 using Gotchi.Core.Managers;
 using Gotchi.Gotchis.Managers;
 using Gotchi.Gotchis.Models;
-using Gotchi.Gotchis.Repository;
 using Gotchi.HighScores.Models;
 using Gotchi.HighScores.Repository;
 using Gotchi.Persons.Models;
@@ -10,7 +9,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Gotchi.HighScores.Mangers;
 
-public class HighScoreManager : CoreManagerBase, IHighScoreManager
+public class HighScoreManager : CoreManagerBase, IHighScoreManager , IDAHighScoreManager
 {
     private IHighScoreRepository _highScoreRepository;
     private ILogger _logger;

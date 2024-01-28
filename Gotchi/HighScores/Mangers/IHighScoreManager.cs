@@ -8,6 +8,5 @@ namespace Gotchi.HighScores.Mangers;
 public interface IHighScoreManager
 {
     HighScore AddHighScore(Person? user, AuthenticationModel? auth, CryptoGotchi? gotchi);
-    Task<ICollection<HighScore>> GetHighScoresAsync();
     bool Store(HighScore person);
 }

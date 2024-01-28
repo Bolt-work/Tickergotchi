@@ -20,6 +20,7 @@ public class HighScoreServiceConfig
         services.AddSingleton<HighScoreRepositorySettings>();
         services.AddSingleton<IHighScoreRepository, HighScoreRepository>();
         services.AddSingleton<IHighScoreManager, HighScoreManager>();
+        services.AddSingleton<IDAHighScoreManager, HighScoreManager>();
 
     }
 }

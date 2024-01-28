@@ -11,7 +11,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Gotchi.Gotchis.Managers;
 
-public class GotchiManager : CoreManagerBase, IGotchiManager
+public class GotchiManager : CoreManagerBase, IGotchiManager, IDAGotchiManager
 {
     private IGotchiRepository _gotchiRepository;
     private ILogger _logger;

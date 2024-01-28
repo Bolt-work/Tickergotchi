@@ -1,6 +1,7 @@
 ﻿using Gotchi.Persons.CommandServices;
 using Gotchi.Persons.DataAccess;
 using Gotchi.Persons.Managers;
+using Gotchi.Persons.Mangers;
 using Gotchi.Persons.Repository;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -20,5 +21,6 @@ public class PersonServiceConfig
         services.AddSingleton<PersonRepositorySettings>();
         services.AddSingleton<IPersonRepository, PersonRepository>();
         services.AddSingleton<IPersonManager, PersonManager>();
+        services.AddSingleton<IDAPersonManager, PersonManager>();
     }
 }

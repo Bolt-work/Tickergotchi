@@ -1,23 +1,18 @@
 ﻿using AutoMapper;
 using Gotchi.Persons.DTOs;
 using Gotchi.Persons.Managers;
+using Gotchi.Persons.Mangers;
 
 namespace Gotchi.Persons.DataAccess;
 
 public class PersonDataAccess : IPersonDataAccess
 {
-    IPersonManager _personManager;
+    IDAPersonManager _personManager;
     IMapper _mapper;
-    public PersonDataAccess(IPersonManager personManager, IMapper mapper)
+    public PersonDataAccess(IDAPersonManager personManager, IMapper mapper)
     {
         _personManager = personManager;
         _mapper = mapper;
-    }
-
-    public PersonDTO PersonById(string? id)
-    {
-        var personModel = _personManager.GetPersonById(id);
-        return _mapper.Map<PersonDTO>(personModel);
     }
 
     public async Task<PersonDTO?> PersonByIdAsync(string? id)
@@ -26,11 +21,5 @@ public class PersonDataAccess : IPersonDataAccess
         if (personModel is null)
             return null;
         return _mapper.Map<PersonDTO>(personModel);
-    }
-
-    public ICollection<PersonDTO> PersonsAll()
-    {
-        var personModel = _personManager.GetAllPersons();
-        return _mapper.Map<ICollection<PersonDTO>>(personModel);
     }
 }

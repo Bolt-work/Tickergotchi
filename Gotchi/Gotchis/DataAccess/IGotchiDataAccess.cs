@@ -4,9 +4,6 @@ namespace Gotchi.Gotchis.DataAccess
 {
     public interface IGotchiDataAccess
     {
-        GotchiDTO GotchiById(string gotchiId);
         Task<GotchiDTO?> GotchiByIdAsync(string gotchiId);
-        ICollection<GotchiDTO> GotchisAll();
-        ICollection<GotchiDTO> GotchisByOwnerId(string ownerId);
     }
 }

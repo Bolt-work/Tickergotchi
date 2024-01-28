@@ -3,6 +3,7 @@ using Gotchi.Gotchis.Repository;
 using Gotchi.Portfolios.CommandService;
 using Gotchi.Portfolios.DataAccess;
 using Gotchi.Portfolios.Managers;
+using Gotchi.Portfolios.Mangers;
 using Gotchi.Portfolios.Repository;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -26,6 +27,6 @@ public class PortfolioServiceConfig
         services.AddSingleton<PortfolioRepositorySettings>();
         services.AddSingleton<IPortfolioRepository, PortfolioRepository>();
         services.AddSingleton<IPortfolioManager, PortfolioManager>();
-
+        services.AddSingleton<IDAPortfolioManager, PortfolioManager>();
     }
 }

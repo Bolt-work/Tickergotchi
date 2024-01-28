@@ -2,6 +2,7 @@
 using Gotchi.CryptoCoins.CommandServices;
 using Gotchi.CryptoCoins.DataAccess;
 using Gotchi.CryptoCoins.Managers;
+using Gotchi.CryptoCoins.Mangers;
 using Gotchi.CryptoCoins.Repository;
 using Gotchi.Persons.CommandServices;
 using Gotchi.Persons.Managers;
@@ -32,5 +33,6 @@ public class CryptoCoinServiceConfig
         services.AddSingleton<CryptoCoinRepositorySettings>();
         services.AddSingleton<ICryptoCoinRepository, CryptoCoinRepository>();
         services.AddSingleton<ICryptoCoinManager, CryptoCoinManager>();
+        services.AddSingleton<IDACryptoCoinManager, CryptoCoinManager>();
     }
 }

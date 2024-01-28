@@ -6,9 +6,9 @@ namespace Gotchi.HighScores.DataAccess;
 
 public class HighScoreDataAccess : IHighScoreDataAccess
 {
-    IHighScoreManager _highScoreManger;
+    IDAHighScoreManager _highScoreManger;
     IMapper _mapper;
-    public HighScoreDataAccess(IHighScoreManager highScoreManger, IMapper mapper)
+    public HighScoreDataAccess(IDAHighScoreManager highScoreManger, IMapper mapper)
     {
         _highScoreManger = highScoreManger;
         _mapper = mapper;

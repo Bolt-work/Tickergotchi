@@ -1,13 +1,14 @@
 ﻿using CoinMarketCap;
 using Gotchi.Core.Helpers;
 using Gotchi.Core.Managers;
+using Gotchi.CryptoCoins.Mangers;
 using Gotchi.CryptoCoins.Repository;
 using Gotchi.Portfolios.Models;
 using Microsoft.VisualBasic;
 
 namespace Gotchi.CryptoCoins.Managers;
 
-public class CryptoCoinManager : CoreManagerBase, ICryptoCoinManager
+public class CryptoCoinManager : CoreManagerBase, ICryptoCoinManager, IDACryptoCoinManager
 {
     private ICryptoCoinRepository _cryptoCoinRepository;
     private ICoinMarketApi _coinMarketApi;

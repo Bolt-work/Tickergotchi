@@ -2,13 +2,14 @@
 using Gotchi.Core.Managers;
 using Gotchi.CryptoCoins.Managers;
 using Gotchi.Persons.Models;
+using Gotchi.Portfolios.Mangers;
 using Gotchi.Portfolios.Models;
 using Gotchi.Portfolios.Repository;
 using Microsoft.Extensions.Logging;
 
 namespace Gotchi.Portfolios.Managers
 {
-    public class PortfolioManager : CoreManagerBase, IPortfolioManager
+    public class PortfolioManager : CoreManagerBase, IPortfolioManager, IDAPortfolioManager
     {
         private IPortfolioRepository _portfolioRepository;
         private ICryptoCoinManager _cryptoCoinManager;

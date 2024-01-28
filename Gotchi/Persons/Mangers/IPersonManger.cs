@@ -12,7 +12,6 @@ namespace Gotchi.Persons.Managers
         bool Delete(Person person);
         IEnumerable<Person> GetAllPersons();
         Person GetPersonById(string? id);
-        Task<Person?> GetPersonByIdAsync(string? personId);
         Person SetPersonActiveGotchi(Person person, CryptoGotchi gotchi);
         Person SetPersonActivePortfolio(Person person, Portfolio portfolio);
         bool Store(Person person);

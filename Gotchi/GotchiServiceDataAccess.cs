@@ -46,20 +46,13 @@ public class GotchiServiceDataAccess: IPersonDataAccess,
         _authenticationDataAccess = authenticationDataAccess;
     }
 
-    public PersonDTO PersonById(string? id) => ICL(_personDataAccess.PersonById, id, null!);
     public async Task<PersonDTO?> PersonByIdAsync(string? id) => await _personDataAccess.PersonByIdAsync(id);
-    public ICollection<PersonDTO> PersonsAll() => _personDataAccess.PersonsAll();
 
-    public PortfolioDTO PortfolioById(string portfolioId) => ICL(_portfolioDataAccess.PortfolioById, portfolioId, null!);
+
     public async Task<PortfolioDTO?> PortfolioByIdAsync(string portfolioId) => await _portfolioDataAccess.PortfolioByIdAsync(portfolioId);
-    public ICollection<PortfolioDTO> PortfoliosByPersonId(string personId) => _portfolioDataAccess.PortfoliosByPersonId(personId);
     public async Task<PortfolioDTO?> PortfolioByPersonIdAsync(string personId) => await _portfolioDataAccess.PortfolioByPersonIdAsync(personId);
-    public ICollection<PortfolioDTO> PortfoliosAll() => _portfolioDataAccess.PortfoliosAll();
 
-    public CryptoCoinDTO CryptoCoinByCoinMarketId(string coinMarketId) => ICL(_cryptoCoinsDataAccess.CryptoCoinByCoinMarketId, coinMarketId, null!);
-    public CryptoCoinDTO CryptoCoinByName(string name) => ICL(_cryptoCoinsDataAccess.CryptoCoinByName, name, null!);
-    public ICollection<CryptoCoinDTO> CryptoCoinBySlug(string slug) => _cryptoCoinsDataAccess.CryptoCoinBySlug(slug);
-    public ICollection<CryptoCoinDTO> CryptoCoinBySymbol(string symbol) => _cryptoCoinsDataAccess.CryptoCoinBySymbol(symbol);
+
     public async Task<CryptoCoinDTO?> CryptoCoinByCoinMarketIdAsync(string coinMarketId) => await _cryptoCoinsDataAccess.CryptoCoinByCoinMarketIdAsync(coinMarketId);
     public async Task<CryptoCoinDTO?> CryptoCoinByNameAsync(string name) => await _cryptoCoinsDataAccess.CryptoCoinByNameAsync(name);
     public async Task<ICollection<CryptoCoinDTO>> CryptoCoinBySlugAsync(string slug) => await _cryptoCoinsDataAccess.CryptoCoinBySlugAsync(slug);
@@ -69,41 +62,11 @@ public class GotchiServiceDataAccess: IPersonDataAccess,
     public async Task<IEnumerable<string?>> GetSymbolSuggestionsAsync(string prefix, int limit = 20) => await _cryptoCoinsDataAccess.GetSymbolSuggestionsAsync(prefix, limit);
 
 
-    public GotchiDTO GotchiById(string gotchiId) => ICL(_gotchiDataAccess.GotchiById, gotchiId, null!);
     public async Task<GotchiDTO?> GotchiByIdAsync(string gotchiId) => await _gotchiDataAccess.GotchiByIdAsync(gotchiId);
-    public ICollection<GotchiDTO> GotchisByOwnerId(string ownerId) => _gotchiDataAccess.GotchisByOwnerId(ownerId);
-    public ICollection<GotchiDTO> GotchisAll() => _gotchiDataAccess.GotchisAll();
 
 
     public async Task<ICollection<HighScoreDTO>> GetHighScoresAsync() => await _highScoreDataAccess.GetHighScoresAsync();
 
     public async Task<AuthenticationDTO?> AuthenticationByPasswordAndUserName(string? password, string? userName) => await _authenticationDataAccess.AuthenticationByPasswordAndUserName(password, userName);
     public async Task<bool> UserNameAlreadyExistAsync(string? userName) => await _authenticationDataAccess.UserNameAlreadyExistAsync(userName);
-
-    //Invoke, Catch, Log - dear god i need to fix this!
-    private T ICL<T>(Func<T> method,T error) 
-    {
-        try 
-        {
-            return method();
-        }
-        catch (Exception ex) 
-        {
-            _logger.LogError(ex, "Error");
-            return error;
-        }
-    }
-
-    private T ICL<T>(Func<string, T> method, string arg, T error)
-    {
-        try
-        {
-            return method(arg);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error");
-            return error;
-        }
-    }
 }

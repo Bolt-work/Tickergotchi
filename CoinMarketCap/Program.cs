@@ -7,15 +7,15 @@ namespace CoinMarketCap
     {
         static void Main(string[] args)
         {
-            var resultFilePath = "coinMarketResult.txt";
-            Console.WriteLine("Hello, World!");
-            var result = new CoinMarketApi().CallApi();
+            //var resultFilePath = "coinMarketResult.txt";
+            //Console.WriteLine("Hello, World!");
+            //var result = new CoinMarketApi().CallApi();
             //File.WriteAllText("coinMarketResult.txt", result);
 
-            var resultJson = File.ReadAllText(resultFilePath);
+            //var resultJson = File.ReadAllText(resultFilePath);
             //var results = JsonSerializer.Deserialize<RootModel>(resultJson);
             //var results = JsonSerializer.Deserialize<RootModel>(resultJson);
-            var t = 0;
+            //var t = 0;
         }
     }
 }
