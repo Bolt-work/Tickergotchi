@@ -62,7 +62,7 @@ else if (_portfolio is not null)
     private Timer? timer;
 
     [CascadingParameter]
-    private Task<AuthenticationState> authenticationState { get; set; }
+    private Task<AuthenticationState> authenticationState { get; set; } = null!;
 
     protected override void OnParametersSet()
     {

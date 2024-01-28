@@ -177,7 +177,7 @@ else
 
     [Parameter]
     public string? ReloadAddress { get; set; } = "/Portfolio/";
-
+    finshed here. need to chage to game page
     private FindCoinModel _findCoinModel = new();
     private ResultsModel _resultsModel = new();
     private BuyCoinModel _buyCoinModel = new();
@@ -355,7 +355,7 @@ else
         _BuyMenuErrorMessage = null;
     }
 
-    private void BuyCoin(PortfolioDTO? portfolio, string? coinId, float amount)
+    private async void BuyCoin(PortfolioDTO? portfolio, string? coinId, float amount)
     {
         if (portfolio is null)
             return;
@@ -382,7 +382,7 @@ else
         }
 
         var command = new BuyAssetsCommand(portfolio.Id, coinId, amount);
-        _gotchiHostService.CommandService().Process(command);
+        await _gotchiHostService.CommandService().ProcessAsync(command);
         navManager.NavigateTo(ReloadAddress, true);
     }
 

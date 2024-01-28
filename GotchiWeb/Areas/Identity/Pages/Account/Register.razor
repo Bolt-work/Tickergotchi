@@ -95,7 +95,7 @@
         }
 
         var command = new CreatePersonCommand(model.Username, model.Password);
-        _gotchiHostService.CommandService().Process(command);
+        await _gotchiHostService.CommandService().ProcessAsync(command);
         var auth = await _gotchiHostService.DataAccess().AuthenticationByPasswordAndUserName(model.Password, model.Username);
 
         if (auth is null)

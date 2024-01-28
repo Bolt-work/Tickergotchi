@@ -49,13 +49,13 @@ else
 
     private void ToggleShowForm() => _showForm = !_showForm;
 
-    private void SubmitGettingStarted()
+    private async void SubmitGettingStarted()
     {
         if (string.IsNullOrWhiteSpace(UserId) || string.IsNullOrWhiteSpace(ReloadAddress) || string.IsNullOrWhiteSpace(_model.GotchiName))
             return;
 
-        _gotchiHostService.CommandService().Process(new CreatePortfolioCommand(UserId));
-        _gotchiHostService.CommandService().Process(new CreateGotchiCommand(UserId, _model.GotchiName));
+        await _gotchiHostService.CommandService().ProcessAsync(new CreatePortfolioCommand(UserId));
+        await _gotchiHostService.CommandService().ProcessAsync(new CreateGotchiCommand(UserId, _model.GotchiName));
         navManager.NavigateTo(ReloadAddress, true);
     }
 

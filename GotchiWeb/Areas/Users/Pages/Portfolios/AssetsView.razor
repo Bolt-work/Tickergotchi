@@ -107,7 +107,7 @@ else
         AssetList = newAssetList;
     }
 
-    private void SellAsset(int coinMarketId)
+    private async void SellAsset(int coinMarketId)
     {
         if (Portfolio is null)
             return;
@@ -136,7 +136,7 @@ else
         }
 
         var sellCommand = new SellAssetsCommand(Portfolio.Id, coinMarketId.ToString(), assetObj.QuantityToSell);
-        _gotchiHostService.CommandService().Process(sellCommand);
+        await _gotchiHostService.CommandService().ProcessAsync(sellCommand);
 
         navManager.NavigateTo(ReloadAddress, true);
 

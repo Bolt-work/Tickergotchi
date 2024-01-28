@@ -43,7 +43,7 @@ else if (Gotchi.State == GotchiStateDTO.Alive)
 
     private string? _errorMessage = string.Empty;
 
-    private void FeedGotchiButton()
+    private async void FeedGotchiButton()
     {
         if (Gotchi is null || Portfolio is null)
             return;
@@ -64,7 +64,7 @@ else if (Gotchi.State == GotchiStateDTO.Alive)
         }
 
         var command = new FeedGotchiCommand(Gotchi.Id, Portfolio.Id);
-        _gotchiHostService.CommandService().Process(command);
+        await _gotchiHostService.CommandService().ProcessAsync(command);
         StateHasChanged();
     }
 

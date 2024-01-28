@@ -16,7 +16,7 @@ public class CreatePersonCommandHandlerTests
     private ILogger<CreatePersonCommandHandler> _logger;
     //private CreatePersonCommandHandler _commandHandler;
 
-    private string _passwordHash = "EB970EB0951C6CDEAC1EC0CC723FC91E30B0C26EE6F3B5EE0E574DB7F487DC55";
+    //private string _passwordHash = "EB970EB0951C6CDEAC1EC0CC723FC91E30B0C26EE6F3B5EE0E574DB7F487DC55";
 
     public CreatePersonCommandHandlerTests()
     {
