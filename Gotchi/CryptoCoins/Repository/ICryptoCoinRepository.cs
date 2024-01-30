@@ -20,6 +20,6 @@ namespace Gotchi.CryptoCoins.Repository
         Task<IEnumerable<string?>> GetSlugSuggestionsAsync(string prefix, int limit = 20);
         Task<IEnumerable<string?>> GetSymbolSuggestionsAsync(string prefix, int limit = 20);
         bool HasAnyEntries();
-        void Insert(IList<CryptoCoin> models);
+        void Insert(IEnumerable<CryptoCoin> models);
     }
 }

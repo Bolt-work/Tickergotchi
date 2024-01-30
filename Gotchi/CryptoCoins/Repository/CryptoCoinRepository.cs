@@ -2,7 +2,6 @@
 using Gotchi.Portfolios.Models;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using System.Collections.Generic;
 
 namespace Gotchi.CryptoCoins.Repository;
 
@@ -13,7 +12,7 @@ public class CryptoCoinRepository : RepositoryBase<CryptoCoin>, ICryptoCoinRepos
     {
     }
 
-    public void Insert(IList<CryptoCoin> models)
+    public void Insert(IEnumerable<CryptoCoin> models)
     {
         ConnectToMongo().InsertMany(models);
     }
