@@ -93,4 +93,9 @@ public class MockCryptoCoinRepository : MockRepositoryBase<CryptoCoin>, ICryptoC
     }
 
     public void Insert(IList<CryptoCoin> models) => base.InsertEntries(models);
+
+    public void Insert(IEnumerable<CryptoCoin> models)
+    {
+        throw new NotImplementedException();
+    }
 }

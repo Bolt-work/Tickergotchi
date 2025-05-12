@@ -7,16 +7,22 @@ namespace CoinMarketCap;
 
 public class CoinMarketApi : ICoinMarketApi
 {
-    private static string _testAddress = "sandbox-api.coinmarketcap.com";
-    private static string _testApiKey = "b54bcf4d-1bca-4e8e-9a24-22ff2c3d462c";
+    private string _testAddress = null!;
+    private string _testApiKey = null!;
 
-    private static string _activeAddress = "pro-api.coinmarketcap.com";
-    private static string _apiKey = "2c2da0e7-48ba-4850-824e-c5f8eb50de48";
+    private string _activeAddress = null!;
+    private string _apiKey = null!;
 
     private HttpClient _httpClient;
 
-    public CoinMarketApi()
+    public CoinMarketApi(CoinMarketKeys apiKeys)
     {
+        _testApiKey = apiKeys.TestAddress;
+        _testApiKey = apiKeys.TestApiKey;
+
+        _activeAddress = apiKeys.ActiveAddress;
+        _apiKey = apiKeys.ApiKey;
+
         _httpClient = new HttpClient();
         _httpClient.DefaultRequestHeaders.Add("X-CMC_PRO_API_KEY", _apiKey);
         _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
